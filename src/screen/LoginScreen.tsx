@@ -5,6 +5,7 @@ import { colors } from '../theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppHeader } from '../components';
 import { SectionHeader } from '../components';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
@@ -47,6 +48,7 @@ export default function LoginScreen() {
         />
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Icon name="log-in-outline" size={24} color="white" />
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -75,6 +77,8 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   button: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     backgroundColor: colors.primary,
     padding: 12,
     borderRadius: 8,
@@ -88,10 +92,10 @@ const styles = StyleSheet.create({
 });
 
 const shadowStyle = {
-  shadowColor: '#000',      // iOS
+  shadowColor: '#000', // iOS
   shadowOffset: { width: 0, height: 2 },
   shadowOpacity: 0.15,
   shadowRadius: 4,
 
-  elevation: 4,             // Android
+  elevation: 4, // Android
 };
