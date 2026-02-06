@@ -14,6 +14,8 @@ import {
 import LoginScreen from './src/screen/LoginScreen';
 import { AuthProvider, useAuth } from './src/context/AuthContext';
 import DashboardScreen from './src/screen/DashboardScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import RootNavigator from './src/navigation/RootNavigator';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -22,7 +24,9 @@ function App() {
     <SafeAreaProvider>
       <AuthProvider>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <AppContent />
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
       </AuthProvider>
     </SafeAreaProvider>
   );

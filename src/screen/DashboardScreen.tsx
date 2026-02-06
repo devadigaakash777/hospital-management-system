@@ -6,14 +6,11 @@ import { colors } from '../theme';
 
 const DashboardScreen = () => {
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-        <AppBar />
         <ScrollView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Hospital Dashboard</Text>
             </View>
         </ScrollView>
-        </SafeAreaView>
     );
 };
 
