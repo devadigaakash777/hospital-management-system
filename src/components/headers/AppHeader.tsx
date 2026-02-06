@@ -38,24 +38,21 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   textContainer: {
-    marginLeft: 12,
+    marginLeft: 2,
     flexDirection: 'column',
   },
   logo: {
-    width: 72,
-    height: 72,
-    marginBottom: 12,
+    width: 32,
+    height: 32,
   },
 
   title: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: 18,
+    fontWeight: '600',
     color: colors.textPrimary,
   },
   subtitle: {
-    marginTop: 4,
-    fontSize: 14,
+    fontSize: 10,
     color: colors.textSecondary,
-    textAlign: 'center',
   },
 });

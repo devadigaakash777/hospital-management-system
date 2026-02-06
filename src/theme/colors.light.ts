@@ -7,6 +7,7 @@ export const lightColors = {
   surface: '#FFFFFF',
   border: '#ACE1AF',
   card: '#F9FFFC', // Light card background for contrast
+  text: '#000000',
 
   textPrimary: '#355E3B',
   textSecondary: '#5F8575',

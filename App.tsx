@@ -12,24 +12,28 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import LoginScreen from './src/screen/LoginScreen';
+import { AuthProvider, useAuth } from './src/context/AuthContext';
+import DashboardScreen from './src/screen/DashboardScreen';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <AuthProvider>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <AppContent />
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }
 
 function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
+  const { isLoggedIn } = useAuth();
 
   return (
     <View style={styles.container}>
-      <LoginScreen />
+      {isLoggedIn ? <DashboardScreen /> : <LoginScreen />}
     </View>
   );
 }

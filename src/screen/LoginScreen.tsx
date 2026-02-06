@@ -1,17 +1,43 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
-import { InputField, AppHeader, SectionHeader, IconButton } from '../components';
+import { useAuth } from '../context/AuthContext';
+import {
+  InputField,
+  AppHeader,
+  SectionHeader,
+  IconButton,
+} from '../components';
 import { colors } from '../theme';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    console.log({ username, password });
+  const { login } = useAuth();
+
+  const handleLogin = async () => {
+    if (!username || !password) {
+      Alert.alert('Please enter email and password');
+      return;
+    }
+
+    try {
+      // TEMP: simulate API call
+      if (username === 'admin@hospital.com' && password === 'admin123') {
+        const userData = {
+          email: username,
+          role: 'ADMIN',
+        };
+
+        login(userData);
+      } else {
+        Alert.alert('Invalid credentials');
+      }
+    } catch (error) {
+      Alert.alert('Login failed');
+    }
   };
 
   return (
@@ -56,6 +82,7 @@ export default function LoginScreen() {
             text="Login"
             iconName="login"
             iconFamily="MaterialCommunityIcons"
+            backgroundColor={colors.primary}
             onPress={handleLogin}
           />
         </View>
@@ -75,6 +102,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   card: {
+    marginTop: 10,
     backgroundColor: colors.surface,
     padding: 16,
     borderRadius: 10,

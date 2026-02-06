@@ -6,6 +6,7 @@ export const darkColors = {
   surface: '#162D24',
   border: '#2A4F3E',
   card: '#1C3A2E', 
+  text: '#FFFFFF',
 
   textPrimary: '#E6F4EC',
   textSecondary: '#A8CFC0',

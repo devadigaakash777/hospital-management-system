@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   View,
+  ViewStyle,
 } from 'react-native';
 import { colors } from '../../theme';
 
@@ -27,6 +28,9 @@ interface IconButtonProps {
   iconFamily?: IconFamily;
   iconSize?: number;
   disabled?: boolean;
+  color?: string;
+  backgroundColor?: string;
+  borderColor?: string; // 👈 NEW
 }
 
 const IconButton: React.FC<IconButtonProps> = ({
@@ -36,12 +40,15 @@ const IconButton: React.FC<IconButtonProps> = ({
   iconFamily = 'MaterialCommunityIcons',
   iconSize = 20,
   disabled = false,
+  color = '#fff',
+  backgroundColor,
+  borderColor,
 }) => {
   const renderIcon = () => {
     const props = {
       name: iconName,
       size: iconSize,
-      color: '#fff',
+      color,
     };
 
     switch (iconFamily) {
@@ -58,16 +65,24 @@ const IconButton: React.FC<IconButtonProps> = ({
     }
   };
 
+  const buttonStyle: ViewStyle = {
+    ...(backgroundColor && { backgroundColor }),
+    ...(borderColor && {
+      borderWidth: 1,
+      borderColor,
+    }),
+  };
+
   return (
     <TouchableOpacity
-      style={[styles.button, disabled && styles.disabled]}
+      style={[styles.button, buttonStyle, disabled && styles.disabled]}
       onPress={onPress}
       activeOpacity={0.8}
       disabled={disabled}
     >
       <View style={styles.content}>
         {renderIcon()}
-        <Text style={styles.text}>{text}</Text>
+        <Text style={[styles.text, { color }]}>{text}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -77,8 +92,8 @@ export default IconButton;
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: colors.primary,
-    paddingVertical: 14,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     borderRadius: 10,
     alignItems: 'center',
   },
@@ -91,7 +106,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   text: {
-    color: '#fff',
     fontSize: 16,
     fontWeight: '600',
   },
