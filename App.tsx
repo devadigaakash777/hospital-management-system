@@ -5,15 +5,9 @@
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
-import LoginScreen from './src/screen/LoginScreen';
-import { AuthProvider, useAuth } from './src/context/AuthContext';
-import DashboardScreen from './src/screen/DashboardScreen';
+import { StatusBar, useColorScheme } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AuthProvider } from './src/context/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
 import RootNavigator from './src/navigation/RootNavigator';
 
@@ -31,21 +25,5 @@ function App() {
     </SafeAreaProvider>
   );
 }
-
-function AppContent() {
-  const { isLoggedIn } = useAuth();
-
-  return (
-    <View style={styles.container}>
-      {isLoggedIn ? <DashboardScreen /> : <LoginScreen />}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;

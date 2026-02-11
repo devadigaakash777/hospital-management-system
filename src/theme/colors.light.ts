@@ -1,9 +1,9 @@
 // theme/colors.light.ts
 
 export const lightColors = {
-  primary: '#2E8B57',     // SeaGreen
-  secondary: '#50C878',   // Emerald
-  background: '#F5FFFA',  // MintCream
+  primary: '#2E8B57', // SeaGreen
+  secondary: '#50C878', // Emerald
+  background: '#F5FFFA', // MintCream
   surface: '#FFFFFF',
   border: '#ACE1AF',
   card: '#F9FFFC', // Light card background for contrast

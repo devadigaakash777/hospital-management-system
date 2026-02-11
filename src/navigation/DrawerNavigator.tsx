@@ -1,4 +1,3 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import DashboardScreen from '../screen/DashboardScreen';
 import { colors } from '../theme';
@@ -12,10 +11,9 @@ export default function DrawerNavigator() {
         name="Dashboard"
         component={DashboardScreen}
         options={{
-          headerStyle: { backgroundColor: colors.surface},
+          headerStyle: { backgroundColor: colors.surface },
           headerTintColor: colors.text,
         }}
-
       />
     </Drawer.Navigator>
   );

@@ -27,16 +27,22 @@ export default function LoginScreen() {
       // TEMP: simulate API call
       if (username === 'admin@hospital.com' && password === 'admin123') {
         const userData = {
+          id: '1',
+          name: 'Admin User',
           email: username,
-          role: 'ADMIN',
+          role: 'ADMIN' as const,
         };
 
         login(userData);
       } else {
         Alert.alert('Invalid credentials');
       }
-    } catch (error) {
-      Alert.alert('Login failed');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Alert.alert('Login failed', error.message);
+      } else {
+        Alert.alert('Login failed', 'An error occurred');
+      }
     }
   };
 

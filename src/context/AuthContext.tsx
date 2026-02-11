@@ -1,16 +1,24 @@
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext, useReducer, ReactNode } from 'react';
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
 
 interface AuthState {
   isLoggedIn: boolean;
-  user: any | null;
+  user: User | null;
 }
+
+type AuthAction = { type: 'LOGIN'; payload: User } | { type: 'LOGOUT' };
 
 const initialState: AuthState = {
   isLoggedIn: false,
   user: null,
 };
 
-function authReducer(state: AuthState, action: any): AuthState {
+function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
     case 'LOGIN':
       return { isLoggedIn: true, user: action.payload };
@@ -21,12 +29,18 @@ function authReducer(state: AuthState, action: any): AuthState {
   }
 }
 
-const AuthContext = createContext<any>(null);
+interface AuthContextType extends AuthState {
+  login: (user: User) => void;
+  logout: () => void;
+}
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const login = (user: any) => dispatch({ type: 'LOGIN', payload: user });
+  const login = (user: User) => dispatch({ type: 'LOGIN', payload: user });
+
   const logout = () => dispatch({ type: 'LOGOUT' });
 
   return (
@@ -36,4 +50,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within AuthProvider');
+  }
+  return context;
+};

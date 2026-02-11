@@ -6,7 +6,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { colors } from '../../theme';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';

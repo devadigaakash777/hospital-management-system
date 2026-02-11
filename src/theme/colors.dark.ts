@@ -1,11 +1,11 @@
 export const darkColors = {
-  primary: '#50C878',     // Emerald (brighter for dark bg)
+  primary: '#50C878', // Emerald (brighter for dark bg)
   secondary: '#2E8B57',
 
-  background: '#0F1F1A',  // Deep green-black
+  background: '#0F1F1A', // Deep green-black
   surface: '#162D24',
   border: '#2A4F3E',
-  card: '#1C3A2E', 
+  card: '#1C3A2E',
   text: '#FFFFFF',
 
   textPrimary: '#E6F4EC',
