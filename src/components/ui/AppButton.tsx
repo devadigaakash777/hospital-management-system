@@ -29,7 +29,7 @@ interface IconButtonProps {
   disabled?: boolean;
   color?: string;
   backgroundColor?: string;
-  borderColor?: string; // 👈 NEW
+  borderColor?: string; 
 }
 
 const IconButton: React.FC<IconButtonProps> = ({
