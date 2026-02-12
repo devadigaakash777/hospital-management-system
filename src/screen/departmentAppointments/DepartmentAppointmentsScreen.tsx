@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import { colors } from '../../theme';
-import StatusFilterBar from './StatusFilterBar';
+import StatusFilterBar from './components/StatusFilterBar';
 
-const DashboardScreen = () => {
+const DepartmentAppointmentsScreen = () => {
   const handleFilterChange = (status: string) => {
     console.log('Selected:', status);
 
@@ -27,4 +27,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DashboardScreen;
+export default DepartmentAppointmentsScreen;

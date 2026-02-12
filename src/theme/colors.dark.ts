@@ -1,16 +1,15 @@
 export const darkColors = {
-  primary: '#50C878', // Emerald (brighter for dark bg)
-  secondary: '#2E8B57',
+  primary: '#1DB954',       // Spotify Green
+  secondary: '#1ED760',     // Lighter hover green
 
-  background: '#0F1F1A', // Deep green-black
-  surface: '#162D24',
-  border: '#2A4F3E',
-  card: '#1C3A2E',
-  text: '#FFFFFF',
+  background: '#121212',    // Spotify dark background
+  surface: '#181818',       // Cards / sections
+  border: '#282828',
+  card: '#1E1E1E',
 
-  textPrimary: '#E6F4EC',
-  textSecondary: '#A8CFC0',
+  textPrimary: '#FFFFFF',
+  textSecondary: '#B3B3B3',
 
-  success: '#3CB371',
-  error: '#EF5350',
+  success: '#1DB954',
+  error: '#E22134',
 };

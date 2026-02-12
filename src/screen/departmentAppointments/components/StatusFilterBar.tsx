@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import { colors } from '../../theme';
-import { AppButton } from '../../components';
+import { colors } from '../../../theme';
+import { AppButton } from '../../../components';
 
 type Props = {
   onFilterChange?: (status: string) => void;
@@ -37,11 +37,11 @@ const StatusFilterBar: React.FC<Props> = ({ onFilterChange }) => {
           iconName={btn.icon}
           text={btn.label}
           onPress={() => handlePress(btn.key)}
-          color={activeStatus === btn.key ? colors.background : colors.text}
+          color={activeStatus === btn.key ? colors.textPrimary : colors.textSecondary}
           backgroundColor={
-            activeStatus === btn.key ? colors.primary : colors.card
+            activeStatus === btn.key ? colors.primary : colors.surface
           }
-          borderColor={colors.text}
+          borderColor={activeStatus === btn.key ? colors.primary : colors.border}
         />
       ))}
     </ScrollView>
