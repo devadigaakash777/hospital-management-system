@@ -7,6 +7,8 @@ import AppointmentCard from './components/AppointmentCard';
 import { FlatList } from 'react-native-gesture-handler';
 import FilterHeader from './components/FilterHeader';
 import { ListRenderItem } from 'react-native';
+import { Linking, Alert } from 'react-native';
+
 
 type Appointment = {
   id: string;
@@ -28,7 +30,7 @@ const APPOINTMENTS_DATA: Appointment[] = [
     id: '1',
     name: 'Ramesh Kumar',
     bookedBy: 'Vishak',
-    phoneNumber: '9876543210',
+    phoneNumber: '9481365071',
     department: 'Cardiology',
     doctorName: 'Dr. Sharma',
     date: '12 Feb 2026',
@@ -42,7 +44,7 @@ const APPOINTMENTS_DATA: Appointment[] = [
     id: '2',
     name: 'Suresh Naik',
     bookedBy: 'Akash',
-    phoneNumber: '9876543211',
+    phoneNumber: '9481515140',
     department: 'Neurology',
     doctorName: 'Dr. Rao',
     date: '13 Feb 2026',
@@ -56,7 +58,7 @@ const APPOINTMENTS_DATA: Appointment[] = [
     id: '3',
     name: 'Meena Shetty',
     bookedBy: 'Admin',
-    phoneNumber: '9876543212',
+    phoneNumber: '9481515140',
     department: 'Orthopedics',
     doctorName: 'Dr. Patil',
     date: '14 Feb 2026',
@@ -67,6 +69,13 @@ const APPOINTMENTS_DATA: Appointment[] = [
     status: 'admitted',
   },
 ];
+
+const handleCall = (phoneNumber: string) => {
+  Linking.openURL(`tel:${phoneNumber}`).catch(() => {
+    Alert.alert('Error', 'Unable to open dialer');
+  });
+};
+
 
 
 const renderItem: ListRenderItem<Appointment> = ({ item }) => (
@@ -82,7 +91,7 @@ const renderItem: ListRenderItem<Appointment> = ({ item }) => (
     token={item.token}
     patientMessage={item.patientMessage}
     status={item.status}
-    onCallPress={() => console.log('Call', item.phoneNumber)}
+    onCallPress={() => handleCall(item.phoneNumber)}
     onDeletePress={() => console.log('Delete', item.id)}
   />
 );
