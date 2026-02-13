@@ -6,95 +6,129 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import { Picker } from '@react-native-picker/picker';
 import { colors } from '../../theme';
 
-const AppointmentFilterSheet: React.FC = () => {
+interface Props {
+  visible: boolean;
+  onClose: () => void;
+}
+
+const AppointmentFilterModal: React.FC<Props> = ({ visible, onClose }) => {
   const [status, setStatus] = useState('All');
   const [department, setDepartment] = useState('All');
-  const [date, setDate] = useState('06-02-2026');
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Appointment Management</Text>
+    <Modal
+      isVisible={visible}
+      onBackdropPress={onClose}
+      onBackButtonPress={onClose}
+      style={styles.modal}
+    >
+      <View style={styles.container}>
+        <Text style={styles.title}>Appointment Filters</Text>
 
-      <TouchableOpacity style={styles.addButton}>
-        <Text style={styles.addButtonText}>＋ Add Appointment</Text>
-      </TouchableOpacity>
+        <Text style={styles.label}>Search</Text>
+        <TextInput style={styles.input} placeholder="Search..." />
 
-      <Text style={styles.label}>Search</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Search patients, phone, email, ID..."
-      />
+        <Text style={styles.label}>Status</Text>
+        <View style={styles.pickerContainer}>
+          <Picker selectedValue={status} onValueChange={setStatus}>
+            <Picker.Item label="All" value="All" />
+            <Picker.Item label="Pending" value="Pending" />
+            <Picker.Item label="Approved" value="Approved" />
+            <Picker.Item label="Completed" value="Completed" />
+          </Picker>
+        </View>
 
-      <Text style={styles.label}>Status</Text>
-      <View style={styles.pickerContainer}>
-        <Picker selectedValue={status} onValueChange={setStatus}>
-          <Picker.Item label="All Statuses" value="All" />
-          <Picker.Item label="Pending" value="Pending" />
-          <Picker.Item label="Approved" value="Approved" />
-          <Picker.Item label="Completed" value="Completed" />
-        </Picker>
+        <Text style={styles.label}>Department</Text>
+        <View style={styles.pickerContainer}>
+          <Picker selectedValue={department} onValueChange={setDepartment}>
+            <Picker.Item label="All" value="All" />
+            <Picker.Item label="Cardiology" value="Cardiology" />
+            <Picker.Item label="Orthopedics" value="Orthopedics" />
+            <Picker.Item label="ENT" value="ENT" />
+          </Picker>
+        </View>
+
+        <View style={styles.actions}>
+          <TouchableOpacity style={styles.cancel} onPress={onClose}>
+            <Text style={styles.btnText}>Cancel</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.apply}
+            onPress={() => {
+              console.log({ status, department });
+              onClose();
+            }}
+          >
+            <Text style={styles.btnText}>Apply</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-
-      <Text style={styles.label}>Department</Text>
-      <View style={styles.pickerContainer}>
-        <Picker selectedValue={department} onValueChange={setDepartment}>
-          <Picker.Item label="All Departments" value="All" />
-          <Picker.Item label="Cardiology" value="Cardiology" />
-          <Picker.Item label="Orthopedics" value="Orthopedics" />
-          <Picker.Item label="ENT" value="ENT" />
-        </Picker>
-      </View>
-    </View>
+    </Modal>
   );
 };
 
-export default AppointmentFilterSheet;
+export default AppointmentFilterModal;
 
 const styles = StyleSheet.create({
+  modal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: '#fff',
     padding: 16,
-    borderRadius: 14,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
   title: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '700',
     marginBottom: 12,
-    color: colors.text,
-  },
-  addButton: {
-    backgroundColor: colors.primary,
-    padding: 14,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginBottom: 18,
-  },
-  addButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 15,
+    color: colors.textPrimary,
   },
   label: {
     marginBottom: 6,
     fontWeight: '600',
-    color: colors.text,
+    color: colors.textPrimary,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: '#f2f2f2',
     borderRadius: 8,
     padding: 12,
     marginBottom: 14,
-    borderWidth: 1,
-    borderColor: '#ddd',
   },
   pickerContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#f2f2f2',
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
     marginBottom: 14,
+  },
+  actions: {
+    flexDirection: 'row',
+    marginTop: 12,
+  },
+  cancel: {
+    flex: 1,
+    backgroundColor: '#ccc',
+    padding: 12,
+    borderRadius: 8,
+    marginRight: 8,
+    alignItems: 'center',
+  },
+  apply: {
+    flex: 1,
+    backgroundColor: colors.primary,
+    padding: 12,
+    borderRadius: 8,
+    marginLeft: 8,
+    alignItems: 'center',
+  },
+  btnText: {
+    color: '#fff',
+    fontWeight: '600',
   },
 });

@@ -1,17 +1,15 @@
-// theme/colors.light.ts
-
 export const lightColors = {
-  primary: '#2E8B57', // SeaGreen
-  secondary: '#50C878', // Emerald
-  background: '#F5FFFA', // MintCream
-  surface: '#FFFFFF',
-  border: '#ACE1AF',
-  card: '#F9FFFC', // Light card background for contrast
-  text: '#000000',
+  primary: '#1DB954',       // Spotify Green
+  secondary: '#1ED760',
 
-  textPrimary: '#355E3B',
-  textSecondary: '#5F8575',
+  background: '#FFFFFF',    // Clean white
+  surface: '#F5F5F5',       // Light section background
+  border: '#E0E0E0',
+  card: '#FAFAFA',
 
-  success: '#3CB371',
+  textPrimary: '#121212',
+  textSecondary: '#535353',
+
+  success: '#1DB954',
   error: '#D32F2F',
 };

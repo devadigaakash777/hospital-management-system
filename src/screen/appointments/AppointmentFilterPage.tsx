@@ -1,58 +1,22 @@
-import React, { useRef } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-
-import AppointmentFilterBottomSheet, {
-  AppointmentFilterBottomSheetRef,
-} from './AppointmentFilterBottomSheet';
-import { colors } from '../../theme';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import AppointmentFilterModal from './AppointmentFilterSheet';
 
 const AppointmentFilterPage = () => {
-  const sheetRef = useRef<AppointmentFilterBottomSheetRef>(null);
+  const [open, setOpen] = useState(false);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Appointments</Text>
+    <View style={{ flex: 1 }}>
+      <TouchableOpacity onPress={() => setOpen(true)}>
+        <Text>Filter</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.filterBtn}
-          onPress={() => {
-            console.log('FILTER CLICKED');
-            sheetRef.current?.open();
-          }}
-        >
-          <Text style={styles.filterText}>Filter</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* MUST be rendered once */}
-      <AppointmentFilterBottomSheet ref={sheetRef} />
+      <AppointmentFilterModal
+        visible={open}
+        onClose={() => setOpen(false)}
+      />
     </View>
   );
 };
 
 export default AppointmentFilterPage;
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
-    padding: 16,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  title: { fontSize: 20, fontWeight: '700' },
-  filterBtn: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  filterText: { color: '#fff', fontWeight: '600' },
-});
