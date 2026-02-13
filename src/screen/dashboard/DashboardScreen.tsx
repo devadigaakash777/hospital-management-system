@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import { colors } from '../../theme';
 import StatusFilterBar from './StatusFilterBar';
+//import AppointmentFilterSheet from './AppoinmentSheet';
 
 const DashboardScreen = () => {
   const handleFilterChange = (status: string) => {
@@ -15,6 +16,7 @@ const DashboardScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <StatusFilterBar onFilterChange={handleFilterChange} />
+      {/* <AppointmentFilterSheet /> */}
     </ScrollView>
   );
 };
