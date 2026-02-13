@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 import DepartmentAppointmentsScreen from '../screen/departmentAppointments/DepartmentAppointmentsScreen';
-import DoctorManagementHomeScreen from '../screen/doctorManagement/DoctorManagementHomeScreen';
+import DoctorManagementStack from './DoctorManagementStack';
 import HealthPackageScreen from '../screen/healthPackageAppointments/healthPackageScreen';
 import { AppHeader } from '../components';
 import { colors } from '../theme';
@@ -49,7 +49,7 @@ const drawerItems: {
   {
     name: 'Doctor Management',
     icon: 'user-doctor',
-    component: DoctorManagementHomeScreen,
+    component: DoctorManagementStack,
   },
 ];
 
@@ -126,6 +126,11 @@ export default function DrawerNavigator() {
           key={item.name}
           name={item.name}
           component={item.component}
+          options={
+            item.name === 'Doctor Management'
+              ? { headerShown: false } // 🔥 prevent double header
+              : undefined
+          }
         />
       ))}
     </Drawer.Navigator>

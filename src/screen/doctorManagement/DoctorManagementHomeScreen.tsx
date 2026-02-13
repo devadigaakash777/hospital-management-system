@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,7 +5,18 @@ import {
 import { SettingItem } from '../../components';
 import { colors } from '../../theme';
 
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import { DoctorStackParamList } from '../../navigation/DoctorManagementStack';
+
+type NavigationProp = NativeStackNavigationProp<
+  DoctorStackParamList,
+  'DoctorManagementHome'
+>;
+
 export default function DoctorManagementHomeScreen() {
+  const navigation = useNavigation<NavigationProp>();
+
   return (
     <View style={styles.container}>
       <SettingItem
@@ -14,7 +24,7 @@ export default function DoctorManagementHomeScreen() {
         subtitle="Add, update and manage departments"
         iconName="hospital-building"
         iconFamily="MaterialCommunityIcons"
-        onPress={() => console.log('Doctor Management')}
+        onPress={() => navigation.navigate('ManageDepartments')}
       />
 
       <SettingItem
@@ -22,7 +32,7 @@ export default function DoctorManagementHomeScreen() {
         subtitle="Add, update and manage doctors"
         iconName="user-doctor"
         iconFamily="FontAwesome6"
-        onPress={() => console.log('Manage Doctors')}
+        onPress={() => navigation.navigate('ManageDoctors')}
       />
 
       <SettingItem
@@ -30,14 +40,15 @@ export default function DoctorManagementHomeScreen() {
         subtitle="Block or unblock doctor availability"
         iconName="calendar-times"
         iconFamily="FontAwesome6"
-        onPress={() => console.log('Block Doctor Availability')}
+        onPress={() => navigation.navigate('BlockAvailability')}
       />
+
       <SettingItem
         title="Correct Doctor Slot Configuration"
         subtitle="Fix incorrect doctor slot configurations"
         iconName="wrench"
         iconFamily="FontAwesome6"
-        onPress={() => console.log('Correct Doctor Slot Configuration')}
+        onPress={() => navigation.navigate('SlotConfiguration')}
       />
     </View>
   );
