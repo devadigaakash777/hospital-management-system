@@ -6,11 +6,14 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import { RouteProp } from '@react-navigation/native';
-import DepartmentAppointmentsScreen from '../screen/departmentAppointments/DepartmentAppointmentsScreen';
-import { colors } from '../theme';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { AppHeader } from '../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import DepartmentAppointmentsScreen from '../screen/departmentAppointments/DepartmentAppointmentsScreen';
+import DoctorManagementScreen from '../screen/doctorManagement/DoctorManagementScreen';
+import HealthPackageScreen from '../screen/healthPackageAppointments/healthPackageScreen';
+import { AppHeader } from '../components';
+import { colors } from '../theme';
 
 /* ----------------------------- */
 /* Drawer Param List */
@@ -19,18 +22,36 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export type DrawerParamList = {
   'Department Appointments': undefined;
   'Health Package Appointments': undefined;
-  'Call Back Requests': undefined;
-  'Job Applications': undefined;
+  'Doctor Management': undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
-const drawerItems = [
-  { name: 'Department Appointments', icon: 'calendar-clear-outline' },
-  { name: 'Health Package Appointments', icon: 'heart-outline' },
-  { name: 'Call Back Requests', icon: 'call-outline' },
-  { name: 'Job Applications', icon: 'briefcase-outline' },
-] as const;
+/* ----------------------------- */
+/* Drawer Items */
+/* ----------------------------- */
+
+const drawerItems: {
+  name: keyof DrawerParamList;
+  icon: string;
+  component: React.ComponentType<any>;
+}[] = [
+  {
+    name: 'Department Appointments',
+    icon: 'calendar-clear-outline',
+    component: DepartmentAppointmentsScreen,
+  },
+  {
+    name: 'Health Package Appointments',
+    icon: 'heart-outline',
+    component: HealthPackageScreen,
+  },
+  {
+    name: 'Doctor Management',
+    icon: 'person-outline',
+    component: DoctorManagementScreen,
+  },
+];
 
 /* ----------------------------- */
 /* screenOptions */
@@ -83,14 +104,17 @@ export default function DrawerNavigator() {
       drawerContent={(props) => (
         <DrawerContentScrollView
           {...props}
-          contentContainerStyle={{ paddingTop: 10, paddingHorizontal: 0 }}
+          contentContainerStyle={{ paddingTop: 0, paddingHorizontal: 0 }}
         >
-          <SafeAreaView edges={['top']} style={styles.headerContainer}>
-          <AppHeader
-            logo={require('../assets/admin-logo.jpg')}
-            title="Admin Portal"
-            subtitle="Adarsha Hospital Management"
-          />
+          <SafeAreaView
+            edges={['top']}
+            style={styles.headerContainer}
+          >
+            <AppHeader
+              logo={require('../assets/admin-logo.jpg')}
+              title="Admin Portal"
+              subtitle="Adarsha Hospital Management"
+            />
           </SafeAreaView>
 
           <DrawerItemList {...props} />
@@ -101,7 +125,7 @@ export default function DrawerNavigator() {
         <Drawer.Screen
           key={item.name}
           name={item.name}
-          component={DepartmentAppointmentsScreen}
+          component={item.component}
         />
       ))}
     </Drawer.Navigator>
@@ -110,9 +134,9 @@ export default function DrawerNavigator() {
 
 const styles = {
   headerContainer: {
-    paddingBottom: 10,
-    marginBottom: 15, 
-    borderBottomWidth: 1, 
-    borderBottomColor: colors.border
+    paddingBottom: 12,
+    marginBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
-}
+};
