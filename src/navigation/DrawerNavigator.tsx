@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/drawer';
 import { RouteProp } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 import DepartmentAppointmentsScreen from '../screen/departmentAppointments/DepartmentAppointmentsScreen';
 import DoctorManagementScreen from '../screen/doctorManagement/DoctorManagementScreen';
@@ -38,17 +38,17 @@ const drawerItems: {
 }[] = [
   {
     name: 'Department Appointments',
-    icon: 'calendar-clear-outline',
+    icon: 'calendar',
     component: DepartmentAppointmentsScreen,
   },
   {
     name: 'Health Package Appointments',
-    icon: 'heart-outline',
+    icon: 'heart',
     component: HealthPackageScreen,
   },
   {
     name: 'Doctor Management',
-    icon: 'person-outline',
+    icon: 'user-doctor',
     component: DoctorManagementScreen,
   },
 ];
@@ -84,7 +84,7 @@ const screenOptions = ({
     headerTintColor: colors.textPrimary,
 
     drawerIcon: ({ color, size }) => (
-      <Ionicons
+      <FontAwesome6
         name={item?.icon ?? 'ellipse-outline'}
         size={size}
         color={color}

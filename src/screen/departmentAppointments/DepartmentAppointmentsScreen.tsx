@@ -8,6 +8,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import FilterHeader from './components/FilterHeader';
 import { ListRenderItem } from 'react-native';
 import { Linking, Alert } from 'react-native';
+import { AppButton } from '../../components';
 
 
 type Appointment = {
@@ -114,6 +115,14 @@ const DepartmentAppointmentsScreen = () => {
           renderItem={renderItem}
           ListHeaderComponent={
             <View>
+              <AppButton
+                iconFamily="Ionicons"
+                iconName="add-circle-outline"
+                text="Add Appointment"
+                onPress={() => console.log('Add Appointment Pressed')}
+                backgroundColor={colors.primary}
+                color={colors.textPrimary}
+              />
               <StatusFilterBar onFilterChange={handleFilterChange} />
               <FilterHeader
                 onDayChange={(day) => console.log('Selected day:', day)}
