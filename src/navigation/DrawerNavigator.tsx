@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 import DepartmentAppointmentsScreen from '../screen/departmentAppointments/DepartmentAppointmentsScreen';
-import DoctorManagementScreen from '../screen/doctorManagement/DoctorManagementScreen';
+import DoctorManagementHomeScreen from '../screen/doctorManagement/DoctorManagementHomeScreen';
 import HealthPackageScreen from '../screen/healthPackageAppointments/healthPackageScreen';
 import { AppHeader } from '../components';
 import { colors } from '../theme';
@@ -49,7 +49,7 @@ const drawerItems: {
   {
     name: 'Doctor Management',
     icon: 'user-doctor',
-    component: DoctorManagementScreen,
+    component: DoctorManagementHomeScreen,
   },
 ];
 

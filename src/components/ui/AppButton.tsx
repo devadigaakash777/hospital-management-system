@@ -11,14 +11,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 
 type IconFamily =
   | 'Ionicons'
   | 'MaterialCommunityIcons'
   | 'Feather'
   | 'AntDesign'
-  | 'FontAwesome';
+  | 'FontAwesome6';
 
 interface IconButtonProps {
   text: string;
@@ -57,7 +57,7 @@ const IconButton: React.FC<IconButtonProps> = ({
         return <Feather {...props} />;
       case 'AntDesign':
         return <AntDesign {...props} />;
-      case 'FontAwesome':
+      case 'FontAwesome6':
         return <FontAwesome {...props} />;
       default:
         return <MaterialCommunityIcons {...props} />;
