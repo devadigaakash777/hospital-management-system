@@ -23,7 +23,6 @@ export type DoctorStackParamList = {
 
 const Stack = createNativeStackNavigator<DoctorStackParamList>();
 
-
 /* ------------------------------------------------ */
 /* Navigator */
 /* ------------------------------------------------ */

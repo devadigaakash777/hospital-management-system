@@ -72,7 +72,12 @@ export default function ManageDepartmentsScreen() {
       <View style={styles.footer}>
         <AppButton
           text="Add Department"
-          onPress={() => Alert.alert('Add Department', 'Add department functionality coming soon!')}
+          onPress={() =>
+            Alert.alert(
+              'Add Department',
+              'Add department functionality coming soon!',
+            )
+          }
           backgroundColor={colors.primary}
           color={colors.textPrimary}
           iconFamily="MaterialCommunityIcons"

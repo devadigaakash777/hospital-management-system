@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { colors } from '../../../theme';
 import { AppButton } from '../../../components';
 
@@ -33,7 +27,7 @@ const FilterHeader: React.FC<Props> = ({
     <View style={styles.container}>
       {/* Left: Day Filters */}
       <View style={styles.leftContainer}>
-        {days.map(day => (
+        {days.map((day) => (
           <TouchableOpacity
             key={day}
             style={[
@@ -59,7 +53,14 @@ const FilterHeader: React.FC<Props> = ({
         iconFamily="Ionicons"
         iconName="filter-outline"
         text="Filter"
-        onPress={onAdvancedFilterPress || (() => Alert.alert('Advanced Filter', 'Advanced filter functionality coming soon!'))}
+        onPress={
+          onAdvancedFilterPress ||
+          (() =>
+            Alert.alert(
+              'Advanced Filter',
+              'Advanced filter functionality coming soon!',
+            ))
+        }
         color={colors.textPrimary}
         backgroundColor={colors.surface}
         borderColor={colors.border}

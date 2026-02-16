@@ -1,8 +1,4 @@
-import {
-  View,
-  StyleSheet,
-  Alert,
-} from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { SettingItem } from '../../components';
 import { colors } from '../../theme';
 
@@ -14,7 +10,12 @@ export default function ManageDoctorsScreen() {
         subtitle="Add, update and manage doctors"
         iconName="user-doctor"
         iconFamily="FontAwesome6"
-        onPress={() => Alert.alert('Manage Doctors', 'Manage Doctors functionality coming soon!')}
+        onPress={() =>
+          Alert.alert(
+            'Manage Doctors',
+            'Manage Doctors functionality coming soon!',
+          )
+        }
       />
     </View>
   );

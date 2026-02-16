@@ -10,7 +10,6 @@ import { ListRenderItem } from 'react-native';
 import { Linking, Alert } from 'react-native';
 import { AppButton } from '../../components';
 
-
 type Appointment = {
   id: string;
   name: string;
@@ -77,8 +76,6 @@ const handleCall = (phoneNumber: string) => {
   });
 };
 
-
-
 const renderItem: ListRenderItem<Appointment> = ({ item }) => (
   <AppointmentCard
     name={item.name}
@@ -93,10 +90,16 @@ const renderItem: ListRenderItem<Appointment> = ({ item }) => (
     patientMessage={item.patientMessage}
     status={item.status}
     onCallPress={() => handleCall(item.phoneNumber)}
-    onDeletePress={() => Alert.alert('Delete Appointment', `Are you sure you want to delete appointment for ${item.name}?`, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive'},
-    ])}
+    onDeletePress={() =>
+      Alert.alert(
+        'Delete Appointment',
+        `Are you sure you want to delete appointment for ${item.name}?`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Delete', style: 'destructive' },
+        ],
+      )
+    }
   />
 );
 
@@ -121,13 +124,20 @@ const DepartmentAppointmentsScreen = () => {
                 iconFamily="Ionicons"
                 iconName="add-circle-outline"
                 text="Add Appointment"
-                onPress={() => Alert.alert('Add Appointment', 'Add appointment functionality coming soon!')}
+                onPress={() =>
+                  Alert.alert(
+                    'Add Appointment',
+                    'Add appointment functionality coming soon!',
+                  )
+                }
                 backgroundColor={colors.primary}
                 color={colors.textPrimary}
               />
               <StatusFilterBar onFilterChange={handleFilterChange} />
               <FilterHeader
-                onDayChange={(day) => Alert.alert('Day Changed', `Selected day: ${day}`)}
+                onDayChange={(day) =>
+                  Alert.alert('Day Changed', `Selected day: ${day}`)
+                }
               />
             </View>
           }
