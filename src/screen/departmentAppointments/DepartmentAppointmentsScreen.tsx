@@ -100,15 +100,17 @@ const renderItem: ListRenderItem<Appointment> = ({ item }) => (
     patientMessage={item.patientMessage}
     status={item.status}
     onCallPress={() => handleCall(item.phoneNumber)}
-    onDeletePress={() => console.log('Delete', item.id)}
+    onDeletePress={() => Alert.alert('Delete Appointment', `Are you sure you want to delete appointment for ${item.name}?`, [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Delete', style: 'destructive'},
+    ])}
   />
 );
 
 
 const DepartmentAppointmentsScreen = () => {
   const handleFilterChange = (status: string) => {
-    console.log('Selected:', status);
-
+    Alert.alert('Filter Changed', `Selected status: ${status}`);
     // In future:
     // fetchAppointments(status)
     // filter local data
@@ -139,7 +141,7 @@ const DepartmentAppointmentsScreen = () => {
               />
               <StatusFilterBar onFilterChange={handleFilterChange} />
               <FilterHeader
-                onDayChange={(day) => console.log('Selected day:', day)}
+                onDayChange={(day) => Alert.alert('Day Filter', `Selected day: ${day}`)}
                 onAdvancedFilterPress={() => setFilterVisible(true)}
               />
             </View>

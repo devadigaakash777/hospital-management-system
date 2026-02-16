@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import { colors } from '../../../theme';
 import { AppButton } from '../../../components';
@@ -58,7 +59,7 @@ const FilterHeader: React.FC<Props> = ({
         iconFamily="Ionicons"
         iconName="filter-outline"
         text="Filter"
-        onPress={onAdvancedFilterPress || (() => console.log('Advanced Filter Pressed'))}
+        onPress={onAdvancedFilterPress || (() => Alert.alert('Advanced Filter', 'Advanced filter functionality coming soon!'))}
         color={colors.textPrimary}
         backgroundColor={colors.surface}
         borderColor={colors.border}

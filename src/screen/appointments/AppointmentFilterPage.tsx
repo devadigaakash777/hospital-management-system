@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import AppointmentFilterModal from './AppointmentFilterSheet';
 
 const AppointmentFilterPage = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <TouchableOpacity onPress={() => setOpen(true)}>
         <Text>Filter</Text>
       </TouchableOpacity>
@@ -18,5 +18,11 @@ const AppointmentFilterPage = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default AppointmentFilterPage;

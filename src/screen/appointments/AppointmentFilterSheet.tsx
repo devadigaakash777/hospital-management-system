@@ -60,7 +60,6 @@ const AppointmentFilterModal: React.FC<Props> = ({ visible, onClose }) => {
           <TouchableOpacity
             style={styles.apply}
             onPress={() => {
-              console.log({ status, department });
               onClose();
             }}
           >
