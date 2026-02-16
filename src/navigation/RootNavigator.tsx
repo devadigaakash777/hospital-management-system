@@ -6,7 +6,7 @@ import AppointmentFilterPage from '../screen/appointments/AppointmentFilterPage'
 
 export default function RootNavigator() {
   // 🔴 Toggle this flag for testing
-  const SHOW_FILTER_ONLY = true;
+  const SHOW_FILTER_ONLY = false;
 
   if (SHOW_FILTER_ONLY) {
     return <AppointmentFilterPage />;

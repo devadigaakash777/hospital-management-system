@@ -14,15 +14,14 @@ function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
        <BottomSheetModalProvider>
-      {/* <SafeAreaProvider> */}
-        {/* <AuthProvider> */}
-          {/* <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} /> */}
+      <SafeAreaProvider> 
+         <AuthProvider> 
+           <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} /> 
           <NavigationContainer>
-             <StatusBar barStyle="dark-content" />
             <RootNavigator />
           </NavigationContainer>
-        {/* </AuthProvider> */}
-      {/* </SafeAreaProvider> */}
+         </AuthProvider> 
+       </SafeAreaProvider>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
