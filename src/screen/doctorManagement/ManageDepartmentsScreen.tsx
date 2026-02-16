@@ -36,9 +36,7 @@ export default function ManageDepartmentsScreen() {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
-            setDepartments(prev =>
-              prev.filter(dept => dept.id !== id)
-            );
+            setDepartments((prev) => prev.filter((dept) => dept.id !== id));
           },
         },
       ],
@@ -46,16 +44,16 @@ export default function ManageDepartmentsScreen() {
   };
 
   const renderItem = ({ item }: { item: Department }) => (
-    <ListItem title={item.name}>
+    <ListItem
+      iconFamily="MaterialCommunityIcons"
+      iconName="hospital-building"
+      title={item.name}
+    >
       <TouchableOpacity
         style={styles.iconBtn}
         onPress={() => handleDelete(item.id, item.name)}
       >
-        <FontAwesome6
-          name="xmark"
-          size={20}
-          color={colors.textPrimary}
-        />
+        <FontAwesome6 name="xmark" size={20} color={colors.textPrimary} />
       </TouchableOpacity>
     </ListItem>
   );
@@ -74,7 +72,7 @@ export default function ManageDepartmentsScreen() {
       <View style={styles.footer}>
         <AppButton
           text="Add Department"
-          onPress={() => console.log('Add Department Pressed')}
+          onPress={() => Alert.alert('Add Department', 'Add department functionality coming soon!')}
           backgroundColor={colors.primary}
           color={colors.textPrimary}
           iconFamily="MaterialCommunityIcons"

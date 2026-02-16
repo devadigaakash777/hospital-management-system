@@ -4,6 +4,7 @@ import {
   DrawerNavigationOptions,
   DrawerContentScrollView,
   DrawerItemList,
+  DrawerContentComponentProps,
 } from '@react-navigation/drawer';
 import { RouteProp } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -34,7 +35,7 @@ const Drawer = createDrawerNavigator<DrawerParamList>();
 const drawerItems: {
   name: keyof DrawerParamList;
   icon: string;
-  component: React.ComponentType<any>;
+  component: React.ComponentType<unknown>;
 }[] = [
   {
     name: 'Department Appointments',
@@ -68,30 +69,49 @@ const screenOptions = ({
     drawerStyle: {
       backgroundColor: colors.surface,
     },
-
     drawerActiveTintColor: colors.primary,
     drawerInactiveTintColor: colors.textPrimary,
     drawerActiveBackgroundColor: colors.background,
-
     drawerItemStyle: {
       borderRadius: 0,
       marginHorizontal: 0,
     },
-
     headerStyle: {
       backgroundColor: colors.surface,
     },
     headerTintColor: colors.textPrimary,
-
     drawerIcon: ({ color, size }) => (
       <FontAwesome6
-        name={item?.icon ?? 'ellipse-outline'}
+        name={item?.icon ?? 'circle'}
         size={size}
         color={color}
       />
     ),
   };
 };
+
+/* ----------------------------- */
+/* Custom Drawer Content */
+/* ----------------------------- */
+
+const CustomDrawerContent = (
+  props: DrawerContentComponentProps
+) => (
+  <DrawerContentScrollView
+    {...props}
+    contentContainerStyle={styles.drawerContent}
+  >
+    <SafeAreaView edges={['top']} style={styles.headerContainer}>
+      <AppHeader
+        logo={require('../assets/admin-logo.jpg')}
+        title="Admin Portal"
+        subtitle="Adarsha Hospital Management"
+      />
+    </SafeAreaView>
+
+    <DrawerItemList {...props} />
+  </DrawerContentScrollView>
+);
 
 /* ----------------------------- */
 /* Drawer Navigator */
@@ -101,25 +121,7 @@ export default function DrawerNavigator() {
   return (
     <Drawer.Navigator
       screenOptions={screenOptions}
-      drawerContent={(props) => (
-        <DrawerContentScrollView
-          {...props}
-          contentContainerStyle={{ paddingTop: 0, paddingHorizontal: 0 }}
-        >
-          <SafeAreaView
-            edges={['top']}
-            style={styles.headerContainer}
-          >
-            <AppHeader
-              logo={require('../assets/admin-logo.jpg')}
-              title="Admin Portal"
-              subtitle="Adarsha Hospital Management"
-            />
-          </SafeAreaView>
-
-          <DrawerItemList {...props} />
-        </DrawerContentScrollView>
-      )}
+      drawerContent={CustomDrawerContent}
     >
       {drawerItems.map(item => (
         <Drawer.Screen
@@ -128,7 +130,7 @@ export default function DrawerNavigator() {
           component={item.component}
           options={
             item.name === 'Doctor Management'
-              ? { headerShown: false } // 🔥 prevent double header
+              ? { headerShown: false }
               : undefined
           }
         />
@@ -138,6 +140,10 @@ export default function DrawerNavigator() {
 }
 
 const styles = {
+  drawerContent: {
+    paddingTop: 0,
+    paddingHorizontal: 0,
+  },
   headerContainer: {
     paddingBottom: 12,
     marginBottom: 12,
