@@ -7,7 +7,7 @@ import {
   InputField,
   AppHeader,
   SectionHeader,
-  IconButton,
+  AppButton,
 } from '../components';
 import { colors } from '../theme';
 
@@ -84,7 +84,7 @@ export default function LoginScreen() {
             isPassword={true}
           />
 
-          <IconButton
+          <AppButton
             text="Login"
             iconName="login"
             iconFamily="MaterialCommunityIcons"

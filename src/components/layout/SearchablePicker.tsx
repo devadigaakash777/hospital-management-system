@@ -7,45 +7,53 @@ import {
   TextInput,
   FlatList,
   StyleSheet,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
+import { colors } from '../../theme';
+import { AppButton } from '../../components';
 
 interface SearchablePickerProps {
   label?: string;
+  labelColor?: string;
   value: string | null;
   placeholder?: string;
   options: string[];
+  containerStyle?: StyleProp<ViewStyle>;
   onSelect: (value: string) => void;
 }
 
 const SearchablePicker: React.FC<SearchablePickerProps> = ({
   label,
+  labelColor = colors.textSecondary,
   value,
   placeholder = 'Select',
   options,
+  containerStyle,
   onSelect,
 }) => {
   const [visible, setVisible] = useState(false);
   const [search, setSearch] = useState('');
 
   const filteredOptions = useMemo(() => {
-    return options.filter(opt =>
+    return options.filter((opt) =>
       opt.toLowerCase().includes(search.toLowerCase()),
     );
   }, [search, options]);
 
   return (
     <>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && <Text style={[styles.label, {color: labelColor}]}>{label}</Text>}
 
       {/* Picker Input */}
       <TouchableOpacity
-        style={styles.input}
+        style={[styles.input, containerStyle]}
         onPress={() => {
           setSearch('');
           setVisible(true);
         }}
       >
-        <Text style={styles.value}>
+        <Text style={[styles.value, !value && { color: colors.textSecondary }]}>
           {value || placeholder}
         </Text>
         <Text style={styles.arrow}>▼</Text>
@@ -59,6 +67,7 @@ const SearchablePicker: React.FC<SearchablePickerProps> = ({
             <TextInput
               style={styles.searchInput}
               placeholder="Search..."
+              placeholderTextColor={colors.textSecondary}
               value={search}
               onChangeText={setSearch}
               autoFocus
@@ -85,13 +94,13 @@ const SearchablePicker: React.FC<SearchablePickerProps> = ({
               }
             />
 
-            {/* Cancel */}
-            <TouchableOpacity
-              style={styles.cancelBtn}
+            <AppButton
+              text="Cancel"
               onPress={() => setVisible(false)}
-            >
-              <Text style={styles.cancelText}>Cancel</Text>
-            </TouchableOpacity>
+              backgroundColor={colors.primary}
+              color={colors.textPrimary}
+              containerStyle={styles.cancelBtn}
+            />
           </View>
         </View>
       </Modal>
@@ -110,60 +119,67 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   input: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.card,
     borderRadius: 10,
     paddingVertical: 14,
     paddingHorizontal: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   value: {
-    color: '#111827',
+    color: colors.textPrimary,
   },
   arrow: {
     fontSize: 12,
-    color: '#6B7280',
+    color: colors.textSecondary,
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
   modal: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
+    borderWidth: 2,
+    borderColor: colors.border,
     borderRadius: 14,
     maxHeight: '70%',
     padding: 12,
+    paddingVertical: 30,
   },
   searchInput: {
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     borderRadius: 10,
     padding: 12,
     marginBottom: 10,
+    backgroundColor: colors.card,
+    color: colors.textPrimary,
   },
   option: {
     paddingVertical: 14,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
   },
   optionText: {
     fontSize: 15,
+    color: colors.textPrimary,
   },
   empty: {
     textAlign: 'center',
     padding: 20,
-    color: '#6B7280',
+    color: colors.textSecondary,
   },
   cancelBtn: {
-    marginTop: 10,
+    marginTop: 20,
     alignSelf: 'flex-end',
-  },
-  cancelText: {
-    color: '#10B981',
-    fontWeight: '700',
+    width: '40%',
+    paddingVertical: 8,
+    borderRadius: 8,
   },
 });

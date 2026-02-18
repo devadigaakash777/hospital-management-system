@@ -12,10 +12,18 @@ const StatusFilterBar: React.FC<Props> = ({ onFilterChange }) => {
 
   const buttons = [
     { key: 'all', label: 'All (150)', icon: 'view-grid' },
-    { key: 'appointments', label: 'Total Appointments (120)', icon: 'calendar-multiple' },
+    {
+      key: 'appointments',
+      label: 'Total Appointments (120)',
+      icon: 'calendar-multiple',
+    },
     { key: 'admitted', label: 'Admitted (80)', icon: 'bed-outline' },
     { key: 'confirmed', label: 'Confirmed (10)', icon: 'check-circle-outline' },
-    { key: 'completed', label: 'Completed (10)', icon: 'clipboard-check-outline' },
+    {
+      key: 'completed',
+      label: 'Completed (10)',
+      icon: 'clipboard-check-outline',
+    },
     { key: 'cancelled', label: 'Cancelled (20)', icon: 'close-circle-outline' },
   ];
 
@@ -30,18 +38,22 @@ const StatusFilterBar: React.FC<Props> = ({ onFilterChange }) => {
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.container}
     >
-      {buttons.map(btn => (
+      {buttons.map((btn) => (
         <AppButton
           key={btn.key}
           iconFamily="MaterialCommunityIcons"
           iconName={btn.icon}
           text={btn.label}
           onPress={() => handlePress(btn.key)}
-          color={activeStatus === btn.key ? colors.textPrimary : colors.textSecondary}
+          color={
+            activeStatus === btn.key ? colors.textPrimary : colors.textSecondary
+          }
           backgroundColor={
             activeStatus === btn.key ? colors.primary : colors.surface
           }
-          borderColor={activeStatus === btn.key ? colors.primary : colors.border}
+          borderColor={
+            activeStatus === btn.key ? colors.primary : colors.border
+          }
         />
       ))}
     </ScrollView>

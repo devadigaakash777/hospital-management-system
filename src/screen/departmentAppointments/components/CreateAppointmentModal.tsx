@@ -13,8 +13,8 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-import SearchablePicker from '../../../components/layout/SearchablePicker';
+import { colors } from '../../../theme';
+import {SearchablePicker, BaseModal} from '../../../components';
 
 /* ================= PROPS ================= */
 
@@ -45,12 +45,9 @@ const timeSlots = [
   '11:00 AM - 11:30 AM',
 ];
 
-const EMERALD = '#10B981';
-
 /* ================= COMPONENT ================= */
 
 const CreateAppointmentModal = ({ visible, onClose }: Props) => {
-  /* ---------- STATES ---------- */
   const [healthPkg, setHealthPkg] = useState(false);
   const [vip, setVip] = useState(false);
 
@@ -60,10 +57,8 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
 
-  /* ---------- CONFIRM CLOSE ---------- */
   const confirmClose = () => {
     Alert.alert(
       'Discard changes?',
@@ -75,7 +70,6 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
     );
   };
 
-  /* ---------- DATE HANDLER ---------- */
   const onDateChange = (e: DateTimePickerEvent, date?: Date) => {
     setShowDatePicker(false);
     if (e.type === 'set' && date) {
@@ -85,35 +79,30 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
   };
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.overlay}>
-        <View style={styles.modal}>
-          {/* ---------- HEADER ---------- */}
-          <View style={styles.header}>
-            <View>
-              <Text style={styles.title}>Create New Appointment</Text>
-              <Text style={styles.subtitle}>
-                Manually create an appointment for a patient
-              </Text>
-            </View>
-
-            <TouchableOpacity onPress={confirmClose}>
-              <Ionicons name="close" size={22} color="#374151" />
-            </TouchableOpacity>
-          </View>
-
-          {/* ---------- CONTENT ---------- */}
-          <ScrollView contentContainerStyle={styles.content}>
-            <TextInput style={styles.input} placeholder="First Name" />
-            <TextInput style={styles.input} placeholder="Last Name (Optional)" />
+    <BaseModal title="Create New Appointment" visible={visible} onClose={confirmClose}>
+            <TextInput
+              style={styles.input}
+              placeholder="First Name"
+              placeholderTextColor={colors.textSecondary}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Last Name (Optional)"
+              placeholderTextColor={colors.textSecondary}
+            />
             <TextInput
               style={styles.input}
               placeholder="Phone Number"
+              placeholderTextColor={colors.textSecondary}
               keyboardType="phone-pad"
             />
-            <TextInput style={styles.input} placeholder="Email (Optional)" />
+            <TextInput
+              style={styles.input}
+              placeholder="Email (Optional)"
+              placeholderTextColor={colors.textSecondary}
+            />
 
-            {/* ---------- CHECKBOXES ---------- */}
+            {/* CHECKBOXES */}
             <Checkbox
               label="Health Package Appointment"
               value={healthPkg}
@@ -139,7 +128,7 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
               onChange={() => setVip(!vip)}
             />
 
-            {/* ---------- DEPARTMENT ---------- */}
+            {/* DEPARTMENT */}
             <SearchablePicker
               label="Department"
               value={department}
@@ -151,7 +140,7 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
               }}
             />
 
-            {/* ---------- DOCTOR ---------- */}
+            {/* DOCTOR */}
             {department && (
               <SearchablePicker
                 label="Doctor"
@@ -162,7 +151,7 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
               />
             )}
 
-            {/* ---------- DATE ---------- */}
+            {/* DATE */}
             {doctor && (
               <>
                 <Text style={styles.label}>Preferred Date</Text>
@@ -170,10 +159,8 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
                   style={styles.dropdown}
                   onPress={() => setShowDatePicker(true)}
                 >
-                  <Text>
-                    {selectedDate
-                      ? selectedDate.toDateString()
-                      : 'Select Date'}
+                  <Text style={styles.dropdownText}>
+                    {selectedDate ? selectedDate.toDateString() : 'Select Date'}
                   </Text>
                 </TouchableOpacity>
               </>
@@ -188,12 +175,12 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
               />
             )}
 
-            {/* ---------- TIME SLOT ---------- */}
+            {/* SLOT */}
             {selectedDate && (
               <>
                 <Text style={styles.label}>Time Slot</Text>
                 <View style={styles.slotGrid}>
-                  {timeSlots.map(slot => (
+                  {timeSlots.map((slot) => (
                     <TouchableOpacity
                       key={slot}
                       style={[
@@ -219,11 +206,11 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
             <TextInput
               style={styles.textarea}
               placeholder="Message (Optional)"
+              placeholderTextColor={colors.textSecondary}
               multiline
             />
-          </ScrollView>
 
-          {/* ---------- STICKY FOOTER ---------- */}
+          {/* FOOTER */}
           <View style={styles.footer}>
             <TouchableOpacity style={styles.cancelBtn} onPress={confirmClose}>
               <Text style={styles.cancelText}>Cancel</Text>
@@ -233,15 +220,13 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
               <Text style={styles.createText}>Create Appointment</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </View>
-    </Modal>
+    </BaseModal>
   );
 };
 
 export default CreateAppointmentModal;
 
-/* ================= SMALL COMPONENT ================= */
+/* ================= CHECKBOX ================= */
 
 const Checkbox = ({
   label,
@@ -254,9 +239,11 @@ const Checkbox = ({
 }) => (
   <TouchableOpacity style={styles.checkboxRow} onPress={onChange}>
     <View style={[styles.checkboxBox, value && styles.checkboxChecked]}>
-      {value && <Ionicons name="checkmark" size={14} color="#fff" />}
+      {value && (
+        <Ionicons name="checkmark" size={14} color={colors.textPrimary} />
+      )}
     </View>
-    <Text>{label}</Text>
+    <Text style={styles.checkboxLabel}>{label}</Text>
   </TouchableOpacity>
 );
 
@@ -265,130 +252,146 @@ const Checkbox = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.45)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
   },
   modal: {
     width: '94%',
     maxHeight: '94%',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 16,
     overflow: 'hidden',
   },
   header: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   title: {
     fontSize: 18,
     fontWeight: '700',
+    color: colors.textPrimary,
   },
   subtitle: {
     fontSize: 12,
-    color: '#6B7280',
+    color: colors.textSecondary,
   },
   content: {
     padding: 16,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     borderRadius: 10,
     padding: 12,
     marginBottom: 10,
+    backgroundColor: colors.card,
+    color: colors.textPrimary,
   },
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 6,
-    gap: 10,
   },
   checkboxBox: {
     width: 20,
     height: 20,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#9CA3AF',
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 10,
   },
   checkboxChecked: {
-    backgroundColor: EMERALD,
-    borderColor: EMERALD,
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  checkboxLabel: {
+    color: colors.textPrimary,
   },
   label: {
     fontWeight: '600',
     marginTop: 12,
     marginBottom: 6,
+    color: colors.textPrimary,
   },
   dropdown: {
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     borderRadius: 10,
     padding: 12,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.card,
+  },
+  dropdownText: {
+    color: colors.textPrimary,
   },
   slotGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    marginBottom: 10,
   },
   slot: {
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: colors.border,
+    marginRight: 10,
+    marginBottom: 10,
   },
   slotActive: {
-    backgroundColor: EMERALD,
-    borderColor: EMERALD,
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   slotText: {
     fontSize: 12,
+    color: colors.textSecondary,
   },
   slotTextActive: {
-    color: '#fff',
+    color: colors.textPrimary,
     fontWeight: '600',
   },
   textarea: {
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     borderRadius: 10,
     padding: 12,
     height: 80,
     marginTop: 12,
+    backgroundColor: colors.card,
+    color: colors.textPrimary,
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 16,
+    marginBottom: 16,
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
-    backgroundColor: '#fff',
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
   },
   cancelBtn: {
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 10,
-    backgroundColor: '#ECFDF5',
+    backgroundColor: colors.border,
   },
   cancelText: {
-    color: EMERALD,
+    color: colors.textPrimary,
     fontWeight: '700',
   },
   createBtn: {
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 10,
-    backgroundColor: EMERALD,
+    backgroundColor: colors.primary,
   },
   createText: {
-    color: '#fff',
+    color: colors.textPrimary,
     fontWeight: '700',
   },
 });

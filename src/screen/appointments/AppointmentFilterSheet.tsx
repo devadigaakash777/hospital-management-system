@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
     padding: 16,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
@@ -96,13 +96,13 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   input: {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: colors.card,
     borderRadius: 8,
     padding: 12,
     marginBottom: 14,
   },
   pickerContainer: {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: colors.card,
     borderRadius: 8,
     marginBottom: 14,
   },
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   },
   cancel: {
     flex: 1,
-    backgroundColor: '#ccc',
+    backgroundColor: colors.border,
     padding: 12,
     borderRadius: 8,
     marginRight: 8,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnText: {
-    color: '#fff',
+    color: colors.textPrimary,
     fontWeight: '600',
   },
 });
