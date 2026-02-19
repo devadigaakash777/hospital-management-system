@@ -14,7 +14,7 @@ import { colors } from '../../theme';
 
 interface InputFieldProps extends TextInputProps {
   label?: string;
-  labelColor?: string,
+  labelColor?: string;
   isPassword?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
 }
@@ -35,7 +35,9 @@ const InputField: React.FC<InputFieldProps> = ({
 
   return (
     <View style={[styles.container, containerStyle]}>
-      {label && <Text style={[styles.label, {color: labelColor}]}>{label}</Text>}
+      {label && (
+        <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
+      )}
 
       <View style={styles.inputWrapper}>
         <TextInput

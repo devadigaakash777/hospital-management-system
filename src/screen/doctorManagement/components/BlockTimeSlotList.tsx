@@ -7,18 +7,18 @@ interface Props {
   doctorID: string;
 }
 
-const BlockedDates: string[] = [
-  '11/29/2025',
-  '12/23/2025',
-  '12/03/2025',
-  '11/23/2025',
-  '11/24/2025',
-  '12/25/2025',
-  '12/06/2025',
-  '11/30/2025',
+const BlockedTime: string[] = [
+  '11/29/2025 * 10:00:00 - 11:00:00',
+  '12/23/2025 * 11:00:00 - 12:00:00',
+  '12/03/2025 * 10:00:00 - 01:00:00',
+  '11/23/2025 * 11:00:00 - 11:30:00',
+  '11/24/2025 * 06:00:00 - 07:00:00',
+  '12/25/2025 * 08:00:00 - 09:00:00',
+  '12/06/2025 * 20:30:00 - 21:00:00',
+  '11/30/2025 * 19:00:00 - 20:00:00',
 ];
 
-const BlockDatesList: React.FC<Props> = ({ doctorID }) => {
+const BlockTimeSlotList: React.FC<Props> = ({ doctorID }) => {
   const renderItem = ({ item }: { item: string }) => (
     <ListItem
       title={item}
@@ -39,7 +39,7 @@ const BlockDatesList: React.FC<Props> = ({ doctorID }) => {
       <Text style={styles.title}>Blocked Dates of {doctorID}</Text>
 
       <FlatList
-        data={BlockedDates}
+        data={BlockedTime}
         keyExtractor={(item, index) => item + index}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
@@ -48,7 +48,7 @@ const BlockDatesList: React.FC<Props> = ({ doctorID }) => {
   );
 };
 
-export default BlockDatesList;
+export default BlockTimeSlotList;
 
 const styles = StyleSheet.create({
   card: {

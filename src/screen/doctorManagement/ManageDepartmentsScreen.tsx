@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-  Alert,
-} from 'react-native';
+import { View, StyleSheet, FlatList, Alert } from 'react-native';
 import { colors } from '../../theme';
 import { AppButton, ListItem } from '../../components';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AddDepartmentModal from './components/AddDepartmentModal';
 
@@ -53,7 +46,7 @@ export default function ManageDepartmentsScreen() {
       title={item.name}
     >
       <AppButton
-        containerStyle={{ paddingHorizontal: 0 }}
+        containerStyle={styles.xButton}
         color={colors.textPrimary}
         iconFamily="FontAwesome6"
         iconName="xmark"
@@ -112,4 +105,5 @@ const styles = StyleSheet.create({
   footer: {
     paddingTop: 12,
   },
+  xButton: { paddingHorizontal: 0 },
 });

@@ -15,17 +15,14 @@ interface Props {
   onToggle: (week: string, day: string) => void;
 }
 
-const SpecificWeekSection: React.FC<Props> = ({
-  selected,
-  onToggle,
-}) => {
+const SpecificWeekSection: React.FC<Props> = ({ selected, onToggle }) => {
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View>
         {/* Header */}
         <View style={styles.row}>
           <View style={styles.weekHeader} />
-          {days.map(day => (
+          {days.map((day) => (
             <Text key={day} style={styles.dayHeader}>
               {day}
             </Text>
@@ -33,11 +30,11 @@ const SpecificWeekSection: React.FC<Props> = ({
         </View>
 
         {/* Rows */}
-        {weeks.map(week => (
+        {weeks.map((week) => (
           <View key={week} style={styles.row}>
             <Text style={styles.weekLabel}>{week}</Text>
 
-            {days.map(day => (
+            {days.map((day) => (
               <View key={day} style={styles.cell}>
                 <AppCheckbox
                   value={selected[week]?.includes(day) || false}

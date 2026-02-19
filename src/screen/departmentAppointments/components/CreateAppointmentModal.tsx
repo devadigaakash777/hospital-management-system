@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import {
-  Modal,
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
   Alert,
 } from 'react-native';
 import DateTimePicker, {
@@ -14,7 +12,7 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { colors } from '../../../theme';
-import {SearchablePicker, BaseModal} from '../../../components';
+import { SearchablePicker, BaseModal } from '../../../components';
 
 /* ================= PROPS ================= */
 
@@ -79,147 +77,151 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
   };
 
   return (
-    <BaseModal title="Create New Appointment" visible={visible} onClose={confirmClose}>
-            <TextInput
-              style={styles.input}
-              placeholder="First Name"
-              placeholderTextColor={colors.textSecondary}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Last Name (Optional)"
-              placeholderTextColor={colors.textSecondary}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Phone Number"
-              placeholderTextColor={colors.textSecondary}
-              keyboardType="phone-pad"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Email (Optional)"
-              placeholderTextColor={colors.textSecondary}
-            />
+    <BaseModal
+      title="Create New Appointment"
+      visible={visible}
+      onClose={confirmClose}
+    >
+      <TextInput
+        style={styles.input}
+        placeholder="First Name"
+        placeholderTextColor={colors.textSecondary}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Last Name (Optional)"
+        placeholderTextColor={colors.textSecondary}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Phone Number"
+        placeholderTextColor={colors.textSecondary}
+        keyboardType="phone-pad"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Email (Optional)"
+        placeholderTextColor={colors.textSecondary}
+      />
 
-            {/* CHECKBOXES */}
-            <Checkbox
-              label="Health Package Appointment"
-              value={healthPkg}
-              onChange={() => {
-                setHealthPkg(!healthPkg);
-                setSelectedPackage(null);
-              }}
-            />
+      {/* CHECKBOXES */}
+      <Checkbox
+        label="Health Package Appointment"
+        value={healthPkg}
+        onChange={() => {
+          setHealthPkg(!healthPkg);
+          setSelectedPackage(null);
+        }}
+      />
 
-            {healthPkg && (
-              <SearchablePicker
-                label="Health Package"
-                value={selectedPackage}
-                placeholder="Select Health Package"
-                options={healthPackages}
-                onSelect={setSelectedPackage}
-              />
-            )}
+      {healthPkg && (
+        <SearchablePicker
+          label="Health Package"
+          value={selectedPackage}
+          placeholder="Select Health Package"
+          options={healthPackages}
+          onSelect={setSelectedPackage}
+        />
+      )}
 
-            <Checkbox
-              label="VIP / Priority Patient"
-              value={vip}
-              onChange={() => setVip(!vip)}
-            />
+      <Checkbox
+        label="VIP / Priority Patient"
+        value={vip}
+        onChange={() => setVip(!vip)}
+      />
 
-            {/* DEPARTMENT */}
-            <SearchablePicker
-              label="Department"
-              value={department}
-              placeholder="Select Department"
-              options={Object.keys(departments)}
-              onSelect={(value) => {
-                setDepartment(value as DepartmentKey);
-                setDoctor(null);
-              }}
-            />
+      {/* DEPARTMENT */}
+      <SearchablePicker
+        label="Department"
+        value={department}
+        placeholder="Select Department"
+        options={Object.keys(departments)}
+        onSelect={(value) => {
+          setDepartment(value as DepartmentKey);
+          setDoctor(null);
+        }}
+      />
 
-            {/* DOCTOR */}
-            {department && (
-              <SearchablePicker
-                label="Doctor"
-                value={doctor}
-                placeholder="Select Doctor"
-                options={departments[department]}
-                onSelect={setDoctor}
-              />
-            )}
+      {/* DOCTOR */}
+      {department && (
+        <SearchablePicker
+          label="Doctor"
+          value={doctor}
+          placeholder="Select Doctor"
+          options={departments[department]}
+          onSelect={setDoctor}
+        />
+      )}
 
-            {/* DATE */}
-            {doctor && (
-              <>
-                <Text style={styles.label}>Preferred Date</Text>
-                <TouchableOpacity
-                  style={styles.dropdown}
-                  onPress={() => setShowDatePicker(true)}
+      {/* DATE */}
+      {doctor && (
+        <>
+          <Text style={styles.label}>Preferred Date</Text>
+          <TouchableOpacity
+            style={styles.dropdown}
+            onPress={() => setShowDatePicker(true)}
+          >
+            <Text style={styles.dropdownText}>
+              {selectedDate ? selectedDate.toDateString() : 'Select Date'}
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
+
+      {showDatePicker && (
+        <DateTimePicker
+          value={selectedDate || new Date()}
+          mode="date"
+          minimumDate={new Date()}
+          onChange={onDateChange}
+        />
+      )}
+
+      {/* SLOT */}
+      {selectedDate && (
+        <>
+          <Text style={styles.label}>Time Slot</Text>
+          <View style={styles.slotGrid}>
+            {timeSlots.map((slot) => (
+              <TouchableOpacity
+                key={slot}
+                style={[
+                  styles.slot,
+                  selectedSlot === slot && styles.slotActive,
+                ]}
+                onPress={() => setSelectedSlot(slot)}
+              >
+                <Text
+                  style={[
+                    styles.slotText,
+                    selectedSlot === slot && styles.slotTextActive,
+                  ]}
                 >
-                  <Text style={styles.dropdownText}>
-                    {selectedDate ? selectedDate.toDateString() : 'Select Date'}
-                  </Text>
-                </TouchableOpacity>
-              </>
-            )}
-
-            {showDatePicker && (
-              <DateTimePicker
-                value={selectedDate || new Date()}
-                mode="date"
-                minimumDate={new Date()}
-                onChange={onDateChange}
-              />
-            )}
-
-            {/* SLOT */}
-            {selectedDate && (
-              <>
-                <Text style={styles.label}>Time Slot</Text>
-                <View style={styles.slotGrid}>
-                  {timeSlots.map((slot) => (
-                    <TouchableOpacity
-                      key={slot}
-                      style={[
-                        styles.slot,
-                        selectedSlot === slot && styles.slotActive,
-                      ]}
-                      onPress={() => setSelectedSlot(slot)}
-                    >
-                      <Text
-                        style={[
-                          styles.slotText,
-                          selectedSlot === slot && styles.slotTextActive,
-                        ]}
-                      >
-                        {slot}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </>
-            )}
-
-            <TextInput
-              style={styles.textarea}
-              placeholder="Message (Optional)"
-              placeholderTextColor={colors.textSecondary}
-              multiline
-            />
-
-          {/* FOOTER */}
-          <View style={styles.footer}>
-            <TouchableOpacity style={styles.cancelBtn} onPress={confirmClose}>
-              <Text style={styles.cancelText}>Cancel</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.createBtn}>
-              <Text style={styles.createText}>Create Appointment</Text>
-            </TouchableOpacity>
+                  {slot}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
+        </>
+      )}
+
+      <TextInput
+        style={styles.textarea}
+        placeholder="Message (Optional)"
+        placeholderTextColor={colors.textSecondary}
+        multiline
+      />
+
+      {/* FOOTER */}
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.cancelBtn} onPress={confirmClose}>
+          <Text style={styles.cancelText}>Cancel</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.createBtn}>
+          <Text style={styles.createText}>Create Appointment</Text>
+        </TouchableOpacity>
+      </View>
     </BaseModal>
   );
 };

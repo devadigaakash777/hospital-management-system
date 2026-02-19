@@ -8,3 +8,5 @@ export { default as ListItem } from './ui/ListItem';
 export { default as BaseModal } from './ui/BaseModal';
 export { default as SearchablePicker } from './layout/SearchablePicker';
 export { default as AppCheckbox } from './ui/AppCheckbox';
+export { default as InfoRow } from './ui/InfoRow';
+export { default as SearchInput } from './ui/SearchInput';

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
 import { colors } from '../../../theme';
 import { InputField, AppButton } from '../../../components';
 
@@ -18,7 +20,7 @@ const BlockDatesCard: React.FC<Props> = ({ onBlock }) => {
   const [reason, setReason] = useState('');
   const [pickerType, setPickerType] = useState<'from' | 'to' | null>(null);
 
-  const handleDateChange = (event: any, date?: Date) => {
+  const handleDateChange = (event: DateTimePickerEvent, date?: Date) => {
     setPickerType(null);
 
     if (event.type === 'dismissed' || !date) return;
@@ -48,7 +50,7 @@ const BlockDatesCard: React.FC<Props> = ({ onBlock }) => {
       reason,
     };
 
-    console.log('Blocked Dates:', payload);
+    // console.log('Blocked Dates:', payload);
 
     onBlock?.(payload);
 
@@ -97,7 +99,7 @@ const BlockDatesCard: React.FC<Props> = ({ onBlock }) => {
         iconFamily="MaterialCommunityIcons"
         backgroundColor={colors.primary}
         color="#fff"
-        containerStyle={{ marginTop: 10 }}
+        containerStyle={styles.dateBlockBtn}
       />
 
       {/* Date Picker */}
@@ -152,4 +154,5 @@ const styles = StyleSheet.create({
   dateText: {
     color: colors.textPrimary,
   },
+  dateBlockBtn: { marginTop: 10 },
 });

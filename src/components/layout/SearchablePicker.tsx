@@ -43,7 +43,9 @@ const SearchablePicker: React.FC<SearchablePickerProps> = ({
 
   return (
     <>
-      {label && <Text style={[styles.label, {color: labelColor}]}>{label}</Text>}
+      {label && (
+        <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
+      )}
 
       {/* Picker Input */}
       <TouchableOpacity

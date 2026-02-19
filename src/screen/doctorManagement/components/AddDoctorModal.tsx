@@ -1,201 +1,104 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {
-  BaseModal,
-  InputField,
-  AppButton,
-  SearchablePicker,
-} from '../../../components';
+import { Alert, View, StyleSheet } from 'react-native';
+import { BaseModal, AppButton } from '../../../components';
 import { colors } from '../../../theme';
-
-import RegularDaysSection from './RegularDaysSection';
-import SpecificWeekSection from './SpecificWeekSection';
+import DoctorForm from './DoctorForm';
 import { useDoctorSchedule } from './useDoctorSchedule';
-
-const departments = ['Cardiology', 'Dermatology', 'General Medicine'];
-
-type SelectionState = {
-  [week: string]: string[];
-};
+import { DoctorFormValues, WeekSelection } from '../../../types/doctor.types';
+import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { validateDoctorForm } from './doctor.validation';
 
 interface Props {
   visible: boolean;
   onClose: () => void;
 }
 
+const departments = ['Cardiology', 'Dermatology', 'General Medicine'];
+
 const AddDoctorModal: React.FC<Props> = ({ visible, onClose }) => {
-  const [doctorName, setDoctorName] = useState('');
-  const [department, setDepartment] = useState<string | null>(null);
-  const [patientsPerHour, setPatientsPerHour] = useState('');
-  const [advanceBookingDays, setAdvanceBookingDays] = useState('');
-  const [activeTab, setActiveTab] = useState<'regular' | 'specific'>('regular');
+  const { showTimePicker, setShowTimePicker } = useDoctorSchedule();
 
-  // 🔥 Specific Week State (Moved to Parent)
-  const [specificWeekSelection, setSpecificWeekSelection] =
-    useState<SelectionState>({});
+  const [values, setValues] = useState<DoctorFormValues>({
+    doctorName: '',
+    department: null,
+    opdFrom: null,
+    opdTo: null,
+    visitingType: 'regular',
+    regularDays: [],
+    specificWeeks: {} as WeekSelection,
+    patientsPerHour: '',
+    advanceBookingDays: '',
+  });
 
-  const schedule = useDoctorSchedule();
+  const handleChange = <K extends keyof DoctorFormValues>(
+    key: K,
+    value: DoctorFormValues[K],
+  ) => {
+    setValues((prev) => ({ ...prev, [key]: value }));
+  };
 
-  const formatTime = (date: Date | null) =>
-    date
-      ? date.toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-        })
-      : 'Select Time';
+  const handleTimeChange = (
+    type: 'from' | 'to',
+    event: DateTimePickerEvent,
+    date?: Date,
+  ): void => {
+    setShowTimePicker(null);
 
-  const toggleSpecificCell = (week: string, day: string) => {
-    setSpecificWeekSelection(prev => {
-      const weekDays = prev[week] || [];
+    if (event.type === 'dismissed' || !date) return;
 
-      if (weekDays.includes(day)) {
-        return {
-          ...prev,
-          [week]: weekDays.filter(d => d !== day),
-        };
+    if (type === 'from') {
+      if (values.opdTo && date >= values.opdTo) {
+        Alert.alert('Invalid Time', '"From" must be earlier than "To"');
+        return;
+      }
+      handleChange('opdFrom', date);
+    }
+
+    if (type === 'to') {
+      if (!values.opdFrom) {
+        Alert.alert('Select From Time First');
+        return;
       }
 
-      return {
-        ...prev,
-        [week]: [...weekDays, day],
-      };
-    });
+      if (date <= values.opdFrom) {
+        Alert.alert('Invalid Time', '"To" must be later than "From"');
+        return;
+      }
+
+      handleChange('opdTo', date);
+    }
   };
 
   const handleSubmit = () => {
-    const payload = {
-      doctorName,
-      department,
-      opdFrom: schedule.opdFrom,
-      opdTo: schedule.opdTo,
-      visitingType: activeTab,
-      regularDays:
-        activeTab === 'regular' ? schedule.selectedDays : null,
-      specificWeeks:
-        activeTab === 'specific'
-          ? specificWeekSelection
-          : null,
-      patientsPerHour: Number(patientsPerHour),
-      advanceBookingDays: Number(advanceBookingDays),
-    };
+    const error = validateDoctorForm(values);
+    if (error) {
+      Alert.alert('Validation Error', error);
+      return;
+    }
+    // const payload = {
+    //   ...values,
+    //   regularDays:
+    //     values.visitingType === 'regular' ? values.regularDays : null,
+    //   specificWeeks:
+    //     values.visitingType === 'specific' ? values.specificWeeks : null,
+    //   patientsPerHour: Number(values.patientsPerHour),
+    //   advanceBookingDays: Number(values.advanceBookingDays),
+    // };
 
-    console.log('FINAL PAYLOAD:', payload);
-    Alert.alert('Doctor Added (Check Console)');
-  }
+    // console.log('FINAL PAYLOAD:', payload);
+    // Alert.alert('Doctor Added (Check Console)');
+    onClose();
+  };
 
   return (
     <BaseModal visible={visible} title="Add Doctor" onClose={onClose}>
-      <InputField
-        label="Doctor Name"
-        containerStyle={{marginBottom: 0}}
-        value={doctorName}
-        onChangeText={setDoctorName}
-      />
-
-      <SearchablePicker
-        label="Department"
-        labelColor={colors.textPrimary}
-        value={department}
-        options={departments}
-        onSelect={setDepartment}
-      />
-
-      {/* OPD Timing */}
-      <Text style={styles.sectionTitle}>OPD Timing</Text>
-
-      <View style={styles.row}>
-        <TouchableOpacity
-          style={styles.box}
-          onPress={() => schedule.setShowTimePicker('from')}
-        >
-          <Text style={styles.text}>
-            {formatTime(schedule.opdFrom)}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.box}
-          onPress={() => schedule.setShowTimePicker('to')}
-        >
-          <Text style={styles.text}>
-            {formatTime(schedule.opdTo)}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {schedule.showTimePicker && (
-        <DateTimePicker
-          mode="time"
-          value={new Date()}
-          onChange={(event, date) =>
-            schedule.handleTimeChange(
-              schedule.showTimePicker!,
-              event,
-              date,
-            )
-          }
-        />
-      )}
-
-      {/* Visiting Days */}
-      <Text style={styles.sectionTitle}>Visiting Days</Text>
-
-      <View style={styles.tabRow}>
-        <TouchableOpacity onPress={() => setActiveTab('regular')}>
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === 'regular' && styles.activeTab,
-            ]}
-          >
-            Regular Days
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => setActiveTab('specific')}>
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === 'specific' && styles.activeTab,
-            ]}
-          >
-            Specific Week
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={{ marginBottom: 20 }}>
-        {activeTab === 'regular' && (
-          <RegularDaysSection {...schedule} />
-        )}
-
-        {activeTab === 'specific' && (
-          <SpecificWeekSection
-            selected={specificWeekSelection}
-            onToggle={toggleSpecificCell}
-          />
-        )}
-      </View>
-
-      <InputField
-        label="Patients Per Hour"
-        keyboardType="numeric"
-        value={patientsPerHour}
-        onChangeText={setPatientsPerHour}
-      />
-
-      <InputField
-        label="Advance Booking Days"
-        keyboardType="numeric"
-        value={advanceBookingDays}
-        onChangeText={setAdvanceBookingDays}
+      <DoctorForm
+        values={values}
+        departments={departments}
+        onChange={handleChange}
+        showTimePicker={showTimePicker}
+        onOpenTimePicker={setShowTimePicker}
+        onTimeChange={handleTimeChange}
       />
 
       <View style={styles.buttonRow}>
@@ -204,7 +107,6 @@ const AddDoctorModal: React.FC<Props> = ({ visible, onClose }) => {
           onPress={onClose}
           backgroundColor={colors.border}
         />
-
         <AppButton
           text="Add Doctor"
           onPress={handleSubmit}
@@ -218,41 +120,6 @@ const AddDoctorModal: React.FC<Props> = ({ visible, onClose }) => {
 export default AddDoctorModal;
 
 const styles = StyleSheet.create({
-  sectionTitle: {
-    marginTop: 16,
-    marginBottom: 8,
-    fontWeight: '700',
-    color: colors.textPrimary,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  box: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 8,
-    padding: 12,
-    backgroundColor: colors.card,
-  },
-  text: {
-    color: colors.textPrimary,
-  },
-  tabRow: {
-    flexDirection: 'row',
-    gap: 20,
-    marginBottom: 10,
-  },
-  tabText: {
-    color: colors.textSecondary,
-    paddingBottom: 4,
-  },
-  activeTab: {
-    color: colors.primary,
-    borderBottomWidth: 2,
-    borderBottomColor: colors.primary,
-  },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',

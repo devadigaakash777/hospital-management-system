@@ -3,12 +3,7 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useAuth } from '../context/AuthContext';
-import {
-  InputField,
-  AppHeader,
-  SectionHeader,
-  AppButton,
-} from '../components';
+import { InputField, AppHeader, SectionHeader, AppButton } from '../components';
 import { colors } from '../theme';
 
 export default function LoginScreen() {
