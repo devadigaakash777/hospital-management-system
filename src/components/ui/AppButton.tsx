@@ -5,7 +5,9 @@ import {
   StyleSheet,
   View,
   ViewStyle,
+  StyleProp,
 } from 'react-native';
+import { colors } from '../../theme';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -20,30 +22,34 @@ type IconFamily =
   | 'AntDesign'
   | 'FontAwesome6';
 
-interface IconButtonProps {
-  text: string;
+interface AppButtonProps {
   onPress: () => void;
-  iconName: string;
+  text?: string;
+  iconName?: string;
   iconFamily?: IconFamily;
   iconSize?: number;
   disabled?: boolean;
   color?: string;
   backgroundColor?: string;
   borderColor?: string;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
-const IconButton: React.FC<IconButtonProps> = ({
+const AppButton: React.FC<AppButtonProps> = ({
   text,
   onPress,
   iconName,
   iconFamily = 'MaterialCommunityIcons',
   iconSize = 20,
   disabled = false,
-  color = '#fff',
+  color = colors.textPrimary,
   backgroundColor,
   borderColor,
+  containerStyle,
 }) => {
   const renderIcon = () => {
+    if (!iconName) return null;
+
     const props = {
       name: iconName,
       size: iconSize,
@@ -74,20 +80,25 @@ const IconButton: React.FC<IconButtonProps> = ({
 
   return (
     <TouchableOpacity
-      style={[styles.button, buttonStyle, disabled && styles.disabled]}
+      style={[
+        styles.button,
+        buttonStyle,
+        containerStyle,
+        disabled && styles.disabled,
+      ]}
       onPress={onPress}
       activeOpacity={0.8}
       disabled={disabled}
     >
       <View style={styles.content}>
-        {renderIcon()}
-        <Text style={[styles.text, { color }]}>{text}</Text>
+        {iconName && <View style={styles.icon}>{renderIcon()}</View>}
+        {text && <Text style={[styles.text, { color }]}>{text}</Text>}
       </View>
     </TouchableOpacity>
   );
 };
 
-export default IconButton;
+export default AppButton;
 
 const styles = StyleSheet.create({
   button: {
@@ -102,7 +113,9 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+  },
+  icon: {
+    marginRight: 6,
   },
   text: {
     fontSize: 16,

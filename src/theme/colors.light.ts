@@ -10,6 +10,8 @@ export const lightColors = {
   textPrimary: '#121212',
   textSecondary: '#535353',
 
+  overlay: 'rgba(255, 255, 255, 0.9)',
+
   success: '#1DB954',
   error: '#D32F2F',
 };

@@ -25,7 +25,7 @@ interface ListItemProps {
   subtitleColor?: string;
   iconColor?: string;
   containerStyle?: ViewStyle;
-  children?: React.ReactNode; // 👈 added
+  children?: React.ReactNode;
 }
 
 const ListItem: React.FC<ListItemProps> = ({
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   rightSection: {
+    flexDirection: 'row',
     marginLeft: 12,
     alignItems: 'center',
     justifyContent: 'center',

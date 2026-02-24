@@ -5,6 +5,5 @@ import DrawerNavigator from './DrawerNavigator';
 
 export default function RootNavigator() {
   const { isLoggedIn } = useAuth();
-
   return isLoggedIn ? <DrawerNavigator /> : <LoginScreen />;
 }

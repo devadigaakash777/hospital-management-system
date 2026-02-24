@@ -1,14 +1,20 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Linking, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { FlatList } from 'react-native-gesture-handler';
+
 import { colors } from '../../theme';
+import { AppButton } from '../../components';
+
 import StatusFilterBar from './components/StatusFilterBar';
 import AppointmentCard from './components/AppointmentCard';
-import { FlatList } from 'react-native-gesture-handler';
+import CreateAppointmentModal from './components/CreateAppointmentModal';
 import FilterHeader from './components/FilterHeader';
+import AppointmentFilterSheet from '../appointments/AppointmentFilterSheet';
+
 import { ListRenderItem } from 'react-native';
-import { Linking, Alert } from 'react-native';
-import { AppButton } from '../../components';
+
+/* ---------------- Types ---------------- */
 
 type Appointment = {
   id: string;
@@ -24,6 +30,8 @@ type Appointment = {
   patientMessage: string;
   status: 'confirmed' | 'cancelled' | 'admitted';
 };
+
+/* ---------------- Dummy Data ---------------- */
 
 const APPOINTMENTS_DATA: Appointment[] = [
   {
@@ -105,11 +113,13 @@ const renderItem: ListRenderItem<Appointment> = ({ item }) => (
 
 const DepartmentAppointmentsScreen = () => {
   const handleFilterChange = (status: string) => {
-    Alert.alert('Filter Changed', `Selected status: ${status}`);
+    Alert.alert('filer', status);
     // In future:
     // fetchAppointments(status)
     // filter local data
   };
+  const [filterVisible, setFilterVisible] = useState(false);
+  const [createModalVisible, setCreateModalVisible] = useState(false);
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safeArea}>
@@ -118,37 +128,44 @@ const DepartmentAppointmentsScreen = () => {
           data={APPOINTMENTS_DATA}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listContent}
           ListHeaderComponent={
             <View>
               <AppButton
                 iconFamily="Ionicons"
                 iconName="add-circle-outline"
                 text="Add Appointment"
-                onPress={() =>
-                  Alert.alert(
-                    'Add Appointment',
-                    'Add appointment functionality coming soon!',
-                  )
-                }
+                onPress={() => setCreateModalVisible(true)}
                 backgroundColor={colors.primary}
                 color={colors.textPrimary}
               />
               <StatusFilterBar onFilterChange={handleFilterChange} />
               <FilterHeader
                 onDayChange={(day) =>
-                  Alert.alert('Day Changed', `Selected day: ${day}`)
+                  Alert.alert('Day Filter', `Selected day: ${day}`)
                 }
+                onAdvancedFilterPress={() => setFilterVisible(true)}
               />
             </View>
           }
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.listContent}
+        />
+        <AppointmentFilterSheet
+          visible={filterVisible}
+          onClose={() => setFilterVisible(false)}
+        />
+        <CreateAppointmentModal
+          visible={createModalVisible}
+          onClose={() => setCreateModalVisible(false)}
         />
       </View>
     </SafeAreaView>
   );
 };
 
+export default DepartmentAppointmentsScreen;
+
+/* ---------------- Styles ---------------- */
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -162,5 +179,3 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 });
-
-export default DepartmentAppointmentsScreen;
