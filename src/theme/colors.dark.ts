@@ -9,6 +9,7 @@ export const darkColors = {
 
   textPrimary: '#FFFFFF',
   textSecondary: '#B3B3B3',
+  overlay: 'rgba(0,0,0,0.7)',
 
   success: '#1DB954',
   error: '#E22134',

@@ -1,91 +1,206 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-
-View,
-Text,
-ScrollView,
-TouchableOpacity,
-StyleSheet,
-Alert,
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
 } from 'react-native';
 
-export default function HealthPackageScreen() {
-const healthPackages = [
-    { id: 1, name: 'Basic Checkup', price: '$50' },
-    { id: 2, name: 'Full Health Screening', price: '$150' },
-    { id: 3, name: 'Premium Package', price: '$300' },
+import IconButton from '../../components/ui/AppButton';
+import { colors } from '../../theme';
+
+import CreateHealthPackageModal from './components/CreateHealthPackageModal';
+import { HealthPackage } from './types';
+
+/* ======================
+   CONSTANT PACKAGE DATA
+   ====================== */
+const HEALTH_PACKAGES: HealthPackage[] = [
+  {
+    id: '1',
+    name: 'Abroad Health Checkup',
+    description:
+      'Comprehensive medical examination for international travel requirements. Includes complete medical tests and certification.',
+    opdTime: '09:00 AM - 05:00 PM',
+    patientsPerHour: 3,
+    visitingDays:
+      'Monday, Tuesday, Wednesday, Thursday, Friday, Saturday',
+    advanceBooking: '7 days',
+  },
+  {
+    id: '2',
+    name: 'Cardio Diabetic Evaluation',
+    description:
+      'Specialized screening for heart and diabetes-related conditions. Includes blood sugar and cardiac function tests.',
+    opdTime: '09:00 AM - 05:00 PM',
+    patientsPerHour: 4,
+    visitingDays: 'Not Set',
+    advanceBooking: '7 days',
+  },
+  {
+    id: '3',
+    name: 'Master Health Checkup',
+    description:
+      'Advanced health screening for adults including age-specific tests, cancer markers, and lifestyle counseling.',
+    opdTime: '09:00 AM - 05:00 PM',
+    patientsPerHour: 4,
+    visitingDays: 'Not Set',
+    advanceBooking: '7 days',
+  },
+  {
+    id: '4',
+    name: 'Mini Health Checkup',
+    description:
+      'Basic health screening for routine monitoring and wellness. Includes blood tests and physical examination.',
+    opdTime: '09:00 AM - 05:00 PM',
+    patientsPerHour: 4,
+    visitingDays: 'Not Set',
+    advanceBooking: '7 days',
+  },
 ];
 
-const handleBookAppointment = (packageName: string) => {
-    Alert.alert(`Booking ${packageName}`);
+const ManageHealthPackages = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [packages, setPackages] =
+    useState<HealthPackage[]>(HEALTH_PACKAGES);
+
+  const renderPackage = ({
+    item,
+  }: {
+    item: HealthPackage;
+  }) => {
+    return (
+      <View style={styles.card}>
+        <Text style={styles.packageTitle}>{item.name}</Text>
+        <Text style={styles.description}>{item.description}</Text>
+
+        <View style={styles.metaRow}>
+          <Text style={styles.metaText}>
+            OPD Timing: {item.opdTime}
+          </Text>
+          <Text style={styles.metaText}>
+            Patients/Hour: {item.patientsPerHour}
+          </Text>
+        </View>
+
+        <Text style={styles.metaText}>
+          Visiting Days: {item.visitingDays}
+        </Text>
+
+        <Text style={styles.metaText}>
+          Advance Booking: {item.advanceBooking}
+        </Text>
+      </View>
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* HEADER */}
+      <View style={styles.header}>
+        <Text style={styles.title}>Manage Health Packages</Text>
+        <Text style={styles.subtitle}>
+          Configure visiting days, OPD timings, and booking settings
+          for health packages.
+        </Text>
+
+        <IconButton
+          text="Create New Health Package"
+          iconName="plus"
+          iconFamily="Feather"
+          backgroundColor={colors.primary}
+          color={colors.textPrimary}
+          onPress={() => setShowModal(true)}
+        />
+      </View>
+
+      {/* MODAL */}
+      <CreateHealthPackageModal
+        visible={showModal}
+        onClose={() => setShowModal(false)}
+        onCreate={(data) => {
+          setPackages((prev) => [
+            ...prev,
+            {
+              id: Date.now().toString(),
+              name: data.name,
+              description: data.description,
+              opdTime: '09:00 AM - 05:00 PM',
+              patientsPerHour: 4,
+              visitingDays: 'Not Set',
+              advanceBooking: '7 days',
+            },
+          ]);
+        }}
+      />
+
+      {/* LIST */}
+      <FlatList
+        data={packages}
+        keyExtractor={(item) => item.id}
+        renderItem={renderPackage}
+        contentContainerStyle={styles.list}
+        showsVerticalScrollIndicator={false}
+      />
+    </SafeAreaView>
+  );
 };
 
-return (
-    <ScrollView style={styles.container}>
-        <Text style={styles.title}>Health Packages</Text>
-        <View style={styles.packagesContainer}>
-            {healthPackages.map((pkg) => (
-                <View key={pkg.id} style={styles.card}>
-                    <Text style={styles.packageName}>{pkg.name}</Text>
-                    <Text style={styles.price}>{pkg.price}</Text>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => handleBookAppointment(pkg.name)}
-                    >
-                        <Text style={styles.buttonText}>Book Appointment</Text>
-                    </TouchableOpacity>
-                </View>
-            ))}
-        </View>
-    </ScrollView>
-);
-}
+export default ManageHealthPackages;
 
+/* ======================
+   STYLES
+   ====================== */
 const styles = StyleSheet.create({
-container: {
+  container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background, // MUST be dark
+  },
+  header: {
     padding: 16,
-},
-title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-},
-packagesContainer: {
+    gap: 10,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: colors.textPrimary,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: colors.textSecondary,
+  },
+  list: {
+    paddingHorizontal: 16,
+    paddingBottom: 20,
     gap: 12,
-},
-card: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 16,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-},
-packageName: {
+  },
+  card: {
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: colors.border,
+    gap: 6,
+  },
+  packageTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
-},
-price: {
-    fontSize: 16,
-    color: '#2196F3',
-    fontWeight: 'bold',
-    marginBottom: 12,
-},
-button: {
-    backgroundColor: '#2196F3',
-    padding: 12,
-    borderRadius: 6,
-    alignItems: 'center',
-},
-buttonText: {
-    color: '#fff',
+    color: colors.textPrimary,
+  },
+  description: {
     fontSize: 14,
-    fontWeight: '600',
-},
+    color: colors.textSecondary,
+    marginBottom: 6,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+  },
+  metaText: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    marginBottom: 2,
+  },
 });

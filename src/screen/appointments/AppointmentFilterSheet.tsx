@@ -3,21 +3,88 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import Modal from 'react-native-modal';
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
+
 import { colors } from '../../theme';
+import SearchablePicker from '../../components/layout/SearchablePicker';
+
+/* ================= PROPS ================= */
 
 interface Props {
   visible: boolean;
   onClose: () => void;
 }
 
-const AppointmentFilterModal: React.FC<Props> = ({ visible, onClose }) => {
+/* ================= DATA ================= */
+
+const statusOptions = [
+  'All',
+  'Pending',
+  'Approved',
+  'Completed',
+];
+
+const departments = {
+  Cardiology: ['OPD', 'IPD'],
+  Orthopedics: ['OPD', 'IPD'],
+  ENT: ['OPD'],
+};
+
+type DepartmentKey = keyof typeof departments;
+
+/* ================= COMPONENT ================= */
+
+const AppointmentFilterModal: React.FC<Props> = ({
+  visible,
+  onClose,
+}) => {
+  /* -------- STATES -------- */
+
   const [status, setStatus] = useState('All');
-  const [department, setDepartment] = useState('All');
+  const [department, setDepartment] =
+    useState<DepartmentKey | null>(null);
+
+  const [filterDate, setFilterDate] = useState<Date | null>(null);
+  const [fromDate, setFromDate] = useState<Date | null>(null);
+  const [toDate, setToDate] = useState<Date | null>(null);
+
+  const [search, setSearch] = useState('');
+
+  const [activePicker, setActivePicker] = useState<
+    'filter' | 'from' | 'to' | null
+  >(null);
+
+  /* -------- DATE HANDLER -------- */
+
+  const onDateChange = (
+    e: DateTimePickerEvent,
+    date?: Date,
+  ) => {
+    if (e.type === 'set' && date) {
+      if (activePicker === 'filter') setFilterDate(date);
+      if (activePicker === 'from') setFromDate(date);
+      if (activePicker === 'to') setToDate(date);
+    }
+    setActivePicker(null);
+  };
+
+  /* -------- CLEAR FILTERS -------- */
+
+  const clearFilters = () => {
+    setStatus('All');
+    setDepartment(null);
+    setFilterDate(null);
+    setFromDate(null);
+    setToDate(null);
+    setSearch('');
+  };
 
   return (
     <Modal
@@ -29,49 +96,112 @@ const AppointmentFilterModal: React.FC<Props> = ({ visible, onClose }) => {
       <View style={styles.container}>
         <Text style={styles.title}>Appointment Filters</Text>
 
+         {/* -------- SEARCH (NORMAL INPUT) -------- */}
         <Text style={styles.label}>Search</Text>
-        <TextInput style={styles.input} placeholder="Search..." />
+        <TextInput
+          style={styles.input}
+          placeholder="Search By Status, Department..."
+          placeholderTextColor={colors.textSecondary}
+          value={search}
+          onChangeText={setSearch}
+        />
 
+        {/* -------- STATUS -------- */}
         <Text style={styles.label}>Status</Text>
         <View style={styles.pickerContainer}>
           <Picker selectedValue={status} onValueChange={setStatus}>
-            <Picker.Item label="All" value="All" />
-            <Picker.Item label="Pending" value="Pending" />
-            <Picker.Item label="Approved" value="Approved" />
-            <Picker.Item label="Completed" value="Completed" />
+            {statusOptions.map(item => (
+              <Picker.Item key={item} label={item} value={item} />
+            ))}
           </Picker>
         </View>
 
-        <Text style={styles.label}>Department</Text>
-        <View style={styles.pickerContainer}>
-          <Picker selectedValue={department} onValueChange={setDepartment}>
-            <Picker.Item label="All" value="All" />
-            <Picker.Item label="Cardiology" value="Cardiology" />
-            <Picker.Item label="Orthopedics" value="Orthopedics" />
-            <Picker.Item label="ENT" value="ENT" />
-          </Picker>
-        </View>
+        {/* -------- DEPARTMENT -------- */}
+        <SearchablePicker
+          label="Department"
+          value={department}
+          placeholder="Select Department"
+          options={Object.keys(departments)}
+          onSelect={(value) =>
+            setDepartment(value as DepartmentKey)
+          }
+        />
 
+        {/* -------- FILTER BY DATE -------- */}
+        <Text style={styles.label}>Filter by Date</Text>
+        <TouchableOpacity
+          style={styles.input}
+          onPress={() => setActivePicker('filter')}
+        >
+          <Text style={styles.text}>
+            {filterDate
+              ? filterDate.toDateString()
+              : 'Select Date'}
+          </Text>
+        </TouchableOpacity>
+
+        {/* -------- DATE RANGE (SAME LINE) --------
+        <Text style={styles.label}>Date Range</Text>
+        <View style={styles.row}>
+          <TouchableOpacity
+            style={[styles.input, styles.half]}
+            onPress={() => setActivePicker('from')}
+          >
+            <Text style={styles.text}>
+              {fromDate ? fromDate.toDateString() : 'From'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.input, styles.half]}
+            onPress={() => setActivePicker('to')}
+          >
+            <Text style={styles.text}>
+              {toDate ? toDate.toDateString() : 'To'}
+            </Text>
+          </TouchableOpacity>
+        </View> */}
+
+       
+
+        {/* -------- ACTIONS -------- */}
         <View style={styles.actions}>
-          <TouchableOpacity style={styles.cancel} onPress={onClose}>
-            <Text style={styles.btnText}>Cancel</Text>
+          <TouchableOpacity
+            style={styles.clear}
+            onPress={clearFilters}
+          >
+            <Text style={styles.clearText}>Clear Filters</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.apply}
-            onPress={() => {
-              onClose();
-            }}
+            onPress={onClose}
           >
             <Text style={styles.btnText}>Apply</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* -------- DATE PICKER -------- */}
+      {activePicker && (
+        <DateTimePicker
+          value={
+            (activePicker === 'filter' && filterDate) ||
+            (activePicker === 'from' && fromDate) ||
+            (activePicker === 'to' && toDate) ||
+            new Date()
+          }
+          mode="date"
+          onChange={onDateChange}
+        />
+      )}
     </Modal>
   );
 };
 
 export default AppointmentFilterModal;
+
+/* ================= STYLES ================= */
 
 const styles = StyleSheet.create({
   modal: {
@@ -79,7 +209,7 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
     padding: 16,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
@@ -96,27 +226,41 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   input: {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: colors.card,
     borderRadius: 8,
     padding: 12,
     marginBottom: 14,
   },
+  text: {
+    color: colors.textPrimary,
+  },
   pickerContainer: {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: colors.card,
     borderRadius: 8,
     marginBottom: 14,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  half: {
+    width: '48%',
   },
   actions: {
     flexDirection: 'row',
     marginTop: 12,
   },
-  cancel: {
+  clear: {
     flex: 1,
-    backgroundColor: '#ccc',
+    backgroundColor: colors.border,
     padding: 12,
     borderRadius: 8,
     marginRight: 8,
     alignItems: 'center',
+  },
+  clearText: {
+    color: colors.textPrimary,
+    fontWeight: '600',
   },
   apply: {
     flex: 1,
@@ -127,7 +271,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnText: {
-    color: '#fff',
+    color: colors.textPrimary,
     fontWeight: '600',
   },
 });

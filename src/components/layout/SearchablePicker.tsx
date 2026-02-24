@@ -8,6 +8,8 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
+import { colors } from '../../theme';
+import { SettingItem } from '../../components';
 
 interface SearchablePickerProps {
   label?: string;
@@ -45,7 +47,12 @@ const SearchablePicker: React.FC<SearchablePickerProps> = ({
           setVisible(true);
         }}
       >
-        <Text style={styles.value}>
+        <Text
+          style={[
+            styles.value,
+            !value && { color: colors.textSecondary },
+          ]}
+        >
           {value || placeholder}
         </Text>
         <Text style={styles.arrow}>▼</Text>
@@ -55,10 +62,12 @@ const SearchablePicker: React.FC<SearchablePickerProps> = ({
       <Modal visible={visible} transparent animationType="fade">
         <View style={styles.overlay}>
           <View style={styles.modal}>
+
             {/* Search */}
             <TextInput
               style={styles.searchInput}
               placeholder="Search..."
+              placeholderTextColor={colors.textSecondary}
               value={search}
               onChangeText={setSearch}
               autoFocus
@@ -85,13 +94,17 @@ const SearchablePicker: React.FC<SearchablePickerProps> = ({
               }
             />
 
-            {/* Cancel */}
-            <TouchableOpacity
-              style={styles.cancelBtn}
+            <SettingItem
+              title="Cancel"
               onPress={() => setVisible(false)}
-            >
-              <Text style={styles.cancelText}>Cancel</Text>
-            </TouchableOpacity>
+              backgroundColor={colors.primary}
+              titleColor={colors.textPrimary}
+              containerStyle={styles.cancelBtn}
+              showArrow={false}
+              iconFamily='Ionicons'
+              iconName='close'
+            />
+
           </View>
         </View>
       </Modal>
@@ -105,65 +118,73 @@ export default SearchablePicker;
 
 const styles = StyleSheet.create({
   label: {
+    color: colors.textSecondary,
     fontWeight: '600',
     marginBottom: 6,
     marginTop: 12,
   },
   input: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.card,
     borderRadius: 10,
     paddingVertical: 14,
     paddingHorizontal: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   value: {
-    color: '#111827',
+    color: colors.textPrimary,
   },
   arrow: {
     fontSize: 12,
-    color: '#6B7280',
+    color: colors.textSecondary,
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
   modal: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
+    borderWidth: 2,
+    borderColor: colors.border,
     borderRadius: 14,
     maxHeight: '70%',
     padding: 12,
+    paddingVertical: 30,
   },
   searchInput: {
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     borderRadius: 10,
     padding: 12,
     marginBottom: 10,
+    backgroundColor: colors.card,
+    color: colors.textPrimary,
   },
   option: {
     paddingVertical: 14,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
   },
   optionText: {
     fontSize: 15,
+    color: colors.textPrimary,
   },
   empty: {
     textAlign: 'center',
     padding: 20,
-    color: '#6B7280',
+    color: colors.textSecondary,
   },
   cancelBtn: {
-    marginTop: 10,
+    marginTop: 20,
     alignSelf: 'flex-end',
-  },
-  cancelText: {
-    color: '#10B981',
-    fontWeight: '700',
+    width: '40%',
+    paddingVertical: 8,
+    borderRadius: 8,
   },
 });
