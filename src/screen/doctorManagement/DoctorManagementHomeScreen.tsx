@@ -59,7 +59,7 @@ export default function DoctorManagementHomeScreen() {
 
       <SettingItem
         title="Block Doctor Availability"
-        subtitle="Block or unblock doctor availability"
+        subtitle="Block specific dates or time slots when a doctor is unavailable (vacation, conference, etc. )"
         iconName="calendar-times"
         iconFamily="FontAwesome6"
         onPress={() => navigation.navigate('BlockAvailability')}

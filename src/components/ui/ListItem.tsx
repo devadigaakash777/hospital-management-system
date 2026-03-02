@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ViewStyle,
-} from 'react-native';
+import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,7 +25,7 @@ interface ListItemProps {
   subtitleColor?: string;
   iconColor?: string;
   containerStyle?: ViewStyle;
-  children?: React.ReactNode; // 👈 added
+  children?: React.ReactNode;
 }
 
 const ListItem: React.FC<ListItemProps> = ({
@@ -69,21 +64,13 @@ const ListItem: React.FC<ListItemProps> = ({
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor },
-        containerStyle,
-      ]}
-    >
+    <View style={[styles.container, { backgroundColor }, containerStyle]}>
       {/* LEFT SIDE */}
       <View style={styles.leftSection}>
         {iconName && <View style={styles.iconWrapper}>{renderIcon()}</View>}
 
         <View style={styles.textContainer}>
-          <Text style={[styles.title, { color: titleColor }]}>
-            {title}
-          </Text>
+          <Text style={[styles.title, { color: titleColor }]}>{title}</Text>
           {subtitle && (
             <Text style={[styles.subtitle, { color: subtitleColor }]}>
               {subtitle}
@@ -118,6 +105,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   rightSection: {
+    flexDirection: 'row',
     marginLeft: 12,
     alignItems: 'center',
     justifyContent: 'center',

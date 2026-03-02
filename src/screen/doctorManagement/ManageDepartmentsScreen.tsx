@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-  Alert,
-} from 'react-native';
+import { View, StyleSheet, FlatList, Alert } from 'react-native';
 import { colors } from '../../theme';
 import { AppButton, ListItem } from '../../components';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AddDepartmentModal from './components/AddDepartmentModal';
 
 type Department = {
   id: string;
@@ -19,6 +13,8 @@ type Department = {
 const Separator = () => <View style={styles.separator} />;
 
 export default function ManageDepartmentsScreen() {
+  const [open, setOpen] = useState(false);
+
   const [departments, setDepartments] = useState<Department[]>([
     { id: '1', name: 'Respiratory Department' },
     { id: '2', name: 'Cardiology Department' },
@@ -49,12 +45,13 @@ export default function ManageDepartmentsScreen() {
       iconName="hospital-building"
       title={item.name}
     >
-      <TouchableOpacity
-        style={styles.iconBtn}
+      <AppButton
+        containerStyle={styles.xButton}
+        color={colors.textPrimary}
+        iconFamily="FontAwesome6"
+        iconName="xmark"
         onPress={() => handleDelete(item.id, item.name)}
-      >
-        <FontAwesome6 name="xmark" size={20} color={colors.textPrimary} />
-      </TouchableOpacity>
+      />
     </ListItem>
   );
 
@@ -72,13 +69,20 @@ export default function ManageDepartmentsScreen() {
       <View style={styles.footer}>
         <AppButton
           text="Add Department"
-          onPress={() => Alert.alert('Add Department', 'Add department functionality coming soon!')}
+          onPress={() => setOpen(true)}
           backgroundColor={colors.primary}
           color={colors.textPrimary}
           iconFamily="MaterialCommunityIcons"
           iconName="plus"
         />
       </View>
+      <AddDepartmentModal
+        visible={open}
+        onClose={() => setOpen(false)}
+        onAdd={() =>
+          Alert.alert('new Department', 'functionality coming soon!')
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -95,13 +99,11 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 20,
   },
-  iconBtn: {
-    padding: 8,
-  },
   separator: {
     height: 10,
   },
   footer: {
     paddingTop: 12,
   },
+  xButton: { paddingHorizontal: 0 },
 });

@@ -148,7 +148,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({
           iconFamily="Ionicons"
           iconName="call-outline"
           backgroundColor={colors.success}
-          color= "#fff"
+          color="#fff"
         />
         <AppButton
           text="Delete"
@@ -156,7 +156,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({
           iconFamily="Ionicons"
           iconName="trash-outline"
           backgroundColor={colors.error}
-          color= "#fff"
+          color="#fff"
         />
       </View>
     </View>

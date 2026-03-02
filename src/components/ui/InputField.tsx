@@ -6,36 +6,44 @@ import {
   StyleSheet,
   TextInputProps,
   TouchableOpacity,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { colors } from '../../theme';
 
 interface InputFieldProps extends TextInputProps {
   label?: string;
+  labelColor?: string;
   isPassword?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
   label,
+  labelColor = colors.textPrimary,
   placeholder,
   keyboardType = 'default',
   secureTextEntry = false,
   isPassword = false,
   value,
+  containerStyle,
   onChangeText,
   ...rest
 }) => {
   const [hidePassword, setHidePassword] = useState(isPassword);
 
   return (
-    <View style={styles.container}>
-      {label && <Text style={styles.label}>{label}</Text>}
+    <View style={[styles.container, containerStyle]}>
+      {label && (
+        <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
+      )}
 
       <View style={styles.inputWrapper}>
         <TextInput
           style={styles.input}
           placeholder={placeholder}
-          placeholderTextColor={'#999'}
+          placeholderTextColor={colors.textSecondary}
           keyboardType={keyboardType}
           secureTextEntry={isPassword ? hidePassword : secureTextEntry}
           value={value}
@@ -52,7 +60,7 @@ const InputField: React.FC<InputFieldProps> = ({
             <Icon
               name={hidePassword ? 'eye-off-outline' : 'eye-outline'}
               size={22}
-              color={'#666'}
+              color={colors.textSecondary}
             />
           </TouchableOpacity>
         )}
@@ -70,7 +78,6 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 6,
     fontSize: 14,
-    color: colors.textPrimary,
     fontWeight: '500',
   },
   inputWrapper: {
@@ -78,7 +85,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    color: '#000',
+    color: colors.textPrimary,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 8,
@@ -86,7 +93,7 @@ const styles = StyleSheet.create({
     paddingRight: 44,
     paddingVertical: 10,
     fontSize: 16,
-    backgroundColor: '#fff',
+    backgroundColor: colors.card,
   },
   eyeButton: {
     position: 'absolute',

@@ -84,8 +84,6 @@ const handleCall = (phoneNumber: string) => {
   });
 };
 
-
-
 const renderItem: ListRenderItem<Appointment> = ({ item }) => (
   <AppointmentCard
     name={item.name}
@@ -100,17 +98,22 @@ const renderItem: ListRenderItem<Appointment> = ({ item }) => (
     patientMessage={item.patientMessage}
     status={item.status}
     onCallPress={() => handleCall(item.phoneNumber)}
-    onDeletePress={() => Alert.alert('Delete Appointment', `Are you sure you want to delete appointment for ${item.name}?`, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive'},
-    ])}
+    onDeletePress={() =>
+      Alert.alert(
+        'Delete Appointment',
+        `Are you sure you want to delete appointment for ${item.name}?`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Delete', style: 'destructive' },
+        ],
+      )
+    }
   />
 );
 
-
 const DepartmentAppointmentsScreen = () => {
   const handleFilterChange = (status: string) => {
-    Alert.alert('Filter Changed', `Selected status: ${status}`);
+    Alert.alert('filer', status);
     // In future:
     // fetchAppointments(status)
     // filter local data
@@ -125,10 +128,8 @@ const DepartmentAppointmentsScreen = () => {
           data={APPOINTMENTS_DATA}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listContent}
-
           ListHeaderComponent={
             <View>
               <AppButton
@@ -141,13 +142,14 @@ const DepartmentAppointmentsScreen = () => {
               />
               <StatusFilterBar onFilterChange={handleFilterChange} />
               <FilterHeader
-                onDayChange={(day) => Alert.alert('Day Filter', `Selected day: ${day}`)}
+                onDayChange={(day) =>
+                  Alert.alert('Day Filter', `Selected day: ${day}`)
+                }
                 onAdvancedFilterPress={() => setFilterVisible(true)}
               />
             </View>
           }
         />
-        {/* 🔽 Filter Modal */}
         <AppointmentFilterSheet
           visible={filterVisible}
           onClose={() => setFilterVisible(false)}
@@ -156,12 +158,10 @@ const DepartmentAppointmentsScreen = () => {
           visible={createModalVisible}
           onClose={() => setCreateModalVisible(false)}
         />
-
       </View>
     </SafeAreaView>
   );
 };
-
 
 export default DepartmentAppointmentsScreen;
 

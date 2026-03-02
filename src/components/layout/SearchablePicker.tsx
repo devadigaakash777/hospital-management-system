@@ -7,52 +7,55 @@ import {
   TextInput,
   FlatList,
   StyleSheet,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
 import { colors } from '../../theme';
-import { SettingItem } from '../../components';
+import { AppButton } from '../../components';
 
 interface SearchablePickerProps {
   label?: string;
+  labelColor?: string;
   value: string | null;
   placeholder?: string;
   options: string[];
+  containerStyle?: StyleProp<ViewStyle>;
   onSelect: (value: string) => void;
 }
 
 const SearchablePicker: React.FC<SearchablePickerProps> = ({
   label,
+  labelColor = colors.textSecondary,
   value,
   placeholder = 'Select',
   options,
+  containerStyle,
   onSelect,
 }) => {
   const [visible, setVisible] = useState(false);
   const [search, setSearch] = useState('');
 
   const filteredOptions = useMemo(() => {
-    return options.filter(opt =>
+    return options.filter((opt) =>
       opt.toLowerCase().includes(search.toLowerCase()),
     );
   }, [search, options]);
 
   return (
     <>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && (
+        <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
+      )}
 
       {/* Picker Input */}
       <TouchableOpacity
-        style={styles.input}
+        style={[styles.input, containerStyle]}
         onPress={() => {
           setSearch('');
           setVisible(true);
         }}
       >
-        <Text
-          style={[
-            styles.value,
-            !value && { color: colors.textSecondary },
-          ]}
-        >
+        <Text style={[styles.value, !value && { color: colors.textSecondary }]}>
           {value || placeholder}
         </Text>
         <Text style={styles.arrow}>▼</Text>
@@ -94,17 +97,13 @@ const SearchablePicker: React.FC<SearchablePickerProps> = ({
               }
             />
 
-            <SettingItem
-              title="Cancel"
+            <AppButton
+              text="Cancel"
               onPress={() => setVisible(false)}
               backgroundColor={colors.primary}
-              titleColor={colors.textPrimary}
+              color={colors.textPrimary}
               containerStyle={styles.cancelBtn}
-              showArrow={false}
-              iconFamily='Ionicons'
-              iconName='close'
             />
-
           </View>
         </View>
       </Modal>

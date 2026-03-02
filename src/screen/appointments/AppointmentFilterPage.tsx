@@ -11,10 +11,7 @@ const AppointmentFilterPage = () => {
         <Text>Filter</Text>
       </TouchableOpacity>
 
-      <AppointmentFilterModal
-        visible={open}
-        onClose={() => setOpen(false)}
-      />
+      <AppointmentFilterModal visible={open} onClose={() => setOpen(false)} />
     </View>
   );
 };

@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import {
-  Modal,
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
   Alert,
 } from 'react-native';
 import DateTimePicker, {
@@ -14,7 +12,7 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { colors } from '../../../theme';
-import SearchablePicker from '../../../components/layout/SearchablePicker';
+import { SearchablePicker, BaseModal } from '../../../components';
 
 /* ================= PROPS ================= */
 
@@ -79,161 +77,153 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
   };
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.overlay}>
-        <View style={styles.modal}>
 
-          {/* HEADER */}
-          <View style={styles.header}>
-            <View>
-              <Text style={styles.title}>Create New Appointment</Text>
-              <Text style={styles.subtitle}>
-                Manually create an appointment for a patient
-              </Text>
-            </View>
+    <BaseModal
+      title="Create New Appointment"
+      visible={visible}
+      onClose={confirmClose}
+    >
+      <TextInput
+        style={styles.input}
+        placeholder="First Name"
+        placeholderTextColor={colors.textSecondary}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Last Name (Optional)"
+        placeholderTextColor={colors.textSecondary}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Phone Number"
+        placeholderTextColor={colors.textSecondary}
+        keyboardType="phone-pad"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Email (Optional)"
+        placeholderTextColor={colors.textSecondary}
+      />
 
-            <TouchableOpacity onPress={confirmClose}>
-              <Ionicons name="close" size={22} color={colors.textSecondary} />
-            </TouchableOpacity>
-          </View>
+      {/* CHECKBOXES */}
+      <Checkbox
+        label="Health Package Appointment"
+        value={healthPkg}
+        onChange={() => {
+          setHealthPkg(!healthPkg);
+          setSelectedPackage(null);
+        }}
+      />
 
-          {/* CONTENT */}
-          <ScrollView contentContainerStyle={styles.content}>
-            <TextInput style={styles.input} placeholder="First Name" placeholderTextColor={colors.textSecondary} />
-            <TextInput style={styles.input} placeholder="Last Name (Optional)" placeholderTextColor={colors.textSecondary} />
-            <TextInput
-              style={styles.input}
-              placeholder="Phone Number"
-              placeholderTextColor={colors.textSecondary}
-              keyboardType="phone-pad"
-            />
-            <TextInput style={styles.input} placeholder="Email (Optional)" placeholderTextColor={colors.textSecondary} />
+      {healthPkg && (
+        <SearchablePicker
+          label="Health Package"
+          value={selectedPackage}
+          placeholder="Select Health Package"
+          options={healthPackages}
+          onSelect={setSelectedPackage}
+        />
+      )}
 
-            {/* CHECKBOXES */}
-            <Checkbox
-              label="Health Package Appointment"
-              value={healthPkg}
-              onChange={() => {
-                setHealthPkg(!healthPkg);
-                setSelectedPackage(null);
-              }}
-            />
+      <Checkbox
+        label="VIP / Priority Patient"
+        value={vip}
+        onChange={() => setVip(!vip)}
+      />
 
-            {healthPkg && (
-              <SearchablePicker
-                label="Health Package"
-                value={selectedPackage}
-                placeholder="Select Health Package"
-                options={healthPackages}
-                onSelect={setSelectedPackage}
-              />
-            )}
+      {/* DEPARTMENT */}
+      <SearchablePicker
+        label="Department"
+        value={department}
+        placeholder="Select Department"
+        options={Object.keys(departments)}
+        onSelect={(value) => {
+          setDepartment(value as DepartmentKey);
+          setDoctor(null);
+        }}
+      />
 
-            <Checkbox
-              label="VIP / Priority Patient"
-              value={vip}
-              onChange={() => setVip(!vip)}
-            />
+      {/* DOCTOR */}
+      {department && (
+        <SearchablePicker
+          label="Doctor"
+          value={doctor}
+          placeholder="Select Doctor"
+          options={departments[department]}
+          onSelect={setDoctor}
+        />
+      )}
 
-            {/* DEPARTMENT */}
-            <SearchablePicker
-              label="Department"
-              value={department}
-              placeholder="Select Department"
-              options={Object.keys(departments)}
-              onSelect={(value) => {
-                setDepartment(value as DepartmentKey);
-                setDoctor(null);
-              }}
-            />
+      {/* DATE */}
+      {doctor && (
+        <>
+          <Text style={styles.label}>Preferred Date</Text>
+          <TouchableOpacity
+            style={styles.dropdown}
+            onPress={() => setShowDatePicker(true)}
+          >
+            <Text style={styles.dropdownText}>
+              {selectedDate ? selectedDate.toDateString() : 'Select Date'}
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
 
-            {/* DOCTOR */}
-            {department && (
-              <SearchablePicker
-                label="Doctor"
-                value={doctor}
-                placeholder="Select Doctor"
-                options={departments[department]}
-                onSelect={setDoctor}
-              />
-            )}
+      {showDatePicker && (
+        <DateTimePicker
+          value={selectedDate || new Date()}
+          mode="date"
+          minimumDate={new Date()}
+          onChange={onDateChange}
+        />
+      )}
 
-            {/* DATE */}
-            {doctor && (
-              <>
-                <Text style={styles.label}>Preferred Date</Text>
-                <TouchableOpacity
-                  style={styles.dropdown}
-                  onPress={() => setShowDatePicker(true)}
+      {/* SLOT */}
+      {selectedDate && (
+        <>
+          <Text style={styles.label}>Time Slot</Text>
+          <View style={styles.slotGrid}>
+            {timeSlots.map((slot) => (
+              <TouchableOpacity
+                key={slot}
+                style={[
+                  styles.slot,
+                  selectedSlot === slot && styles.slotActive,
+                ]}
+                onPress={() => setSelectedSlot(slot)}
+              >
+                <Text
+                  style={[
+                    styles.slotText,
+                    selectedSlot === slot && styles.slotTextActive,
+                  ]}
                 >
-                  <Text style={styles.dropdownText}>
-                    {selectedDate
-                      ? selectedDate.toDateString()
-                      : 'Select Date'}
-                  </Text>
-                </TouchableOpacity>
-              </>
-            )}
-
-            {showDatePicker && (
-              <DateTimePicker
-                value={selectedDate || new Date()}
-                mode="date"
-                minimumDate={new Date()}
-                onChange={onDateChange}
-              />
-            )}
-
-            {/* SLOT */}
-            {selectedDate && (
-              <>
-                <Text style={styles.label}>Time Slot</Text>
-                <View style={styles.slotGrid}>
-                  {timeSlots.map(slot => (
-                    <TouchableOpacity
-                      key={slot}
-                      style={[
-                        styles.slot,
-                        selectedSlot === slot && styles.slotActive,
-                      ]}
-                      onPress={() => setSelectedSlot(slot)}
-                    >
-                      <Text
-                        style={[
-                          styles.slotText,
-                          selectedSlot === slot && styles.slotTextActive,
-                        ]}
-                      >
-                        {slot}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </>
-            )}
-
-            <TextInput
-              style={styles.textarea}
-              placeholder="Message (Optional)"
-              placeholderTextColor={colors.textSecondary}
-              multiline
-            />
-          </ScrollView>
-
-          {/* FOOTER */}
-          <View style={styles.footer}>
-            <TouchableOpacity style={styles.cancelBtn} onPress={confirmClose}>
-              <Text style={styles.cancelText}>Cancel</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.createBtn}>
-              <Text style={styles.createText}>Create Appointment</Text>
-            </TouchableOpacity>
+                  {slot}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
+        </>
+      )}
 
-        </View>
+      <TextInput
+        style={styles.textarea}
+        placeholder="Message (Optional)"
+        placeholderTextColor={colors.textSecondary}
+        multiline
+      />
+
+      {/* FOOTER */}
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.cancelBtn} onPress={confirmClose}>
+          <Text style={styles.cancelText}>Cancel</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.createBtn}>
+          <Text style={styles.createText}>Create Appointment</Text>
+        </TouchableOpacity>
       </View>
-    </Modal>
+    </BaseModal>
   );
 };
 
@@ -252,7 +242,9 @@ const Checkbox = ({
 }) => (
   <TouchableOpacity style={styles.checkboxRow} onPress={onChange}>
     <View style={[styles.checkboxBox, value && styles.checkboxChecked]}>
-      {value && <Ionicons name="checkmark" size={14} color={colors.textPrimary} />}
+      {value && (
+        <Ionicons name="checkmark" size={14} color={colors.textPrimary} />
+      )}
     </View>
     <Text style={styles.checkboxLabel}>{label}</Text>
   </TouchableOpacity>
@@ -263,7 +255,7 @@ const Checkbox = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -380,6 +372,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 16,
+    marginBottom: 16,
     borderTopWidth: 1,
     borderTopColor: colors.border,
     backgroundColor: colors.surface,

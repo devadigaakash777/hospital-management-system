@@ -1,8 +1,12 @@
 export { default as InputField } from './ui/InputField';
 export { default as AppHeader } from './headers/AppHeader';
 export { default as SectionHeader } from './headers/SectionHeader';
-export { default as IconButton } from './ui/AppButton';
 export { default as AppButton } from './ui/AppButton';
 export { default as AppBar } from './layout/AppBar';
-export { default as SettingItem } from './ui/SettingItem'
+export { default as SettingItem } from './ui/SettingItem';
 export { default as ListItem } from './ui/ListItem';
+export { default as BaseModal } from './ui/BaseModal';
+export { default as SearchablePicker } from './layout/SearchablePicker';
+export { default as AppCheckbox } from './ui/AppCheckbox';
+export { default as InfoRow } from './ui/InfoRow';
+export { default as SearchInput } from './ui/SearchInput';

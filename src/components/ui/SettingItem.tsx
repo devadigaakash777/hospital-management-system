@@ -75,11 +75,7 @@ const SettingItem: React.FC<SettingItemProps> = ({
 
   return (
     <TouchableOpacity
-      style={[
-        styles.container,
-        { backgroundColor },
-        containerStyle,
-      ]}
+      style={[styles.container, { backgroundColor }, containerStyle]}
       onPress={onPress}
       activeOpacity={0.7}
     >
@@ -87,9 +83,7 @@ const SettingItem: React.FC<SettingItemProps> = ({
         {iconName && <View style={styles.iconWrapper}>{renderIcon()}</View>}
 
         <View style={styles.textContainer}>
-          <Text style={[styles.title, { color: titleColor }]}>
-            {title}
-          </Text>
+          <Text style={[styles.title, { color: titleColor }]}>{title}</Text>
           {subtitle && (
             <Text style={[styles.subtitle, { color: subtitleColor }]}>
               {subtitle}
@@ -99,11 +93,7 @@ const SettingItem: React.FC<SettingItemProps> = ({
       </View>
 
       {showArrow && (
-        <Ionicons
-          name="chevron-forward"
-          size={20}
-          color={arrowColor}
-        />
+        <Ionicons name="chevron-forward" size={20} color={arrowColor} />
       )}
     </TouchableOpacity>
   );

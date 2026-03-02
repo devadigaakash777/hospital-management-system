@@ -63,7 +63,7 @@ const screenOptions = ({
 }: {
   route: RouteProp<DrawerParamList, keyof DrawerParamList>;
 }): DrawerNavigationOptions => {
-  const item = drawerItems.find(i => i.name === route.name);
+  const item = drawerItems.find((i) => i.name === route.name);
 
   return {
     drawerStyle: {
@@ -81,11 +81,7 @@ const screenOptions = ({
     },
     headerTintColor: colors.textPrimary,
     drawerIcon: ({ color, size }) => (
-      <FontAwesome6
-        name={item?.icon ?? 'circle'}
-        size={size}
-        color={color}
-      />
+      <FontAwesome6 name={item?.icon ?? 'circle'} size={size} color={color} />
     ),
   };
 };
@@ -94,9 +90,7 @@ const screenOptions = ({
 /* Custom Drawer Content */
 /* ----------------------------- */
 
-const CustomDrawerContent = (
-  props: DrawerContentComponentProps
-) => (
+const CustomDrawerContent = (props: DrawerContentComponentProps) => (
   <DrawerContentScrollView
     {...props}
     contentContainerStyle={styles.drawerContent}
@@ -123,7 +117,7 @@ export default function DrawerNavigator() {
       screenOptions={screenOptions}
       drawerContent={CustomDrawerContent}
     >
-      {drawerItems.map(item => (
+      {drawerItems.map((item) => (
         <Drawer.Screen
           key={item.name}
           name={item.name}
