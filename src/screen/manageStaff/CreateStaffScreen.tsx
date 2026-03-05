@@ -11,6 +11,9 @@ import { InputField, AppButton, SearchablePicker } from '../../components';
 import { colors } from '../../theme';
 import ManualRightsSection from './components/ManualRightsSection';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { StaffStackParamList } from '../../navigation/StaffManagementStack';
 
 type TabType = 'GROUP' | 'MANUAL';
 
@@ -60,7 +63,10 @@ const permissionConfig: PermissionItem[] = [
   },
 ];
 
+type StackNav = NativeStackNavigationProp<StaffStackParamList, 'CreateStaff'>;
+
 const CreateStaffScreen = () => {
+  const navigation = useNavigation<StackNav>();
   const [activeTab, setActiveTab] = useState<TabType>('GROUP');
   const [deptModalVisible, setDeptModalVisible] = useState(false);
 
@@ -157,7 +163,9 @@ const CreateStaffScreen = () => {
     //       };
 
     // console.log('Payload:', payload);
-    Alert.alert('Success', 'Staff created successfully');
+    Alert.alert('Success', 'Staff created successfully', [
+      { text: 'OK', onPress: () => navigation.goBack() },
+    ]);
   };
 
   return (
