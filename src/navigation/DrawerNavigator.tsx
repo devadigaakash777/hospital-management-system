@@ -13,6 +13,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import DepartmentAppointmentsScreen from '../screen/departmentAppointments/DepartmentAppointmentsScreen';
 import DoctorManagementStack from './DoctorManagementStack';
 import HealthPackageScreen from '../screen/healthPackageAppointments/healthPackageScreen';
+import ManageStaffScreen from '../screen/ManageStaff/ManageStaffScreen';
 import { AppHeader } from '../components';
 import { colors } from '../theme';
 
@@ -24,6 +25,7 @@ export type DrawerParamList = {
   'Department Appointments': undefined;
   'Health Package Appointments': undefined;
   'Doctor Management': undefined;
+  'Manage Staff': undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
