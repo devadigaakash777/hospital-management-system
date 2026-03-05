@@ -27,7 +27,7 @@ export type DrawerParamList = {
   'Health Package Appointments': undefined;
   'Doctor Management': undefined;
   'Manage Staff': undefined;
-  Groups: undefined;
+  'Manage Groups': undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -58,11 +58,11 @@ const drawerItems: {
   },
   {
     name: 'Manage Staff',
-    icon: 'user-plus',
+    icon: 'users-gear',
     component: StaffManagementStack,
   },
   {
-    name: 'Groups',
+    name: 'Manage Groups',
     icon: 'user-group',
     component: ManageGroupsScreen,
   },
