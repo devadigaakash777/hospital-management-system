@@ -13,8 +13,8 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import DepartmentAppointmentsScreen from '../screen/departmentAppointments/DepartmentAppointmentsScreen';
 import DoctorManagementStack from './DoctorManagementStack';
 import HealthPackageScreen from '../screen/healthPackageAppointments/healthPackageScreen';
-import CreateStaffScreen from '../screen/manageStaff/CreateStaffScreen';
 import ManageGroupsScreen from '../screen/groups/ManageGroupsScreen';
+import StaffManagementStack from './StaffManagementStack';
 import { AppHeader } from '../components';
 import { colors } from '../theme';
 
@@ -26,8 +26,8 @@ export type DrawerParamList = {
   'Department Appointments': undefined;
   'Health Package Appointments': undefined;
   'Doctor Management': undefined;
-  'Create Staff': undefined;
-  Groups: undefined;
+  'Manage Staff': undefined;
+  'Manage Groups': undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -57,12 +57,12 @@ const drawerItems: {
     component: DoctorManagementStack,
   },
   {
-    name: 'Create Staff',
-    icon: 'user-plus',
-    component: CreateStaffScreen,
+    name: 'Manage Staff',
+    icon: 'users-gear',
+    component: StaffManagementStack,
   },
   {
-    name: 'Groups',
+    name: 'Manage Groups',
     icon: 'user-group',
     component: ManageGroupsScreen,
   },
@@ -137,7 +137,7 @@ export default function DrawerNavigator() {
           name={item.name}
           component={item.component}
           options={
-            item.name === 'Doctor Management'
+            item.name === 'Doctor Management' || item.name === 'Manage Staff'
               ? { headerShown: false }
               : undefined
           }
