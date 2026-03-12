@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   View,
@@ -106,6 +107,7 @@ const ManageHealthPackages = () => {
           for health packages.
         </Text>
 
+
         <IconButton
           text="Create New Health Package"
           iconName="plus"
@@ -156,13 +158,16 @@ export default ManageHealthPackages;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     backgroundColor: colors.background, // MUST be dark
   },
   header: {
+
     padding: 16,
     gap: 10,
   },
   title: {
+
     fontSize: 22,
     fontWeight: '700',
     color: colors.textPrimary,
@@ -203,5 +208,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.textSecondary,
     marginBottom: 2,
+
   },
 });

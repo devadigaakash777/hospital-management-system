@@ -134,7 +134,7 @@ const DoctorSelectionSection = () => {
             />
 
             <AppButton
-              text="Edit Details"
+              text="Save Details"
               onPress={handleSubmit}
               backgroundColor={colors.primary}
               color={colors.textPrimary}

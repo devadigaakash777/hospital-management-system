@@ -17,6 +17,7 @@ interface InputFieldProps extends TextInputProps {
   labelColor?: string;
   isPassword?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
+  error?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -29,6 +30,7 @@ const InputField: React.FC<InputFieldProps> = ({
   value,
   containerStyle,
   onChangeText,
+  error,
   ...rest
 }) => {
   const [hidePassword, setHidePassword] = useState(isPassword);
@@ -41,7 +43,7 @@ const InputField: React.FC<InputFieldProps> = ({
 
       <View style={styles.inputWrapper}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, error && styles.error]}
           placeholder={placeholder}
           placeholderTextColor={colors.textSecondary}
           keyboardType={keyboardType}
@@ -65,6 +67,8 @@ const InputField: React.FC<InputFieldProps> = ({
           </TouchableOpacity>
         )}
       </View>
+
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
   );
 };
@@ -101,4 +105,10 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
   },
+  errorText: {
+    marginTop: 4,
+    color: 'red',
+    fontSize: 12,
+  },
+  error: { color: colors.error },
 });
