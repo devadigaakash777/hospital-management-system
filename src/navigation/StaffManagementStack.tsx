@@ -3,8 +3,8 @@ import { TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { colors } from '../theme';
-import CreateStaffScreen from '../screen/manageStaff/CreateStaffScreen';
-import ManageStaffScreen from '../screen/manageStaff/ManageStaffScreen';
+import CreateStaffScreen from '../screen/StaffManagement/CreateStaffScreen';
+import ManageStaffScreen from '../screen/StaffManagement/ManageStaffScreen';
 import { StaffProvider, StaffData } from '../context/StaffContext';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
@@ -58,8 +58,10 @@ export default function StaffManagementStack() {
         <Stack.Screen
           name="CreateStaff"
           component={CreateStaffScreen}
-          options={{ title: 'Create or Edit Staff' }}
-        />
+          options={({ route }) => ({
+            title: route.params?.editStaff ? 'Edit Staff' : 'Create Staff',
+          })}
+/>
       </Stack.Navigator>
     </StaffProvider>
   );

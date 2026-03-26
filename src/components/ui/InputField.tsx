@@ -1,18 +1,9 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TextInputProps,
-  TouchableOpacity,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import React from 'react';
+import { View, StyleSheet, StyleProp, ViewStyle, TextInputProps } from 'react-native';
+import { TextInput, HelperText } from 'react-native-paper';
 import { colors } from '../../theme';
 
-interface InputFieldProps extends TextInputProps {
+interface InputFieldProps extends Omit<TextInputProps, 'placeholderTextColor' | 'selectionColor'> {
   label?: string;
   labelColor?: string;
   isPassword?: boolean;
@@ -22,10 +13,8 @@ interface InputFieldProps extends TextInputProps {
 
 const InputField: React.FC<InputFieldProps> = ({
   label,
-  labelColor = colors.textPrimary,
   placeholder,
   keyboardType = 'default',
-  secureTextEntry = false,
   isPassword = false,
   value,
   containerStyle,
@@ -33,42 +22,50 @@ const InputField: React.FC<InputFieldProps> = ({
   error,
   ...rest
 }) => {
-  const [hidePassword, setHidePassword] = useState(isPassword);
+  const [hidePassword, setHidePassword] = React.useState(isPassword);
 
   return (
     <View style={[styles.container, containerStyle]}>
-      {label && (
-        <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
-      )}
 
-      <View style={styles.inputWrapper}>
-        <TextInput
-          style={[styles.input, error && styles.error]}
-          placeholder={placeholder}
-          placeholderTextColor={colors.textSecondary}
-          keyboardType={keyboardType}
-          secureTextEntry={isPassword ? hidePassword : secureTextEntry}
-          value={value}
-          onChangeText={onChangeText}
-          {...rest}
-        />
-
-        {isPassword && (
-          <TouchableOpacity
-            onPress={() => setHidePassword(!hidePassword)}
-            style={styles.eyeButton}
-            activeOpacity={0.7}
-          >
-            <Icon
-              name={hidePassword ? 'eye-off-outline' : 'eye-outline'}
+      {/* ✅ Paper TextInput — placeholder color via theme prop */}
+      <TextInput
+        label={label}
+        placeholder={placeholder}
+        keyboardType={keyboardType}
+        secureTextEntry={isPassword ? hidePassword : false}
+        value={value}
+        onChangeText={onChangeText}
+        mode="outlined"
+        outlineColor={error ? colors.error : colors.border}
+        activeOutlineColor={error ? colors.error : colors.primary}
+        style={styles.input}
+        textColor={colors.textPrimary}
+        // ✅ Controls placeholder + label floating color
+        theme={{
+          colors: {
+            onSurfaceVariant: colors.textSecondary,
+          },
+        }}
+        // ✅ Eye toggle for password fields
+        right={
+          isPassword ? (
+            <TextInput.Icon
+              icon={hidePassword ? 'eye-off-outline' : 'eye-outline'}
               size={22}
               color={colors.textSecondary}
+              onPress={() => setHidePassword(prev => !prev)}
             />
-          </TouchableOpacity>
-        )}
-      </View>
+          ) : undefined
+        }
+      />
 
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      {/* ✅ Paper HelperText for error messages */}
+      {error ? (
+        <HelperText type="error" visible={!!error} style={styles.errorText}>
+          {error}
+        </HelperText>
+      ) : null}
+
     </View>
   );
 };
@@ -79,36 +76,12 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
   },
-  label: {
-    marginBottom: 6,
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  inputWrapper: {
-    position: 'relative',
-    justifyContent: 'center',
-  },
   input: {
-    color: colors.textPrimary,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingRight: 44,
-    paddingVertical: 10,
-    fontSize: 16,
     backgroundColor: colors.card,
-  },
-  eyeButton: {
-    position: 'absolute',
-    right: 12,
-    height: '100%',
-    justifyContent: 'center',
+    fontSize: 16,
   },
   errorText: {
-    marginTop: 4,
-    color: 'red',
     fontSize: 12,
+    color: colors.error,
   },
-  error: { color: colors.error },
 });

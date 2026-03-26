@@ -1,40 +1,31 @@
-
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-} from 'react-native';
-
+import { View, StyleSheet, FlatList } from 'react-native';
+import { Text, Button } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-import IconButton from '../../components/ui/AppButton';
 import { colors } from '../../theme';
+import {
+  SearchInput,
+  ConfirmModal,
+  EntityCard,
+  EntityCardRow,
+} from '../../components';
+import CreateHealthPackageModal from '../../components/manageHealthPackage/CreateHealthPackageModal';
+import { HealthPackage } from '../../types/healthpackage.types';
 
-import CreateHealthPackageModal from './components/CreateHealthPackageModal';
-import { HealthPackage } from './types';
-
-/* ======================
-   CONSTANT PACKAGE DATA
-   ====================== */
 const HEALTH_PACKAGES: HealthPackage[] = [
   {
     id: '1',
     name: 'Abroad Health Checkup',
-    description:
-      'Comprehensive medical examination for international travel requirements. Includes complete medical tests and certification.',
+    description: 'Comprehensive medical examination for international travel requirements. Includes complete medical tests and certification.',
     opdTime: '09:00 AM - 05:00 PM',
     patientsPerHour: 3,
-    visitingDays:
-      'Monday, Tuesday, Wednesday, Thursday, Friday, Saturday',
+    visitingDays: 'Monday, Tuesday, Wednesday, Thursday, Friday, Saturday',
     advanceBooking: '7 days',
   },
   {
     id: '2',
     name: 'Cardio Diabetic Evaluation',
-    description:
-      'Specialized screening for heart and diabetes-related conditions. Includes blood sugar and cardiac function tests.',
+    description: 'Specialized screening for heart and diabetes-related conditions. Includes blood sugar and cardiac function tests.',
     opdTime: '09:00 AM - 05:00 PM',
     patientsPerHour: 4,
     visitingDays: 'Not Set',
@@ -43,8 +34,7 @@ const HEALTH_PACKAGES: HealthPackage[] = [
   {
     id: '3',
     name: 'Master Health Checkup',
-    description:
-      'Advanced health screening for adults including age-specific tests, cancer markers, and lifestyle counseling.',
+    description: 'Advanced health screening for adults including age-specific tests, cancer markers, and lifestyle counseling.',
     opdTime: '09:00 AM - 05:00 PM',
     patientsPerHour: 4,
     visitingDays: 'Not Set',
@@ -53,8 +43,7 @@ const HEALTH_PACKAGES: HealthPackage[] = [
   {
     id: '4',
     name: 'Mini Health Checkup',
-    description:
-      'Basic health screening for routine monitoring and wellness. Includes blood tests and physical examination.',
+    description: 'Basic health screening for routine monitoring and wellness. Includes blood tests and physical examination.',
     opdTime: '09:00 AM - 05:00 PM',
     patientsPerHour: 4,
     visitingDays: 'Not Set',
@@ -64,87 +53,166 @@ const HEALTH_PACKAGES: HealthPackage[] = [
 
 const ManageHealthPackages = () => {
   const [showModal, setShowModal] = useState(false);
-  const [packages, setPackages] =
-    useState<HealthPackage[]>(HEALTH_PACKAGES);
+  const [packages, setPackages] = useState<HealthPackage[]>(HEALTH_PACKAGES);
+  const [search, setSearch] = useState('');
+  const [deleteConfirm, setDeleteConfirm] = useState<HealthPackage | null>(null);
+  const [editPackage, setEditPackage] = useState<HealthPackage | null>(null);
 
-  const renderPackage = ({
-    item,
-  }: {
-    item: HealthPackage;
-  }) => {
+  const filtered = packages.filter(p =>
+    p.name.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  const renderPackage = ({ item }: { item: HealthPackage }) => {
+    const rows: EntityCardRow[] = [
+      { icon: 'clock-outline',    label: 'OPD Timing:',      value: item.opdTime },
+      { icon: 'account-group',    label: 'Patients/Hour:',   value: item.patientsPerHour },
+      { icon: 'calendar-month',   label: 'Visiting Days:',   value: item.visitingDays },
+      { icon: 'calendar-clock',   label: 'Advance Booking:', value: item.advanceBooking },
+    ];
+
     return (
-      <View style={styles.card}>
-        <Text style={styles.packageTitle}>{item.name}</Text>
-        <Text style={styles.description}>{item.description}</Text>
-
-        <View style={styles.metaRow}>
-          <Text style={styles.metaText}>
-            OPD Timing: {item.opdTime}
-          </Text>
-          <Text style={styles.metaText}>
-            Patients/Hour: {item.patientsPerHour}
-          </Text>
-        </View>
-
-        <Text style={styles.metaText}>
-          Visiting Days: {item.visitingDays}
-        </Text>
-
-        <Text style={styles.metaText}>
-          Advance Booking: {item.advanceBooking}
-        </Text>
-      </View>
+      <EntityCard
+        title={item.name}
+        subtitle={item.description}
+        rows={rows}
+        footer={
+          // ✅ Paper Button replaces AppButton
+          <View style={styles.buttonRow}>
+            <Button
+              mode="contained"
+              onPress={() => { setEditPackage(item); setShowModal(true); }}
+              icon="pencil"
+              buttonColor={colors.primary}
+              textColor="#fff"
+              style={styles.actionBtn}
+            >
+              Edit
+            </Button>
+            <Button
+              mode="contained"
+              onPress={() => setDeleteConfirm(item)}
+              icon="delete"
+              buttonColor={colors.error}
+              textColor="#fff"
+              style={styles.actionBtn}
+            >
+              Delete
+            </Button>
+          </View>
+        }
+      />
     );
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* HEADER */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Manage Health Packages</Text>
-        <Text style={styles.subtitle}>
-          Configure visiting days, OPD timings, and booking settings
-          for health packages.
-        </Text>
+    <SafeAreaView edges={['bottom']} style={styles.container}>
+      <FlatList
+        data={filtered}
+        keyExtractor={item => item.id}
+        renderItem={renderPackage}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <>
+            {/* ✅ Paper Text replaces RN Text */}
+            <Text style={styles.title}>Manage Health Packages</Text>
+            <Text style={styles.subtitle}>
+              Configure visiting days, OPD timings, and booking settings
+              for health packages.
+            </Text>
 
+            {/* ✅ SearchInput unchanged — already converted */}
+            <SearchInput
+              value={search}
+              onChangeText={setSearch}
+              placeholder="Search health packages..."
+            />
 
-        <IconButton
-          text="Create New Health Package"
-          iconName="plus"
-          iconFamily="Feather"
-          backgroundColor={colors.primary}
-          color={colors.textPrimary}
-          onPress={() => setShowModal(true)}
-        />
-      </View>
+            {/* ✅ Paper Button replaces AppButton */}
+            <Button
+              mode="contained"
+              icon="plus"
+              onPress={() => { setEditPackage(null); setShowModal(true); }}
+              buttonColor={colors.primary}
+              textColor="#fff"
+              style={styles.addBtn}
+              labelStyle={styles.addBtnLabel}
+            >
+              Create New Health Package
+            </Button>
 
-      {/* MODAL */}
+            <Text style={styles.sectionLabel}>Available Packages</Text>
+          </>
+        }
+        ListEmptyComponent={
+          <Text style={styles.empty}>No health packages found.</Text>
+        }
+      />
+
+      {/* ✅ CreateHealthPackageModal unchanged — already converted */}
       <CreateHealthPackageModal
         visible={showModal}
-        onClose={() => setShowModal(false)}
-        onCreate={(data) => {
-          setPackages((prev) => [
-            ...prev,
-            {
-              id: Date.now().toString(),
-              name: data.name,
-              description: data.description,
-              opdTime: '09:00 AM - 05:00 PM',
-              patientsPerHour: 4,
-              visitingDays: 'Not Set',
-              advanceBooking: '7 days',
-            },
-          ]);
+        editPackage={editPackage}
+        onClose={() => { setShowModal(false); setEditPackage(null); }}
+        onCreate={data => {
+          if (editPackage) {
+            setPackages(prev =>
+              prev.map(p =>
+                p.id === editPackage.id
+                  ? {
+                      ...p,
+                      name: data.name,
+                      description: data.description,
+                      patientsPerHour: Number(data.patientsPerHour) || p.patientsPerHour,
+                      advanceBooking: data.advanceBooking || p.advanceBooking,
+                      visitingDays: data.visitingDays.length > 0
+                        ? data.visitingDays.join(', ')
+                        : p.visitingDays,
+                      opdTime: data.opdTimeRanges.length > 0
+                        ? `${data.opdTimeRanges[0].from} - ${data.opdTimeRanges[0].to}`
+                        : p.opdTime,
+                    }
+                  : p,
+              ),
+            );
+          } else {
+            setPackages(prev => [
+              ...prev,
+              {
+                id: Date.now().toString(),
+                name: data.name,
+                description: data.description,
+                opdTime: data.opdTimeRanges.length > 0
+                  ? `${data.opdTimeRanges[0].from} - ${data.opdTimeRanges[0].to}`
+                  : '09:00 AM - 05:00 PM',
+                patientsPerHour: Number(data.patientsPerHour) || 4,
+                visitingDays: data.visitingDays.length > 0
+                  ? data.visitingDays.join(', ')
+                  : 'Not Set',
+                advanceBooking: data.advanceBooking || '7 days',
+              },
+            ]);
+          }
+          setEditPackage(null);
         }}
       />
 
-      {/* LIST */}
-      <FlatList
-        data={packages}
-        keyExtractor={(item) => item.id}
-        renderItem={renderPackage}
-        contentContainerStyle={styles.list}
-        showsVerticalScrollIndicator={false}
+      {/* ✅ ConfirmModal unchanged — already converted */}
+      <ConfirmModal
+        visible={!!deleteConfirm}
+        type="delete"
+        message={
+          deleteConfirm
+            ? `Are you sure you want to delete "${deleteConfirm.name}"?`
+            : undefined
+        }
+        onConfirm={() => {
+          if (deleteConfirm) {
+            setPackages(prev => prev.filter(p => p.id !== deleteConfirm.id));
+          }
+          setDeleteConfirm(null);
+        }}
+        onCancel={() => setDeleteConfirm(null)}
       />
     </SafeAreaView>
   );
@@ -152,22 +220,16 @@ const ManageHealthPackages = () => {
 
 export default ManageHealthPackages;
 
-/* ======================
-   STYLES
-   ====================== */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    backgroundColor: colors.background, // MUST be dark
+    backgroundColor: colors.background,
   },
-  header: {
-
+  listContent: {
     padding: 16,
-    gap: 10,
+    paddingBottom: 20,
   },
   title: {
-
     fontSize: 22,
     fontWeight: '700',
     color: colors.textPrimary,
@@ -175,39 +237,33 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     color: colors.textSecondary,
+    marginBottom: 12,
   },
-  list: {
-    paddingHorizontal: 16,
-    paddingBottom: 20,
-    gap: 12,
+  addBtn: {
+    marginBottom: 16,
+    marginTop: 8,
+    borderRadius: 10,
   },
-  card: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
-    gap: 6,
-  },
-  packageTitle: {
-    fontSize: 18,
+  addBtnLabel: {
     fontWeight: '600',
-    color: colors.textPrimary,
-  },
-  description: {
     fontSize: 14,
-    color: colors.textSecondary,
-    marginBottom: 6,
   },
-  metaRow: {
+  sectionLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.textSecondary,
+    marginBottom: 8,
+  },
+  buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
+    gap: 10,
   },
-  metaText: {
-    fontSize: 13,
+  actionBtn: {
+    flex: 1,
+  },
+  empty: {
+    textAlign: 'center',
     color: colors.textSecondary,
-    marginBottom: 2,
-
+    marginTop: 40,
   },
 });

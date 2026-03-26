@@ -1,62 +1,42 @@
 import React from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
-import AppHeader from '../headers/AppHeader';
-import { AppButton } from '..';
-import { colors } from '../../theme';
+import { Alert, StyleSheet } from 'react-native';
+import { Appbar } from 'react-native-paper';
 
 const AppBar: React.FC = () => {
   const handleLogout = () => {
-    // Handle logout logic here
     Alert.alert('Logout', 'You have been logged out.');
   };
 
   return (
-    <View style={styles.appBar}>
-      {/* Left Section */}
-      <View style={styles.leftSection}>
-        <AppHeader
-          logo={require('../../assets/admin-logo.jpg')}
-          title="Admin Dashboard"
-          subtitle="Adarsha Hospital Management"
-        />
-      </View>
+    <Appbar.Header style={styles.appBar} elevated>
 
-      {/* Right Section */}
-      <View style={styles.rightSection}>
-        <AppButton
-          text="Logout"
-          onPress={handleLogout}
-          iconName="logout"
-          iconFamily="MaterialCommunityIcons"
-          iconSize={18}
-          borderColor="white"
-        />
-      </View>
-    </View>
+      {/* Title Section */}
+      <Appbar.Content
+        title="Admin Dashboard"
+        subtitle="Adarsha Hospital Management"
+        titleStyle={styles.title}
+        subtitleStyle={styles.subtitle}
+      />
+
+      {/* Logout Button */}
+      <Appbar.Action
+        icon="logout"
+        onPress={handleLogout}
+      />
+
+    </Appbar.Header>
   );
 };
 
 const styles = StyleSheet.create({
   appBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: colors.surface,
     elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
   },
-  leftSection: {
-    flex: 1,
+  title: {
+    fontWeight: 'bold',
   },
-  rightSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
+  subtitle: {
+    fontSize: 12,
   },
 });
 

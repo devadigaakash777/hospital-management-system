@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { TextInput, Button } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
-import { InputField, AppHeader, SectionHeader, AppButton } from '../components';
+import { AppHeader, SectionHeader } from '../components';
 import { colors } from '../theme';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const { login } = useAuth();
 
@@ -17,9 +19,7 @@ export default function LoginScreen() {
       Alert.alert('Please enter email and password');
       return;
     }
-
     try {
-      // TEMP: simulate API call
       if (username === 'admin@hospital.com' && password === 'admin123') {
         const userData = {
           id: '1',
@@ -27,7 +27,6 @@ export default function LoginScreen() {
           email: username,
           role: 'ADMIN' as const,
         };
-
         login(userData);
       } else {
         Alert.alert('Invalid credentials');
@@ -49,6 +48,7 @@ export default function LoginScreen() {
         enableOnAndroid
         extraScrollHeight={20}
       >
+        {/* ✅ AppHeader + SectionHeader unchanged — your own components */}
         <AppHeader
           logo={require('../assets/admin-logo.jpg')}
           title="Admin Portal"
@@ -62,30 +62,52 @@ export default function LoginScreen() {
             align="center"
           />
 
-          <InputField
+          {/* ✅ Paper TextInput replaces InputField */}
+          <TextInput
             label="Email"
             placeholder="Enter your email"
             keyboardType="email-address"
             value={username}
             onChangeText={setUsername}
+            mode="outlined"
+            style={styles.input}
+            outlineColor={colors.border}
+            activeOutlineColor={colors.primary}
+            theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
           />
 
-          <InputField
+          {/* ✅ Paper TextInput with eye toggle replaces InputField isPassword */}
+          <TextInput
             label="Password"
             placeholder="Enter your password"
-            secureTextEntry
+            secureTextEntry={!showPassword}
             value={password}
             onChangeText={setPassword}
-            isPassword={true}
+            mode="outlined"
+            style={styles.input}
+            outlineColor={colors.border}
+            activeOutlineColor={colors.primary}
+            theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
+            right={
+              <TextInput.Icon
+                icon={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                onPress={() => setShowPassword(prev => !prev)}
+                color={colors.textSecondary}
+              />
+            }
           />
 
-          <AppButton
-            text="Login"
-            iconName="login"
-            iconFamily="MaterialCommunityIcons"
-            backgroundColor={colors.primary}
+          {/* ✅ Paper Button replaces AppButton */}
+          <Button
+            mode="contained"
+            icon="login"
             onPress={handleLogin}
-          />
+            buttonColor={colors.primary}
+            style={styles.loginBtn}
+            labelStyle={styles.loginBtnLabel}
+          >
+            Login
+          </Button>
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
@@ -107,6 +129,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     padding: 16,
     borderRadius: 10,
+  },
+  input: {
+    backgroundColor: colors.card,
+    marginBottom: 12,
+  },
+  loginBtn: {
+    marginTop: 8,
+    borderRadius: 8,
+  },
+  loginBtnLabel: {
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

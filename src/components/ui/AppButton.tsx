@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  View,
-  ViewStyle,
-  StyleProp,
-} from 'react-native';
+import { StyleSheet, ViewStyle, StyleProp } from 'react-native';
+import { Button } from 'react-native-paper';
 import { colors } from '../../theme';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -47,54 +41,42 @@ const AppButton: React.FC<AppButtonProps> = ({
   borderColor,
   containerStyle,
 }) => {
-  const renderIcon = () => {
-    if (!iconName) return null;
-
-    const props = {
-      name: iconName,
-      size: iconSize,
-      color,
-    };
+  // ✅ Only called when iconName exists — never returns null
+  const getIcon = () => {
+    const props = { name: iconName!, size: iconSize, color };
 
     switch (iconFamily) {
       case 'Ionicons':
-        return <Ionicons {...props} />;
+        return () => <Ionicons {...props} />;
       case 'Feather':
-        return <Feather {...props} />;
+        return () => <Feather {...props} />;
       case 'AntDesign':
-        return <AntDesign {...props} />;
+        return () => <AntDesign {...props} />;
       case 'FontAwesome6':
-        return <FontAwesome {...props} />;
+        return () => <FontAwesome {...props} />;
       default:
-        return <MaterialCommunityIcons {...props} />;
+        return () => <MaterialCommunityIcons {...props} />;
     }
   };
 
-  const buttonStyle: ViewStyle = {
-    ...(backgroundColor && { backgroundColor }),
-    ...(borderColor && {
-      borderWidth: 1,
-      borderColor,
-    }),
-  };
-
   return (
-    <TouchableOpacity
+    <Button
+      mode="contained"
+      onPress={onPress}
+      disabled={disabled}
+      icon={iconName ? getIcon() : undefined} // ✅ undefined not null
+      buttonColor={backgroundColor ?? colors.primary}
+      textColor={color}
       style={[
         styles.button,
-        buttonStyle,
+        borderColor && { borderWidth: 1, borderColor },
         containerStyle,
-        disabled && styles.disabled,
       ]}
-      onPress={onPress}
-      activeOpacity={0.8}
-      disabled={disabled}
+      labelStyle={styles.label}
+      contentStyle={styles.content}
     >
-      <View style={styles.content}>
-        {iconName && <View style={styles.icon}>{renderIcon()}</View>}
-        {text && <Text style={[styles.text, { color }]}>{text}</Text>}
-      </View>
-    </TouchableOpacity>
+      {text ?? ''}
+    </Button>
   );
 };
 
@@ -102,23 +84,16 @@ export default AppButton;
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
     borderRadius: 10,
-    alignItems: 'center',
   },
-  disabled: {
-    opacity: 0.6,
+  label: {
+    fontSize: 16,
+    fontWeight: '600',
   },
   content: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  icon: {
-    marginRight: 6,
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: '600',
+    paddingVertical: 2,
+    paddingHorizontal: 4,
   },
 });

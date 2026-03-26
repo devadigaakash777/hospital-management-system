@@ -1,37 +1,43 @@
 import React, { createContext, useContext, useState } from 'react';
 
+// ✅ Matches backend payload exactly
 export interface StaffData {
   id: string;
-  name: string;
-  role: string;
-  department: string;
-  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
   password: string;
-  group?: string;
-  departments: string[];
-  permissions: {
-    manageDoctorSlot: boolean;
-    manageStaff: boolean;
-    manageGroup: boolean;
-    manageHealthPackage: boolean;
-  };
+  role: string;
+  groupId?: string;        // ✅ renamed from group
+  departmentIds: string[]; // ✅ renamed from departments
+  canManageDoctorSlots: boolean;   // ✅ renamed from permissions.manageDoctorSlot
+  canManageStaff: boolean;         // ✅ renamed from permissions.manageStaff
+  canManageGroups: boolean;        // ✅ renamed from permissions.manageGroup
+  canManageHealthPackages: boolean;// ✅ renamed from permissions.manageHealthPackage
+  canExportReports: boolean;       // ✅ new field
+
+  // ── UI only fields (not sent to backend) ──
+  name: string;
+  department: string;
 }
 
 const INITIAL_STAFF: StaffData[] = [
   {
     id: '1',
-    name: 'ANITHA S B',
-    role: 'Dermatology Consultant',
-    department: 'Dermatology',
-    username: 'anitha',
+    firstName: 'Anitha',
+    lastName: 'S B',
+    email: 'anitha@hms.com',
     password: '123456',
-    departments: ['Dermatology'],
-    permissions: {
-      manageDoctorSlot: false,
-      manageStaff: true,
-      manageGroup: false,
-      manageHealthPackage: false,
-    },
+    role: 'STAFF',
+    groupId: undefined,
+    departmentIds: [],
+    canManageDoctorSlots: false,
+    canManageStaff: true,
+    canManageGroups: false,
+    canManageHealthPackages: false,
+    canExportReports: false,
+    name: 'Anitha S B',
+    department: 'Dermatology',
   },
 ];
 
@@ -50,20 +56,14 @@ export const StaffProvider: React.FC<{ children: React.ReactNode }> = ({
   const [staffList, setStaffList] = useState<StaffData[]>(INITIAL_STAFF);
 
   const addStaff = (staff: StaffData) => {
-    // TODO: replace with API call when backend is ready
-    // await fetch('https://your-api.com/staff', { method: 'POST', body: JSON.stringify(staff) });
     setStaffList(prev => [...prev, staff]);
   };
 
   const updateStaff = (staff: StaffData) => {
-    // TODO: replace with API call when backend is ready
-    // await fetch(`https://your-api.com/staff/${staff.id}`, { method: 'PUT', body: JSON.stringify(staff) });
     setStaffList(prev => prev.map(s => s.id === staff.id ? staff : s));
   };
 
   const deleteStaff = (id: string) => {
-    // TODO: replace with API call when backend is ready
-    // await fetch(`https://your-api.com/staff/${id}`, { method: 'DELETE' });
     setStaffList(prev => prev.filter(s => s.id !== id));
   };
 

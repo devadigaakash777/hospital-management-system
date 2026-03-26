@@ -3,8 +3,8 @@ import { TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { colors } from '../theme';
-import CreateGroupScreen from '../screen/groups/CreateGroupScreen';
-import ManageGroupScreen from '../screen/groups/ManageGroupsScreen';
+import CreateGroupScreen from '../screen/GroupManagement/CreateGroupScreen';
+import ManageGroupScreen from '../screen/GroupManagement/ManageGroupsScreen';
 import { GroupsProvider, GroupData } from '../context/GroupContext';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
@@ -50,7 +50,9 @@ export default function GroupManagementStack() {
         <Stack.Screen
           name="CreateGroupScreen"
           component={CreateGroupScreen}
-          options={{ title: 'Create or Edit Group' }}
+          options={({ route }) => ({
+            title: route.params?.editGroup ? 'Edit Group' : 'Create Group',
+          })}
           // ← default back button shows here, no hamburger needed
         />
       </Stack.Navigator>

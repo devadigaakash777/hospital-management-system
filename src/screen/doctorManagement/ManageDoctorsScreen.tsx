@@ -1,190 +1,204 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Alert } from 'react-native';
+import { StyleSheet, FlatList, View } from 'react-native';
+import { Text, Button } from 'react-native-paper';
+import DoctorScheduleTab from '../../components/ManageDoctor/DoctorScheduleTab';
 import { colors } from '../../theme';
-import SearchablePicker from '../../components/layout/SearchablePicker';
-import { AppButton } from '../../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AddDoctorModal from './components/AddDoctorModal';
-import DoctorForm from './components/DoctorForm';
-import { useDoctorSchedule } from './components/useDoctorSchedule';
+import { SearchInput, ConfirmModal } from '../../components';
+import AddDoctorModal from '../../components/ManageDoctor/AddDoctorModal';
 import { DoctorFormValues, WeekSelection } from '../../types/doctor.types';
-import { validateDoctorForm } from './components/doctor.validation';
-import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
-const departmentsData = ['Cardiology', 'Dermatology', 'GeneralMedicine'];
-const doctorData = [
-  'Dr. Sunil G',
-  'Dr. Anitha R',
-  'Dr. Kavya M',
-  'Dr. Ramesh K',
-];
+interface DoctorSchedule {
+  id: string;
+  doctorName: string;
+  department: string;
+  roomNumber?: string;
+  opdTiming: string;
+  visitingDays: string;
+  totalSlots: number;
+}
 
-const DoctorSelectionSection = () => {
-  const [department, setDepartment] = useState<string | null>(null);
-  const [doctor, setDoctor] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
+export default function ManageDoctorsScreen() {
+  const [data, setData] = useState<DoctorSchedule[]>([
+    {
+      id: '1',
+      doctorName: 'Dr. Rajesh Kumar',
+      department: 'Cardiology',
+      roomNumber: 'Room 204',
+      opdTiming: '09:00 AM - 02:00 PM',
+      visitingDays: 'Mon - Sat',
+      totalSlots: 40,
+    },
+    {
+      id: '2',
+      doctorName: 'Dr. Anjali Sharma',
+      department: 'Dermatology',
+      opdTiming: '10:00 AM - 04:00 PM',
+      visitingDays: 'Full Time',
+      totalSlots: 36,
+    },
+    {
+      id: '3',
+      doctorName: 'Dr. Vivek Rao',
+      department: 'Orthopedics',
+      roomNumber: 'Room 110',
+      opdTiming: '08:00 AM - 01:00 PM',
+      visitingDays: 'Mon, Wed, Fri',
+      totalSlots: 25,
+    },
+  ]);
 
-  const departments = ['Cardiology', 'Dermatology', 'General Medicine'];
-  const { showTimePicker, setShowTimePicker } = useDoctorSchedule();
+  const [search, setSearch] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingValues, setEditingValues] = useState<Partial<DoctorFormValues> | undefined>();
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
-  const [values, setValues] = useState<DoctorFormValues>({
-    doctorName: '',
-    department: null,
-    opdFrom: null,
-    opdTo: null,
-    visitingType: 'regular',
-    regularDays: [],
-    specificWeeks: {} as WeekSelection,
-    patientsPerHour: '',
-    advanceBookingDays: '',
-  });
+  const filteredData = data.filter(
+    item =>
+      item.doctorName.toLowerCase().includes(search.toLowerCase()) ||
+      item.department.toLowerCase().includes(search.toLowerCase()),
+  );
 
-  const handleChange = <K extends keyof DoctorFormValues>(
-    key: K,
-    value: DoctorFormValues[K],
-  ) => {
-    setValues((prev) => ({ ...prev, [key]: value }));
+  const handleDelete = (id: string) => setDeleteConfirm(id);
+
+  const handleEdit = (item: DoctorSchedule) => {
+    setEditingValues({
+      user: item.doctorName,
+      department: item.department,
+      roomNumber: item.roomNumber ?? '',
+      opdTimeRanges: [],
+      visitingType: 'regular',
+      regularDays: [],
+      specificWeeks: {} as WeekSelection,
+      advanceBookingDays: '',
+    });
+    setIsEditMode(true);
+    setModalVisible(true);
   };
 
-  const handleTimeChange = (
-    type: 'from' | 'to',
-    event: DateTimePickerEvent,
-    date?: Date,
-  ): void => {
-    setShowTimePicker(null);
-
-    if (event.type === 'dismissed' || !date) return;
-
-    if (type === 'from') {
-      if (values.opdTo && date >= values.opdTo) {
-        Alert.alert('Invalid Time', '"From" must be earlier than "To"');
-        return;
-      }
-      handleChange('opdFrom', date);
-    }
-
-    if (type === 'to') {
-      if (!values.opdFrom) {
-        Alert.alert('Select From Time First');
-        return;
-      }
-
-      if (date <= values.opdFrom) {
-        Alert.alert('Invalid Time', '"To" must be later than "From"');
-        return;
-      }
-
-      handleChange('opdTo', date);
-    }
-  };
-
-  const handleSubmit = () => {
-    const error = validateDoctorForm(values);
-    if (error) {
-      Alert.alert('Validation Error', error);
-      return;
-    }
-    // const payload = {
-    //   ...values,
-    //   regularDays:
-    //     values.visitingType === 'regular' ? values.regularDays : null,
-    //   specificWeeks:
-    //     values.visitingType === 'specific' ? values.specificWeeks : null,
-    //   patientsPerHour: Number(values.patientsPerHour),
-    //   advanceBookingDays: Number(values.advanceBookingDays),
-    // };
-
-    // console.log('FINAL PAYLOAD:', payload);
-    Alert.alert('Doctor Added (Check Console)');
+  const handleAddDoctor = () => {
+    setEditingValues(undefined);
+    setIsEditMode(false);
+    setModalVisible(true);
   };
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
-      {/* Scrollable Content */}
-      <ScrollView
-        contentContainerStyle={styles.content}
+      <FlatList
+        data={filteredData}
+        keyExtractor={item => item.id}
+        contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
-      >
-        <SearchablePicker
-          label="Department"
-          value={department}
-          placeholder="Select Department"
-          options={departmentsData}
-          onSelect={setDepartment}
-        />
+        ListHeaderComponent={
+          <View>
+            {/* ✅ Paper Text replaces RN Text */}
+            <Text style={styles.title}>Manage Doctors</Text>
+            <Text style={styles.subtitle}>
+              Add and manage hospital doctors
+            </Text>
 
-        <SearchablePicker
-          label="Doctor"
-          value={doctor}
-          placeholder="Select Doctor"
-          options={doctorData}
-          onSelect={setDoctor}
-        />
-
-        {/* Additional Details Section */}
-        {doctor && (
-          <View style={styles.detailsContainer}>
-            <DoctorForm
-              values={values}
-              departments={departments}
-              onChange={handleChange}
-              showTimePicker={showTimePicker}
-              onOpenTimePicker={setShowTimePicker}
-              onTimeChange={handleTimeChange}
+            {/* ✅ SearchInput unchanged — already converted */}
+            <SearchInput
+              value={search}
+              onChangeText={setSearch}
+              placeholder="Search doctor or department..."
             />
 
-            <AppButton
-              text="Save Details"
-              onPress={handleSubmit}
-              backgroundColor={colors.primary}
-              color={colors.textPrimary}
-              iconFamily="MaterialCommunityIcons"
-              iconName="account-edit-outline"
-            />
+            {/* ✅ Paper Button replaces TouchableOpacity + MaterialCommunityIcons + Text */}
+            <Button
+              mode="contained"
+              icon="plus"
+              onPress={handleAddDoctor}
+              buttonColor={colors.primary}
+              textColor="#fff"
+              style={styles.addBtn}
+              labelStyle={styles.addBtnLabel}
+            >
+              Add Doctor
+            </Button>
+
+            <Text style={styles.sectionLabel}>Current Doctors</Text>
           </View>
+        }
+        ListEmptyComponent={
+          <Text style={styles.empty}>No doctors found.</Text>
+        }
+        renderItem={({ item }) => (
+          // ✅ DoctorScheduleTab unchanged — already converted
+          <DoctorScheduleTab
+            doctorName={item.doctorName}
+            department={item.department}
+            roomNumber={item.roomNumber}
+            opdTiming={item.opdTiming}
+            visitingDays={item.visitingDays}
+            totalSlots={item.totalSlots}
+            onDelete={() => handleDelete(item.id)}
+            onEdit={() => handleEdit(item)}
+          />
         )}
-      </ScrollView>
+      />
 
-      {/* Fixed Footer Button */}
-      <View style={styles.footer}>
-        <AppButton
-          text="Add Doctor"
-          onPress={() => setOpen(true)}
-          backgroundColor={colors.primary}
-          color={colors.textPrimary}
-          iconFamily="MaterialCommunityIcons"
-          iconName="plus"
-        />
-      </View>
-      <AddDoctorModal visible={open} onClose={() => setOpen(false)} />
+      {/* ✅ AddDoctorModal unchanged — already converted */}
+      <AddDoctorModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        initialValues={editingValues}
+        isEditMode={isEditMode}
+      />
+
+      {/* ✅ ConfirmModal unchanged — already converted */}
+      <ConfirmModal
+        visible={!!deleteConfirm}
+        type="delete"
+        onConfirm={() => {
+          setData(prev => prev.filter(item => item.id !== deleteConfirm));
+          setDeleteConfirm(null);
+        }}
+        onCancel={() => setDeleteConfirm(null)}
+      />
     </SafeAreaView>
   );
-};
-
-export default DoctorSelectionSection;
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
   },
-  content: {
-    padding: 16,
-    paddingBottom: 30,
+  listContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 20,
+    paddingTop: 12,
   },
-  detailsContainer: {
-    marginTop: 40,
-    minHeight: 120,
-    padding: 10,
-    paddingVertical: 20,
-    borderWidth: 1,
-    borderColor: colors.border,
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: colors.textPrimary,
+  },
+  subtitle: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    marginBottom: 12,
+  },
+  addBtn: {
     borderRadius: 10,
-    backgroundColor: colors.surface,
+    marginBottom: 16,
+    marginTop: 8,
   },
-  footer: {
-    padding: 16,
+  addBtnLabel: {
+    fontWeight: '600',
+    fontSize: 15,
+  },
+  sectionLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.textSecondary,
+    marginBottom: 8,
+  },
+  empty: {
+    textAlign: 'center',
+    color: colors.textSecondary,
+    marginTop: 40,
   },
 });
-
-// i appreciate you being asshole ai which couldn't solve a simple problem. but now i want real solution not you are fucking wrong solution which wont work.

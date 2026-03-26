@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { StyleSheet } from 'react-native';
+import { Searchbar } from 'react-native-paper';
 import { colors } from '../../theme';
 
 interface Props {
@@ -15,35 +15,22 @@ const SearchInput: React.FC<Props> = ({
   placeholder = 'Search...',
 }) => {
   return (
-    <View style={styles.container}>
-      {/* Search Icon */}
-      <MaterialCommunityIcons
-        name="magnify"
-        size={20}
-        color={colors.textSecondary}
-        style={styles.leftIcon}
-      />
-
-      {/* Input */}
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor={colors.textSecondary}
-      />
-
-      {/* Clear Icon */}
-      {value.length > 0 && (
-        <TouchableOpacity onPress={() => onChangeText('')}>
-          <MaterialCommunityIcons
-            name="close-circle"
-            size={20}
-            color={colors.textSecondary}
-          />
-        </TouchableOpacity>
-      )}
-    </View>
+    // ✅ Paper Searchbar replaces entire custom View + TextInput + icons
+    <Searchbar
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={placeholder}
+      onClearIconPress={() => onChangeText('')}
+      style={styles.container}
+      inputStyle={styles.input}
+      iconColor={colors.textSecondary}
+      placeholderTextColor={colors.textSecondary}
+      theme={{
+        colors: {
+          onSurfaceVariant: colors.textSecondary,
+        },
+      }}
+    />
   );
 };
 
@@ -51,24 +38,18 @@ export default SearchInput;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
     borderRadius: 10,
-    paddingHorizontal: 12,
     height: 45,
-    margin: 16,
+    marginBottom: 12,
+    elevation: 0, // ✅ Remove Paper's default shadow
   },
-
-  leftIcon: {
-    marginRight: 8,
-  },
-
   input: {
-    flex: 1,
     color: colors.textPrimary,
     fontSize: 14,
+    minHeight: 0,  // ✅ Fixes height on Android
+    alignSelf: 'center',
   },
 });

@@ -42,15 +42,7 @@ export default function DoctorManagementHomeScreen() {
   return (
     <View style={styles.container}>
       <SettingItem
-        title="Manage Departments"
-        subtitle="Add, update and manage departments"
-        iconName="hospital-building"
-        iconFamily="MaterialCommunityIcons"
-        onPress={() => navigation.navigate('ManageDepartments')}
-      />
-
-      <SettingItem
-        title="Manage Doctors"
+        title="Manage Doctor "
         subtitle="Add, update and manage doctors"
         iconName="user-doctor"
         iconFamily="FontAwesome6"
@@ -65,13 +57,7 @@ export default function DoctorManagementHomeScreen() {
         onPress={() => navigation.navigate('BlockAvailability')}
       />
 
-      <SettingItem
-        title="Correct Doctor Slot Configuration"
-        subtitle="Fix incorrect doctor slot configurations"
-        iconName="wrench"
-        iconFamily="FontAwesome6"
-        onPress={() => navigation.navigate('SlotConfiguration')}
-      />
+      
     </View>
   );
 }

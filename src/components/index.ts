@@ -10,3 +10,7 @@ export { default as SearchablePicker } from './layout/SearchablePicker';
 export { default as AppCheckbox } from './ui/AppCheckbox';
 export { default as InfoRow } from './ui/InfoRow';
 export { default as SearchInput } from './ui/SearchInput';
+export { default as ConfirmModal } from './ui/ConfirmModal';
+export { default as EntityCard } from './ui/EntityCard';
+export type { EntityCardRow, EntityCardAction } from './ui/EntityCard';
+export { default as ChangePasswordModal } from './ui/ChangePasswordModal';

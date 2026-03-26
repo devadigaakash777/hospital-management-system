@@ -1,17 +1,14 @@
 import React, { useMemo, useState } from 'react';
+import { View, FlatList, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import {
-  Modal,
-  View,
+  Portal,
+  Dialog,
   Text,
-  TouchableOpacity,
-  TextInput,
-  FlatList,
-  StyleSheet,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
+  Button,
+  TouchableRipple,
+  Searchbar,
+} from 'react-native-paper';
 import { colors } from '../../theme';
-import { AppButton } from '../../components';
 
 interface SearchablePickerProps {
   label?: string;
@@ -36,84 +33,104 @@ const SearchablePicker: React.FC<SearchablePickerProps> = ({
   const [search, setSearch] = useState('');
 
   const filteredOptions = useMemo(() => {
-    return options.filter((opt) =>
+    return options.filter(opt =>
       opt.toLowerCase().includes(search.toLowerCase()),
     );
   }, [search, options]);
 
   return (
     <>
+      {/* ✅ Label */}
       {label && (
         <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
       )}
 
-      {/* Picker Input */}
-      <TouchableOpacity
+      {/* ✅ TouchableRipple replaces TouchableOpacity picker trigger */}
+      <TouchableRipple
         style={[styles.input, containerStyle]}
         onPress={() => {
           setSearch('');
           setVisible(true);
         }}
+        rippleColor={colors.primary + '22'}
       >
-        <Text style={[styles.value, !value && { color: colors.textSecondary }]}>
-          {value || placeholder}
-        </Text>
-        <Text style={styles.arrow}>▼</Text>
-      </TouchableOpacity>
+        <View style={styles.inputInner}>
+          <Text style={[styles.value, !value && { color: colors.textSecondary }]}>
+            {value || placeholder}
+          </Text>
+          <Text style={styles.arrow}>▼</Text>
+        </View>
+      </TouchableRipple>
 
-      {/* Modal */}
-      <Modal visible={visible} transparent animationType="fade">
-        <View style={styles.overlay}>
-          <View style={styles.modal}>
+      {/* ✅ Portal + Dialog replaces Modal + View overlay */}
+      <Portal>
+        <Dialog
+          visible={visible}
+          onDismiss={() => setVisible(false)}
+          style={styles.dialog}
+        >
+          <Dialog.Content style={styles.dialogContent}>
 
-            {/* Search */}
-            <TextInput
-              style={styles.searchInput}
+            {/* ✅ Paper Searchbar replaces custom TextInput search */}
+            <Searchbar
               placeholder="Search..."
-              placeholderTextColor={colors.textSecondary}
               value={search}
               onChangeText={setSearch}
+              style={styles.searchbar}
+              inputStyle={styles.searchInput}
+              iconColor={colors.textSecondary}
               autoFocus
+              elevation={0}
+              theme={{
+                colors: { onSurfaceVariant: colors.textSecondary },
+              }}
             />
 
-            {/* Options */}
+            {/* ✅ FlatList stays — no Paper equivalent needed */}
             <FlatList
               data={filteredOptions}
-              keyExtractor={(item) => item}
+              keyExtractor={item => item}
               keyboardShouldPersistTaps="handled"
               renderItem={({ item }) => (
-                <TouchableOpacity
+                // ✅ TouchableRipple replaces TouchableOpacity for options
+                <TouchableRipple
                   style={styles.option}
                   onPress={() => {
                     onSelect(item);
                     setVisible(false);
                   }}
+                  rippleColor={colors.primary + '22'}
                 >
                   <Text style={styles.optionText}>{item}</Text>
-                </TouchableOpacity>
+                </TouchableRipple>
               )}
               ListEmptyComponent={
                 <Text style={styles.empty}>No results found</Text>
               }
             />
 
-            <AppButton
-              text="Cancel"
+          </Dialog.Content>
+
+          {/* ✅ Dialog.Actions + Paper Button replaces AppButton */}
+          <Dialog.Actions>
+            <Button
+              mode="contained"
               onPress={() => setVisible(false)}
-              backgroundColor={colors.primary}
-              color={colors.textPrimary}
-              containerStyle={styles.cancelBtn}
-            />
-          </View>
-        </View>
-      </Modal>
+              buttonColor={colors.primary}
+              textColor={colors.textPrimary}
+              style={styles.cancelBtn}
+            >
+              Cancel
+            </Button>
+          </Dialog.Actions>
+
+        </Dialog>
+      </Portal>
     </>
   );
 };
 
 export default SearchablePicker;
-
-/* ---------------- Styles ---------------- */
 
 const styles = StyleSheet.create({
   label: {
@@ -125,13 +142,15 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: colors.card,
     borderRadius: 10,
-    paddingVertical: 14,
-    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  inputInner: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.border,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
   },
   value: {
     color: colors.textPrimary,
@@ -140,29 +159,30 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.textSecondary,
   },
-  overlay: {
-    flex: 1,
-    backgroundColor: colors.overlay,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-  },
-  modal: {
+  dialog: {
     backgroundColor: colors.background,
     borderWidth: 2,
     borderColor: colors.border,
     borderRadius: 14,
     maxHeight: '70%',
-    padding: 12,
-    paddingVertical: 30,
   },
-  searchInput: {
+  dialogContent: {
+    paddingHorizontal: 12,
+    paddingTop: 16,
+  },
+  searchbar: {
+    backgroundColor: colors.card,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 10,
-    padding: 12,
     marginBottom: 10,
-    backgroundColor: colors.card,
+    elevation: 0,
+  },
+  searchInput: {
     color: colors.textPrimary,
+    fontSize: 14,
+    minHeight: 0,
+    alignSelf: 'center',
   },
   option: {
     paddingVertical: 14,
@@ -180,10 +200,6 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
   cancelBtn: {
-    marginTop: 20,
-    alignSelf: 'flex-end',
-    width: '40%',
-    paddingVertical: 8,
-    borderRadius: 8,
+    minWidth: '40%',
   },
 });

@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ViewStyle,
-} from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
+import { List, TouchableRipple } from 'react-native-paper';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -50,86 +45,80 @@ const SettingItem: React.FC<SettingItemProps> = ({
   arrowColor = colors.textPrimary,
   containerStyle,
 }) => {
+  // ✅ Returns a function — required by List.Item left/right props
   const renderIcon = () => {
-    if (!iconName) return null;
+    if (!iconName) return undefined;
 
-    const props = {
-      name: iconName,
-      size: 22,
-      color: iconColor,
-    };
+    const props = { name: iconName, size: 22, color: iconColor };
 
     switch (iconFamily) {
       case 'Ionicons':
-        return <Ionicons {...props} />;
+        return () => <Ionicons {...props} />;
       case 'Feather':
-        return <Feather {...props} />;
+        return () => <Feather {...props} />;
       case 'AntDesign':
-        return <AntDesign {...props} />;
+        return () => <AntDesign {...props} />;
       case 'FontAwesome6':
-        return <FontAwesome {...props} />;
+        return () => <FontAwesome {...props} />;
       default:
-        return <MaterialCommunityIcons {...props} />;
+        return () => <MaterialCommunityIcons {...props} />;
     }
   };
 
   return (
-    <TouchableOpacity
-      style={[styles.container, { backgroundColor }, containerStyle]}
+    // ✅ TouchableRipple replaces TouchableOpacity
+    <TouchableRipple
       onPress={onPress}
-      activeOpacity={0.7}
+      rippleColor={colors.primary + '22'}
+      style={[styles.container, { backgroundColor }, containerStyle]}
     >
-      <View style={styles.leftSection}>
-        {iconName && <View style={styles.iconWrapper}>{renderIcon()}</View>}
-
-        <View style={styles.textContainer}>
-          <Text style={[styles.title, { color: titleColor }]}>{title}</Text>
-          {subtitle && (
-            <Text style={[styles.subtitle, { color: subtitleColor }]}>
-              {subtitle}
-            </Text>
-          )}
-        </View>
-      </View>
-
-      {showArrow && (
-        <Ionicons name="chevron-forward" size={20} color={arrowColor} />
-      )}
-    </TouchableOpacity>
+      {/* ✅ List.Item replaces custom View + Text layout */}
+      <List.Item
+        title={title}
+        description={subtitle}
+        left={iconName ? renderIcon() : undefined}
+        right={
+          showArrow
+            ? () => (
+                <Ionicons
+                  name="chevron-forward"
+                  size={20}
+                  color={arrowColor}
+                  style={styles.arrow}
+                />
+              )
+            : undefined
+        }
+        titleStyle={[styles.title, { color: titleColor }]}
+        descriptionStyle={[styles.subtitle, { color: subtitleColor }]}
+        style={styles.listItem}
+      />
+    </TouchableRipple>
   );
 };
 
 export default SettingItem;
 
-/* ------------------ Styles ------------------ */
-
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  leftSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  iconWrapper: {
-    marginRight: 14,
-  },
-  textContainer: {
-    flex: 1,
+  listItem: {
+    paddingVertical: 6,
+    paddingHorizontal: 16,
   },
   title: {
     fontSize: 16,
     fontWeight: '600',
+    color: colors.textPrimary,
   },
   subtitle: {
     fontSize: 13,
     marginTop: 2,
+    color: colors.textSecondary,
+  },
+  arrow: {
+    alignSelf: 'center',
   },
 });

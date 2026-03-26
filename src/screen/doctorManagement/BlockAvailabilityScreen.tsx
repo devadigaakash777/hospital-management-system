@@ -1,18 +1,13 @@
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
+import { Text, TouchableRipple } from 'react-native-paper';
 import { SearchablePicker } from '../../components';
-import BlockDatesCard from './components/BlockDatesCard';
-import BlockDatesList from './components/BlockDatesList';
+import BlockDatesCard from '../../components/ManageDoctor/BlockDatesCard';
+import BlockDatesList from '../../components/ManageDoctor/BlockDatesList';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../../theme';
 import { useState } from 'react';
-import BlockTimeSlotCard from './components/BlockTimeSlotCard';
-import BlockTimeSlotList from './components/BlockTimeSlotList';
+import BlockTimeSlotCard from '../../components/ManageDoctor/BlockTimeSlotCard';
+import BlockTimeSlotList from '../../components/ManageDoctor/BlockTimeSlotList';
 
 const departmentsData = ['Cardiology', 'Dermatology', 'GeneralMedicine'];
 const doctorData = [
@@ -25,18 +20,23 @@ const doctorData = [
 export default function BlockAvailabilityScreen() {
   const [department, setDepartment] = useState<string | null>(null);
   const [doctor, setDoctor] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'BlockDates' | 'BlockTimeSlots'>(
-    'BlockDates',
-  );
+  const [activeTab, setActiveTab] = useState<'BlockDates' | 'BlockTimeSlots'>('BlockDates');
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
       <FlatList
         data={doctor ? ['content'] : []}
-        keyExtractor={(item) => item}
+        keyExtractor={item => item}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <View>
+            {/* ✅ Paper Text replaces RN Text */}
+            <Text style={styles.title}>Block Availability</Text>
+            <Text style={styles.subtitle}>
+              Block specific dates or time slots for a doctor
+            </Text>
+
+            {/* ✅ SearchablePicker unchanged — already converted */}
             <SearchablePicker
               label="Department"
               value={department}
@@ -44,7 +44,6 @@ export default function BlockAvailabilityScreen() {
               options={departmentsData}
               onSelect={setDepartment}
             />
-
             <SearchablePicker
               label="Doctor"
               value={doctor}
@@ -56,8 +55,13 @@ export default function BlockAvailabilityScreen() {
         }
         renderItem={() => (
           <>
+            {/* ✅ TouchableRipple replaces TouchableOpacity tabs */}
             <View style={styles.tabRow}>
-              <TouchableOpacity onPress={() => setActiveTab('BlockDates')}>
+              <TouchableRipple
+                onPress={() => setActiveTab('BlockDates')}
+                rippleColor={colors.primary + '22'}
+                style={styles.tabItem}
+              >
                 <Text
                   style={[
                     styles.tabText,
@@ -66,9 +70,13 @@ export default function BlockAvailabilityScreen() {
                 >
                   Block Dates
                 </Text>
-              </TouchableOpacity>
+              </TouchableRipple>
 
-              <TouchableOpacity onPress={() => setActiveTab('BlockTimeSlots')}>
+              <TouchableRipple
+                onPress={() => setActiveTab('BlockTimeSlots')}
+                rippleColor={colors.primary + '22'}
+                style={styles.tabItem}
+              >
                 <Text
                   style={[
                     styles.tabText,
@@ -77,9 +85,10 @@ export default function BlockAvailabilityScreen() {
                 >
                   Block Time Slots
                 </Text>
-              </TouchableOpacity>
+              </TouchableRipple>
             </View>
 
+            {/* ✅ All cards/lists unchanged — already converted */}
             <View style={styles.tabContainer}>
               {activeTab === 'BlockDates' && (
                 <>
@@ -87,7 +96,6 @@ export default function BlockAvailabilityScreen() {
                   <BlockDatesList doctorID={doctor!} />
                 </>
               )}
-
               {activeTab === 'BlockTimeSlots' && (
                 <>
                   <BlockTimeSlotCard />
@@ -108,12 +116,24 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     padding: 16,
   },
-  tabContainer: { marginBottom: 20 },
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: colors.textPrimary,
+  },
+  subtitle: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    marginBottom: 12,
+  },
   tabRow: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     gap: 20,
     marginTop: 20,
+  },
+  tabItem: {
+    paddingBottom: 4,
   },
   tabText: {
     color: colors.textPrimary,
@@ -124,11 +144,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: colors.primary,
   },
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
-    marginBottom: 30,
-    gap: 10,
+  tabContainer: {
+    marginBottom: 20,
   },
 });

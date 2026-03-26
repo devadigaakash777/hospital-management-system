@@ -1,13 +1,6 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { Checkbox, TouchableRipple, Text } from 'react-native-paper';
 import { colors } from '../../theme';
 
 interface AppCheckboxProps {
@@ -34,30 +27,37 @@ const AppCheckbox: React.FC<AppCheckboxProps> = ({
   };
 
   return (
-    <TouchableOpacity
-      style={[styles.container, containerStyle]}
+    // ✅ TouchableRipple replaces TouchableOpacity
+    <TouchableRipple
       onPress={handlePress}
-      activeOpacity={0.7}
       disabled={disabled}
+      rippleColor={colors.primary + '22'}
+      style={[styles.container, containerStyle]}
     >
-      <View
-        style={[
-          styles.checkbox,
-          value && styles.checkedBox,
-          disabled && styles.disabledBox,
-        ]}
-      >
-        {value && <Ionicons name="checkmark" size={14} color="#fff" />}
-      </View>
+      <>
+        {/* ✅ Paper Checkbox replaces custom View + Ionicons checkmark */}
+        <Checkbox
+          status={value ? 'checked' : 'unchecked'}
+          disabled={disabled}
+          color={colors.primary}
+          uncheckedColor={colors.primary}
+          onPress={handlePress}
+        />
 
-      {label && (
-        <Text
-          style={[styles.label, disabled && styles.disabledLabel, labelStyle]}
-        >
-          {label}
-        </Text>
-      )}
-    </TouchableOpacity>
+        {/* ✅ Paper Text replaces RN Text */}
+        {label && (
+          <Text
+            style={[
+              styles.label,
+              disabled && styles.disabledLabel,
+              labelStyle,
+            ]}
+          >
+            {label}
+          </Text>
+        )}
+      </>
+    </TouchableRipple>
   );
 };
 
@@ -67,32 +67,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 6,
   },
-
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderRadius: 4,
-    borderWidth: 1.5,
-    borderColor: colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 8,
-  },
-
-  checkedBox: {
-    backgroundColor: colors.primary,
-  },
-
-  disabledBox: {
-    borderColor: colors.border,
-    backgroundColor: colors.border,
-  },
-
   label: {
     fontSize: 14,
     color: colors.textPrimary,
   },
-
   disabledLabel: {
     color: colors.textSecondary,
   },

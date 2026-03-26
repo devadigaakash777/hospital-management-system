@@ -10,25 +10,27 @@ import { RouteProp } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
-import DepartmentAppointmentsScreen from '../screen/departmentAppointments/DepartmentAppointmentsScreen';
+import DepartmentAppointmentsScreen from '../screen/HomeScreen/DepartmentAppointmentsScreen';
 import DoctorManagementStack from './DoctorManagementStack';
-import HealthPackageScreen from '../screen/healthPackageAppointments/healthPackageScreen';
+import HealthPackageScreen from '../screen/HealthPackageAppointments/HealthPackageScreen';
 // import ManageGroupsScreen from '../screen/groups/ManageGroupsScreen';
 import StaffManagementStack from './StaffManagementStack';
 import GroupManagementStack from './GroupManagementStack';
 import { AppHeader } from '../components';
 import { colors } from '../theme';
+import DepartmentManagementStack from './DepartmentManagementStack';
 
 /* ----------------------------- */
 /* Drawer Param List */
 /* ----------------------------- */
 
 export type DrawerParamList = {
-  'Department Appointments': undefined;
+  'Appointment Management': undefined;
   'Health Package Appointments': undefined;
+  'Department Management': undefined;
   'Doctor Management': undefined;
-  'Manage Staff': undefined;
-  'Manage Groups': undefined;
+  'Staff Management': undefined;
+  'Group Management': undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -43,7 +45,7 @@ const drawerItems: {
   component: React.ComponentType<unknown>;
 }[] = [
   {
-    name: 'Department Appointments',
+    name: 'Appointment Management',
     icon: 'calendar',
     component: DepartmentAppointmentsScreen,
   },
@@ -53,17 +55,22 @@ const drawerItems: {
     component: HealthPackageScreen,
   },
   {
+    name: 'Department Management',
+    icon: 'building',
+    component: DepartmentManagementStack,
+  },
+  {
     name: 'Doctor Management',
     icon: 'user-doctor',
     component: DoctorManagementStack,
   },
   {
-    name: 'Manage Staff',
+    name: 'Staff Management',
     icon: 'users-gear',
     component: StaffManagementStack,
   },
   {
-    name: 'Manage Groups',
+    name: 'Group Management',
     icon: 'user-group',
     component: GroupManagementStack,
   },
@@ -138,7 +145,7 @@ export default function DrawerNavigator() {
           name={item.name}
           component={item.component}
           options={
-            item.name === 'Doctor Management' || item.name === 'Manage Staff' || item.name === 'Manage Groups'
+            item.name === 'Doctor Management' || item.name === 'Staff Management' || item.name === 'Group Management'||item.name === 'Department Management'
               ? { headerShown: false }
               : undefined
           }

@@ -5,13 +5,12 @@ export type WeekSelection = {
 };
 
 export interface DoctorFormValues {
-  doctorName: string;
+  user: string | null;
   department: string | null;
-  opdFrom: Date | null;
-  opdTo: Date | null;
+  opdTimeRanges: { from: Date; to: Date; patients: string }[];
   visitingType: VisitingType;
   regularDays: string[];
   specificWeeks: WeekSelection;
-  patientsPerHour: string;
   advanceBookingDays: string;
+  roomNumber: string;         // ✅ text input
 }
