@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, View, StyleSheet } from 'react-native';
+import { Alert, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { BaseModal, ConfirmModal } from '..';
 import { colors } from '../../theme';
@@ -8,6 +8,7 @@ import { useDoctorSchedule } from './useDoctorSchedule';
 import { DoctorFormValues, WeekSelection } from '../../types/doctor.types';
 import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { validateDoctorForm } from './doctor.validation';
+import { wp, hp } from '../../utils/responsive';
 
 interface Props {
   visible: boolean;
@@ -146,7 +147,6 @@ const AddDoctorModal: React.FC<Props> = ({
       title={isEditMode ? 'Edit Doctor' : 'Add Doctor'}
       onClose={handleCancelPress}
     >
-      {/* ✅ DoctorForm unchanged — internal conversion handled separately */}
       <DoctorForm
         values={values}
         departments={departments}
@@ -163,14 +163,20 @@ const AddDoctorModal: React.FC<Props> = ({
         onRemoveTimeRange={handleRemoveTimeRange}
       />
 
-      {/* ✅ Paper Button replaces AppButton */}
-      <View style={styles.buttonRow}>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: hp(2.5),
+          marginBottom: hp(3.5),
+          gap: wp(2.5),
+        }}
+      >
         <Button
           mode="contained"
           onPress={handleCancelPress}
           buttonColor={colors.border}
           textColor={colors.textPrimary}
-          style={styles.halfBtn}
+          style={{ flex: 1 }}
         >
           Cancel
         </Button>
@@ -178,13 +184,12 @@ const AddDoctorModal: React.FC<Props> = ({
           mode="contained"
           onPress={handleSubmit}
           buttonColor={colors.primary}
-          style={styles.halfBtn}
+          style={{ flex: 1 }}
         >
           {isEditMode ? 'Save Changes' : 'Add Doctor'}
         </Button>
       </View>
 
-      {/* ✅ ConfirmModals unchanged */}
       <ConfirmModal
         visible={showCancelConfirm}
         type="cancel"
@@ -209,15 +214,3 @@ const AddDoctorModal: React.FC<Props> = ({
 };
 
 export default AddDoctorModal;
-
-const styles = StyleSheet.create({
-  buttonRow: {
-    flexDirection: 'row',
-    marginTop: 20,
-    marginBottom: 30,
-    gap: 10,
-  },
-  halfBtn: {
-    flex: 1,
-  },
-});

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { View, FlatList, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { View, FlatList, StyleProp, ViewStyle } from 'react-native';
 import {
   Portal,
   Dialog,
@@ -9,6 +9,7 @@ import {
   Searchbar,
 } from 'react-native-paper';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 interface SearchablePickerProps {
   label?: string;
@@ -40,44 +41,102 @@ const SearchablePicker: React.FC<SearchablePickerProps> = ({
 
   return (
     <>
-      {/* ✅ Label */}
+      {/* Label */}
       {label && (
-        <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
+        <Text
+          style={{
+            color: labelColor,
+            fontWeight: '600',
+            marginBottom: hp(0.8),
+            marginTop: hp(1.5),
+          }}
+        >
+          {label}
+        </Text>
       )}
 
-      {/* ✅ TouchableRipple replaces TouchableOpacity picker trigger */}
+      {/* Picker Trigger */}
       <TouchableRipple
-        style={[styles.input, containerStyle]}
+        style={[
+          {
+            backgroundColor: colors.card,
+            borderRadius: wp(2.5),
+            borderWidth: 1,
+            borderColor: colors.border,
+          },
+          containerStyle,
+        ]}
         onPress={() => {
           setSearch('');
           setVisible(true);
         }}
         rippleColor={colors.primary + '22'}
       >
-        <View style={styles.inputInner}>
-          <Text style={[styles.value, !value && { color: colors.textSecondary }]}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingVertical: hp(1.8),
+            paddingHorizontal: wp(3),
+          }}
+        >
+          <Text
+            style={{
+              color: value ? colors.textPrimary : colors.textSecondary,
+            }}
+          >
             {value || placeholder}
           </Text>
-          <Text style={styles.arrow}>▼</Text>
+          <Text
+            style={{
+              fontSize: wp(3),
+              color: colors.textSecondary,
+            }}
+          >
+            ▼
+          </Text>
         </View>
       </TouchableRipple>
 
-      {/* ✅ Portal + Dialog replaces Modal + View overlay */}
+      {/* Dialog */}
       <Portal>
         <Dialog
           visible={visible}
           onDismiss={() => setVisible(false)}
-          style={styles.dialog}
+          style={{
+            backgroundColor: colors.background,
+            borderWidth: 2,
+            borderColor: colors.border,
+            borderRadius: wp(3.5),
+            maxHeight: '70%',
+          }}
         >
-          <Dialog.Content style={styles.dialogContent}>
-
-            {/* ✅ Paper Searchbar replaces custom TextInput search */}
+          <Dialog.Content
+            style={{
+              paddingHorizontal: wp(3),
+              paddingTop: hp(2),
+            }}
+          >
+            {/* Searchbar */}
             <Searchbar
               placeholder="Search..."
               value={search}
               onChangeText={setSearch}
-              style={styles.searchbar}
-              inputStyle={styles.searchInput}
+              style={{
+                backgroundColor: colors.card,
+                borderWidth: 1,
+                borderColor: colors.border,
+                borderRadius: wp(2.5),
+                marginBottom: hp(1.2),
+                elevation: 0,
+              }}
+              inputStyle={{
+                color: colors.textPrimary,
+                fontSize: wp(3.5),
+                minHeight: 0,
+                alignSelf: 'center',
+              }}
               iconColor={colors.textSecondary}
               autoFocus
               elevation={0}
@@ -86,44 +145,61 @@ const SearchablePicker: React.FC<SearchablePickerProps> = ({
               }}
             />
 
-            {/* ✅ FlatList stays — no Paper equivalent needed */}
+            {/* Options List */}
             <FlatList
               data={filteredOptions}
               keyExtractor={item => item}
               keyboardShouldPersistTaps="handled"
               renderItem={({ item }) => (
-                // ✅ TouchableRipple replaces TouchableOpacity for options
                 <TouchableRipple
-                  style={styles.option}
+                  style={{
+                    paddingVertical: hp(1.8),
+                    paddingHorizontal: wp(2.5),
+                    borderBottomWidth: 1,
+                    borderBottomColor: colors.border,
+                  }}
                   onPress={() => {
                     onSelect(item);
                     setVisible(false);
                   }}
                   rippleColor={colors.primary + '22'}
                 >
-                  <Text style={styles.optionText}>{item}</Text>
+                  <Text
+                    style={{
+                      fontSize: wp(3.8),
+                      color: colors.textPrimary,
+                    }}
+                  >
+                    {item}
+                  </Text>
                 </TouchableRipple>
               )}
               ListEmptyComponent={
-                <Text style={styles.empty}>No results found</Text>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    padding: wp(5),
+                    color: colors.textSecondary,
+                  }}
+                >
+                  No results found
+                </Text>
               }
             />
-
           </Dialog.Content>
 
-          {/* ✅ Dialog.Actions + Paper Button replaces AppButton */}
+          {/* Cancel Button */}
           <Dialog.Actions>
             <Button
               mode="contained"
               onPress={() => setVisible(false)}
               buttonColor={colors.primary}
               textColor={colors.textPrimary}
-              style={styles.cancelBtn}
+              style={{ minWidth: '40%' }}
             >
               Cancel
             </Button>
           </Dialog.Actions>
-
         </Dialog>
       </Portal>
     </>
@@ -131,75 +207,3 @@ const SearchablePicker: React.FC<SearchablePickerProps> = ({
 };
 
 export default SearchablePicker;
-
-const styles = StyleSheet.create({
-  label: {
-    color: colors.textSecondary,
-    fontWeight: '600',
-    marginBottom: 6,
-    marginTop: 12,
-  },
-  input: {
-    backgroundColor: colors.card,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  inputInner: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 12,
-  },
-  value: {
-    color: colors.textPrimary,
-  },
-  arrow: {
-    fontSize: 12,
-    color: colors.textSecondary,
-  },
-  dialog: {
-    backgroundColor: colors.background,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 14,
-    maxHeight: '70%',
-  },
-  dialogContent: {
-    paddingHorizontal: 12,
-    paddingTop: 16,
-  },
-  searchbar: {
-    backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 10,
-    marginBottom: 10,
-    elevation: 0,
-  },
-  searchInput: {
-    color: colors.textPrimary,
-    fontSize: 14,
-    minHeight: 0,
-    alignSelf: 'center',
-  },
-  option: {
-    paddingVertical: 14,
-    paddingHorizontal: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  optionText: {
-    fontSize: 15,
-    color: colors.textPrimary,
-  },
-  empty: {
-    textAlign: 'center',
-    padding: 20,
-    color: colors.textSecondary,
-  },
-  cancelBtn: {
-    minWidth: '40%',
-  },
-});

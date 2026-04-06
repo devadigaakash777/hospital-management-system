@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { EntityCard, EntityCardRow } from '..';
 import { colors } from '../../theme';
+import { wp } from '../../utils/responsive';
 
 interface Props {
   doctorName: string;
@@ -29,21 +30,20 @@ const DoctorScheduleTab: React.FC<Props> = ({
     ...(roomNumber
       ? [{ icon: 'door', label: 'Room:', value: roomNumber }]
       : []),
-    { icon: 'clock-outline',   label: 'OPD Timing:',    value: opdTiming },
-    { icon: 'calendar-month',  label: 'Visiting Days:',  value: visitingDays },
-    { icon: 'account-group',   label: 'Total Slots:',    value: totalSlots },
+    { icon: 'clock-outline',  label: 'OPD Timing:',   value: opdTiming },
+    { icon: 'calendar-month', label: 'Visiting Days:', value: visitingDays },
+    { icon: 'account-group',  label: 'Total Slots:',   value: totalSlots },
   ];
 
-  // ✅ Paper Button replaces AppButton in footer
   const footer = (
-    <View style={styles.buttonRow}>
+    <View style={{ flexDirection: 'row', gap: wp(2.5) }}>
       <Button
         mode="contained"
         onPress={() => onEdit?.()}
         icon="pencil"
         buttonColor={colors.primary}
         textColor="#fff"
-        style={styles.actionBtn}
+        style={{ flex: 1 }}
       >
         Edit
       </Button>
@@ -53,7 +53,7 @@ const DoctorScheduleTab: React.FC<Props> = ({
         icon="delete"
         buttonColor={colors.error}
         textColor="#fff"
-        style={styles.actionBtn}
+        style={{ flex: 1 }}
       >
         Delete
       </Button>
@@ -72,13 +72,3 @@ const DoctorScheduleTab: React.FC<Props> = ({
 };
 
 export default DoctorScheduleTab;
-
-const styles = StyleSheet.create({
-  buttonRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  actionBtn: {
-    flex: 1,
-  },
-});

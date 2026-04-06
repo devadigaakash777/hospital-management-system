@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import {
   Text,
   TouchableRipple,
@@ -18,6 +18,7 @@ import {
   VisitingType,
   WeekSelection,
 } from '../../types/doctor.types';
+import { wp, hp } from '../../utils/responsive';
 
 interface Props {
   values: DoctorFormValues;
@@ -69,9 +70,30 @@ const DoctorForm: React.FC<Props> = ({
 
   const canAdd = !!currentFrom && !!currentTo && currentPatients.trim() !== '';
 
+  const timeBoxStyle = {
+    flex: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: wp(2),
+    padding: wp(2.5),
+    backgroundColor: colors.card,
+  };
+
+  const inputStyle = {
+    backgroundColor: colors.card,
+    marginBottom: hp(1.5),
+  };
+
+  const btnStyle = {
+    width: wp(9),
+    height: wp(9),
+    borderRadius: wp(4.5),
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  };
+
   return (
     <>
-      {/* ✅ SearchablePicker unchanged */}
       <SearchablePicker
         label="User"
         labelColor={colors.textPrimary}
@@ -88,76 +110,117 @@ const DoctorForm: React.FC<Props> = ({
         onSelect={val => onChange('department', val)}
       />
 
-      <Text style={styles.sectionTitle}>OPD Timing</Text>
+      {/* OPD Timing */}
+      <Text
+        style={{
+          marginTop: hp(2),
+          marginBottom: hp(1),
+          fontWeight: '700',
+          color: colors.textPrimary,
+        }}
+      >
+        OPD Timing
+      </Text>
 
-      {/* ✅ Input row: From | To | Patients | + */}
-      <View style={styles.rangeRow}>
-
-        {/* ✅ TouchableRipple replaces TouchableOpacity time boxes */}
+      {/* Input Row */}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: wp(1.5),
+          marginBottom: hp(1),
+        }}
+      >
         <TouchableRipple
-          style={styles.timeBox}
+          style={timeBoxStyle}
           onPress={() => onOpenTimePicker('from')}
           rippleColor={colors.primary + '22'}
         >
-          <Text style={styles.text}>{formatTime(currentFrom)}</Text>
+          <Text style={{ color: colors.textPrimary }}>{formatTime(currentFrom)}</Text>
         </TouchableRipple>
 
         <TouchableRipple
-          style={styles.timeBox}
+          style={timeBoxStyle}
           onPress={() => onOpenTimePicker('to')}
           rippleColor={colors.primary + '22'}
         >
-          <Text style={styles.text}>{formatTime(currentTo)}</Text>
+          <Text style={{ color: colors.textPrimary }}>{formatTime(currentTo)}</Text>
         </TouchableRipple>
 
-        {/* ✅ Paper TextInput replaces RN TextInput for patients */}
         <TextInput
           value={currentPatients}
           onChangeText={onPatientsChange}
           keyboardType="numeric"
           placeholder="Pts"
           mode="outlined"
-          style={styles.patientsInput}
+          style={{
+            flex: 2,
+            backgroundColor: colors.card,
+            height: hp(5),
+          }}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
           dense
         />
 
-        {/* ✅ Paper Button replaces add icon TouchableOpacity */}
         <Button
           mode="contained"
           onPress={onAddTimeRange}
           disabled={!canAdd}
           buttonColor={canAdd ? colors.primary : colors.border}
-          style={styles.addIconBtn}
-          labelStyle={styles.addIconText}
+          style={btnStyle}
+          labelStyle={{
+            color: colors.textPrimary,
+            fontSize: wp(5),
+            fontWeight: '600',
+          }}
           compact
         >
           +
         </Button>
       </View>
 
-      {/* ✅ Saved ranges */}
+      {/* Saved Ranges */}
       {(values.opdTimeRanges ?? []).map((range, index) => (
-        <View key={index} style={styles.rangeRow}>
-          <View style={styles.timeBox}>
-            <Text style={styles.text}>{formatTime(range.from)}</Text>
+        <View
+          key={index}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: wp(1.5),
+            marginBottom: hp(1),
+          }}
+        >
+          <View style={timeBoxStyle}>
+            <Text style={{ color: colors.textPrimary }}>{formatTime(range.from)}</Text>
           </View>
-          <View style={styles.timeBox}>
-            <Text style={styles.text}>{formatTime(range.to)}</Text>
+          <View style={timeBoxStyle}>
+            <Text style={{ color: colors.textPrimary }}>{formatTime(range.to)}</Text>
           </View>
-          <View style={styles.patientsBox}>
-            <Text style={styles.text}>{range.patients}</Text>
+          <View
+            style={{
+              flex: 2,
+              borderWidth: 1,
+              borderColor: colors.border,
+              borderRadius: wp(2),
+              padding: wp(2.5),
+              backgroundColor: colors.card,
+            }}
+          >
+            <Text style={{ color: colors.textPrimary }}>{range.patients}</Text>
           </View>
 
-          {/* ✅ Paper Button replaces remove TouchableOpacity */}
           <Button
             mode="contained"
             onPress={() => onRemoveTimeRange(index)}
             buttonColor={colors.border}
-            style={styles.removeBtn}
-            labelStyle={styles.removeBtnText}
+            style={btnStyle}
+            labelStyle={{
+              color: colors.textSecondary,
+              fontSize: wp(3.5),
+              fontWeight: '600',
+            }}
             compact
           >
             ✕
@@ -173,21 +236,41 @@ const DoctorForm: React.FC<Props> = ({
         />
       )}
 
-      <Text style={styles.sectionTitle}>Visiting Days</Text>
+      {/* Visiting Days */}
+      <Text
+        style={{
+          marginTop: hp(2),
+          marginBottom: hp(1),
+          fontWeight: '700',
+          color: colors.textPrimary,
+        }}
+      >
+        Visiting Days
+      </Text>
 
-      {/* ✅ TouchableRipple replaces TouchableOpacity tabs */}
-      <View style={styles.tabRow}>
+      {/* Tab Row */}
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: wp(5),
+          marginBottom: hp(1.2),
+        }}
+      >
         {(['regular', 'specific'] as VisitingType[]).map(type => (
           <TouchableRipple
             key={type}
             onPress={() => onChange('visitingType', type)}
             rippleColor={colors.primary + '22'}
-            style={styles.tabItem}
+            style={{ paddingBottom: hp(0.5) }}
           >
             <Text
               style={[
-                styles.tabText,
-                values.visitingType === type && styles.activeTab,
+                { color: colors.textSecondary },
+                values.visitingType === type && {
+                  color: colors.primary,
+                  borderBottomWidth: 2,
+                  borderBottomColor: colors.primary,
+                },
               ]}
             >
               {type === 'regular' ? 'Regular Days' : 'Specific Week'}
@@ -196,7 +279,7 @@ const DoctorForm: React.FC<Props> = ({
         ))}
       </View>
 
-      <View style={styles.tabContainer}>
+      <View style={{ marginBottom: hp(2.5) }}>
         {values.visitingType === 'regular' && (
           <RegularDaysSection
             weekDays={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']}
@@ -233,14 +316,14 @@ const DoctorForm: React.FC<Props> = ({
         )}
       </View>
 
-      {/* ✅ Paper TextInput replaces InputField */}
+      {/* Room & Advance Booking */}
       <TextInput
         label="Room"
         value={values.roomNumber}
         onChangeText={val => onChange('roomNumber', val)}
         placeholder="e.g. Room 204"
         mode="outlined"
-        style={styles.input}
+        style={inputStyle}
         outlineColor={colors.border}
         activeOutlineColor={colors.primary}
         theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
@@ -252,7 +335,7 @@ const DoctorForm: React.FC<Props> = ({
         value={values.advanceBookingDays}
         onChangeText={val => onChange('advanceBookingDays', val)}
         mode="outlined"
-        style={styles.input}
+        style={inputStyle}
         outlineColor={colors.border}
         activeOutlineColor={colors.primary}
         theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
@@ -262,89 +345,3 @@ const DoctorForm: React.FC<Props> = ({
 };
 
 export default DoctorForm;
-
-const styles = StyleSheet.create({
-  sectionTitle: {
-    marginTop: 16,
-    marginBottom: 8,
-    fontWeight: '700',
-    color: colors.textPrimary,
-  },
-  rangeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 8,
-  },
-  timeBox: {
-    flex: 3,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 8,
-    padding: 10,
-    backgroundColor: colors.card,
-  },
-  patientsBox: {
-    flex: 2,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 8,
-    padding: 10,
-    backgroundColor: colors.card,
-  },
-  patientsInput: {
-    flex: 2,
-    backgroundColor: colors.card,
-    height: 40,
-  },
-  text: {
-    color: colors.textPrimary,
-  },
-  addIconBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  addIconText: {
-    color: colors.textPrimary,
-    fontSize: 20,
-    fontWeight: '600',
-  },
-  removeBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  removeBtnText: {
-    color: colors.textSecondary,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  tabRow: {
-    flexDirection: 'row',
-    gap: 20,
-    marginBottom: 10,
-  },
-  tabItem: {
-    paddingBottom: 4,
-  },
-  tabText: {
-    color: colors.textSecondary,
-  },
-  activeTab: {
-    color: colors.primary,
-    borderBottomWidth: 2,
-    borderBottomColor: colors.primary,
-  },
-  tabContainer: {
-    marginBottom: 20,
-  },
-  input: {
-    backgroundColor: colors.card,
-    marginBottom: 12,
-  },
-});

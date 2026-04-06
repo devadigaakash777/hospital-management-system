@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 import { Text, Button, IconButton } from 'react-native-paper';
 import { colors } from '../../theme';
 import { ListItem, ConfirmModal } from '../../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AddDepartmentModal from '../../components/ManageDepartment/AddDepartmentModal';
+import { wp, hp } from '../../utils/responsive';
 
 type Department = {
   id: string;
   name: string;
 };
 
-const Separator = () => <View style={styles.separator} />;
+const Separator = () => <View style={{ height: hp(1) }} />;
 
 export default function ManageDepartmentsScreen() {
   const [open, setOpen] = useState(false);
@@ -34,54 +35,102 @@ export default function ManageDepartmentsScreen() {
       iconName="hospital-building"
       title={item.name}
     >
-      {/* ✅ Paper IconButton replaces AppButton icon-only */}
       <IconButton
         icon="close"
-        iconColor={colors.textPrimary}
-        size={20}
+        iconColor={colors.error}
+        size={wp(5)}
         onPress={() => handleDelete(item)}
       />
     </ListItem>
   );
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.container}>
+    <SafeAreaView
+      edges={['bottom']}
+      style={{
+        flex: 1,
+        backgroundColor: colors.background,
+      }}
+    >
       <FlatList
         data={departments}
         keyExtractor={item => item.id}
         renderItem={renderItem}
         ItemSeparatorComponent={Separator}
-        contentContainerStyle={styles.listContent}
-        style={styles.list}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingHorizontal: wp(4),
+          paddingBottom: hp(2.5),
+        }}
+        style={{ flex: 1 }}
         ListHeaderComponent={
-          <>
-            {/* ✅ Paper Text replaces RN Text */}
-            <Text style={styles.title}>Manage Departments</Text>
-            <Text style={styles.subtitle}>
+          <View style={{ marginBottom: hp(1) }}>
+            {/* Title */}
+            <Text
+              style={{
+                fontSize: wp(6),
+                fontWeight: '700',
+                color: colors.textPrimary,
+                marginTop: hp(2),
+                marginBottom: hp(0.5),
+              }}
+            >
+              Manage Departments
+            </Text>
+
+            {/* Subtitle */}
+            <Text
+              style={{
+                fontSize: wp(3.5),
+                color: colors.textSecondary,
+                marginBottom: hp(2),
+              }}
+            >
               Add and manage hospital departments
             </Text>
 
-            {/* ✅ Paper Button replaces AppButton */}
+            {/* Add Button */}
             <Button
               mode="contained"
               icon="plus"
               onPress={() => setOpen(true)}
               buttonColor={colors.primary}
               textColor="#fff"
-              style={styles.addBtn}
+              style={{
+                marginBottom: hp(2.5),
+                borderRadius: wp(2),
+              }}
             >
               Add Department
             </Button>
 
-            <Text style={styles.sectionLabel}>Current Departments</Text>
-          </>
+            {/* Section Label */}
+            <Text
+              style={{
+                fontSize: wp(3.8),
+                fontWeight: '600',
+                color: colors.textSecondary,
+                marginBottom: hp(1),
+              }}
+            >
+              Current Departments
+            </Text>
+          </View>
         }
         ListEmptyComponent={
-          <Text style={styles.empty}>No departments found.</Text>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: colors.textSecondary,
+              marginTop: hp(5),
+              fontSize: wp(3.8),
+            }}
+          >
+            No departments found.
+          </Text>
         }
       />
 
-      {/* ✅ AddDepartmentModal unchanged — already converted */}
       <AddDepartmentModal
         visible={open}
         onClose={() => setOpen(false)}
@@ -94,7 +143,6 @@ export default function ManageDepartmentsScreen() {
         }}
       />
 
-      {/* ✅ ConfirmModal unchanged — already converted */}
       <ConfirmModal
         visible={!!deleteConfirm}
         type="delete"
@@ -114,45 +162,3 @@ export default function ManageDepartmentsScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: 16,
-  },
-  list: {
-    flex: 1,
-  },
-  listContent: {
-    paddingBottom: 20,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: colors.textPrimary,
-  },
-  subtitle: {
-    fontSize: 13,
-    color: colors.textSecondary,
-    marginBottom: 12,
-  },
-  addBtn: {
-    marginBottom: 16,
-    borderRadius: 10,
-  },
-  sectionLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.textSecondary,
-    marginBottom: 8,
-  },
-  separator: {
-    height: 10,
-  },
-  empty: {
-    textAlign: 'center',
-    color: colors.textSecondary,
-    marginTop: 40,
-  },
-});

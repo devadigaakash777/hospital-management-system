@@ -1,5 +1,8 @@
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
+import { Text } from 'react-native-paper';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 interface SectionHeaderProps {
   title: string;
@@ -13,30 +16,34 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
   align = 'left',
 }) => {
   return (
-    <View style={[styles.container, align === 'center' && styles.center]}>
-      <Text style={styles.title}>{title}</Text>
-      {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+    <View
+      style={{
+        marginBottom: hp(2),
+        alignItems: align === 'center' ? 'center' : 'flex-start',
+      }}
+    >
+      <Text
+        style={{
+          fontSize: wp(4.5),
+          fontWeight: '600',
+          color: colors.textPrimary,
+        }}
+      >
+        {title}
+      </Text>
+      {subtitle && (
+        <Text
+          style={{
+            marginTop: hp(0.5),
+            fontSize: wp(3.5),
+            color: colors.textSecondary,
+          }}
+        >
+          {subtitle}
+        </Text>
+      )}
     </View>
   );
 };
 
 export default SectionHeader;
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 16,
-  },
-  center: {
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.textPrimary,
-  },
-  subtitle: {
-    marginTop: 4,
-    fontSize: 14,
-    color: colors.textSecondary,
-  },
-});

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native';
 import { Chip } from 'react-native-paper';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 type Props = {
   onFilterChange?: (status: string) => void;
@@ -28,26 +29,27 @@ const StatusFilterBar: React.FC<Props> = ({ onFilterChange }) => {
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.container}
+      contentContainerStyle={{
+        flexDirection: 'row',
+        gap: wp(3),
+        paddingVertical: hp(1.5),
+      }}
     >
-      {/* ✅ Paper Chip replaces AppButton for filter tabs */}
       {buttons.map(btn => (
         <Chip
           key={btn.key}
           icon={btn.icon}
           selected={activeStatus === btn.key}
           onPress={() => handlePress(btn.key)}
-          style={[
-            styles.chip,
-            activeStatus === btn.key
-              ? { backgroundColor: colors.primary, borderColor: colors.primary }
-              : { backgroundColor: colors.surface, borderColor: colors.border },
-          ]}
+          style={{
+            borderWidth: 1,
+            borderRadius: wp(5),
+            backgroundColor: activeStatus === btn.key ? colors.primary : colors.surface,
+            borderColor: activeStatus === btn.key ? colors.primary : colors.border,
+          }}
           selectedColor={colors.textPrimary}
           textStyle={{
-            color: activeStatus === btn.key
-              ? colors.textPrimary
-              : colors.textSecondary,
+            color: activeStatus === btn.key ? colors.textPrimary : colors.textSecondary,
             fontWeight: activeStatus === btn.key ? '600' : '400',
           }}
         >
@@ -57,17 +59,5 @@ const StatusFilterBar: React.FC<Props> = ({ onFilterChange }) => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    gap: 12,
-    paddingVertical: 12,
-  },
-  chip: {
-    borderWidth: 1,
-    borderRadius: 20,
-  },
-});
 
 export default StatusFilterBar;

@@ -9,7 +9,7 @@ import {
   EntityCard,
   EntityCardRow,
 } from '../../components';
-import CreateHealthPackageModal from '../../components/manageHealthPackage/CreateHealthPackageModal';
+import CreateHealthPackageModal from '../../components/ManageHealthPackage/CreateHealthPackageModal';
 import { HealthPackage } from '../../types/healthpackage.types';
 
 const HEALTH_PACKAGES: HealthPackage[] = [

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { BaseModal } from '..';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 interface Props {
   visible: boolean;
@@ -61,7 +62,6 @@ const ChangePasswordModal: React.FC<Props> = ({
       title="Change Password"
       onClose={handleClose}
     >
-      {/* ✅ Paper TextInput with secureTextEntry + eye toggle */}
       <TextInput
         label="Current Password"
         value={current}
@@ -69,7 +69,10 @@ const ChangePasswordModal: React.FC<Props> = ({
         placeholder="Enter current password"
         secureTextEntry={!showCurrent}
         mode="outlined"
-        style={styles.input}
+        style={{
+          marginBottom: hp(1.5),
+          backgroundColor: colors.surface,
+        }}
         outlineColor={colors.border}
         activeOutlineColor={colors.primary}
         right={
@@ -88,7 +91,10 @@ const ChangePasswordModal: React.FC<Props> = ({
         placeholder="Enter new password"
         secureTextEntry={!showNew}
         mode="outlined"
-        style={styles.input}
+        style={{
+          marginBottom: hp(1.5),
+          backgroundColor: colors.surface,
+        }}
         outlineColor={colors.border}
         activeOutlineColor={colors.primary}
         right={
@@ -107,7 +113,10 @@ const ChangePasswordModal: React.FC<Props> = ({
         placeholder="Confirm new password"
         secureTextEntry={!showConfirm}
         mode="outlined"
-        style={styles.input}
+        style={{
+          marginBottom: hp(1.5),
+          backgroundColor: colors.surface,
+        }}
         outlineColor={colors.border}
         activeOutlineColor={colors.primary}
         right={
@@ -119,14 +128,20 @@ const ChangePasswordModal: React.FC<Props> = ({
         }
       />
 
-      {/* ✅ Paper Button replaces AppButton */}
-      <View style={styles.buttonRow}>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: wp(2.5),
+          marginTop: hp(2.5),
+          marginBottom: hp(3.5),
+        }}
+      >
         <Button
           mode="contained"
           onPress={handleClose}
           buttonColor={colors.border}
           textColor={colors.textPrimary}
-          style={styles.halfBtn}
+          style={{ flex: 1 }}
         >
           Cancel
         </Button>
@@ -134,7 +149,7 @@ const ChangePasswordModal: React.FC<Props> = ({
           mode="contained"
           onPress={handleSubmit}
           buttonColor={colors.primary}
-          style={styles.halfBtn}
+          style={{ flex: 1 }}
         >
           Change Password
         </Button>
@@ -144,19 +159,3 @@ const ChangePasswordModal: React.FC<Props> = ({
 };
 
 export default ChangePasswordModal;
-
-const styles = StyleSheet.create({
-  input: {
-    marginBottom: 12,
-    backgroundColor: colors.surface,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginTop: 20,
-    marginBottom: 30,
-  },
-  halfBtn: {
-    flex: 1,
-  },
-});

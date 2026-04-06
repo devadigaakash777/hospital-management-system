@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert, Platform } from 'react-native';
+import { View, Alert, Platform } from 'react-native';
 import { Card, Text, Button, TextInput, TouchableRipple } from 'react-native-paper';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 interface Props {
   onBlock?: (data: {
@@ -71,32 +72,74 @@ const BlockTimeSlotCard: React.FC<Props> = ({ onBlock }) => {
     Alert.alert('Time Slot Blocked Successfully');
   };
 
+  const boxStyle = {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: wp(2),
+    padding: wp(3),
+    backgroundColor: colors.card,
+    marginBottom: hp(1.2),
+  };
+
+  const inputStyle = {
+    backgroundColor: colors.card,
+    marginBottom: hp(1.2),
+  };
+
   return (
-    // ✅ Paper Card replaces custom View with shadow/border
-    <Card style={styles.card} mode="outlined">
+    <Card
+      style={{
+        borderRadius: wp(3.5),
+        borderColor: colors.border,
+        backgroundColor: colors.surface,
+        marginVertical: hp(1.5),
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: hp(0.5) },
+        shadowOpacity: 0.08,
+        shadowRadius: wp(1.5),
+        elevation: 4,
+      }}
+      mode="outlined"
+    >
       <Card.Content>
 
-        <Text style={styles.title}>Block Time Slot</Text>
+        <Text
+          style={{
+            fontSize: wp(4),
+            fontWeight: '700',
+            marginBottom: hp(1.8),
+            color: colors.textPrimary,
+          }}
+        >
+          Block Time Slot
+        </Text>
 
-        {/* ✅ TouchableRipple replaces TouchableOpacity date box */}
+        {/* Date Box */}
         <TouchableRipple
-          style={styles.box}
+          style={boxStyle}
           onPress={() => setPickerType('date')}
           rippleColor={colors.primary + '22'}
         >
-          <Text style={styles.boxText}>
+          <Text style={{ color: colors.textPrimary }}>
             {date ? date.toDateString() : 'Select Date'}
           </Text>
         </TouchableRipple>
 
-        {/* ✅ TouchableRipple for start/end time boxes */}
-        <View style={styles.row}>
+        {/* Start / End Time Row */}
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: wp(2.5),
+            marginVertical: hp(1.5),
+          }}
+        >
           <TouchableRipple
-            style={styles.box}
+            style={boxStyle}
             onPress={() => setPickerType('start')}
             rippleColor={colors.primary + '22'}
           >
-            <Text style={styles.boxText}>
+            <Text style={{ color: colors.textPrimary }}>
               {startTime
                 ? startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 : 'Start Time'}
@@ -104,11 +147,11 @@ const BlockTimeSlotCard: React.FC<Props> = ({ onBlock }) => {
           </TouchableRipple>
 
           <TouchableRipple
-            style={styles.box}
+            style={boxStyle}
             onPress={() => setPickerType('end')}
             rippleColor={colors.primary + '22'}
           >
-            <Text style={styles.boxText}>
+            <Text style={{ color: colors.textPrimary }}>
               {endTime
                 ? endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 : 'End Time'}
@@ -116,7 +159,7 @@ const BlockTimeSlotCard: React.FC<Props> = ({ onBlock }) => {
           </TouchableRipple>
         </View>
 
-        {/* ✅ Paper TextInput replaces InputField */}
+        {/* Reserved Slots Input */}
         <TextInput
           label="Number of Slots Reserved (Optional)"
           placeholder="Enter number"
@@ -124,42 +167,52 @@ const BlockTimeSlotCard: React.FC<Props> = ({ onBlock }) => {
           keyboardType="numeric"
           onChangeText={setReservedSlots}
           mode="outlined"
-          style={styles.input}
+          style={inputStyle}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
         />
 
-        <Text style={styles.subTitle}>
+        <Text
+          style={{
+            fontSize: wp(3),
+            color: colors.textSecondary,
+            marginTop: hp(-0.8),
+            marginBottom: hp(1.8),
+          }}
+        >
           Leave empty to fully block the time slot. Enter number to reserve
           that many slots for VIP / walk-in patients.
         </Text>
 
+        {/* Reason Input */}
         <TextInput
           label="Reason (Optional)"
           placeholder="Eg: Emergency / Personal Work"
           value={reason}
           onChangeText={setReason}
           mode="outlined"
-          style={styles.input}
+          style={inputStyle}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
         />
 
-        {/* ✅ Paper Button replaces AppButton */}
+        {/* Block Button */}
         <Button
           mode="contained"
           onPress={handleBlock}
           icon="calendar-remove"
           buttonColor={colors.primary}
           textColor="#fff"
-          style={styles.blockBtn}
+          style={{
+            marginTop: hp(1.5),
+            borderRadius: wp(2),
+          }}
         >
           Block Time Slot
         </Button>
 
-        {/* DateTimePicker unchanged */}
         {pickerType && (
           <DateTimePicker
             mode={pickerType === 'date' ? 'date' : 'time'}
@@ -175,54 +228,3 @@ const BlockTimeSlotCard: React.FC<Props> = ({ onBlock }) => {
 };
 
 export default BlockTimeSlotCard;
-
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 14,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    marginVertical: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '700',
-    marginBottom: 14,
-    color: colors.textPrimary,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: 10,
-    marginVertical: 12,
-  },
-  box: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 8,
-    padding: 12,
-    backgroundColor: colors.card,
-    marginBottom: 10,
-  },
-  boxText: {
-    color: colors.textPrimary,
-  },
-  input: {
-    backgroundColor: colors.card,
-    marginBottom: 10,
-  },
-  subTitle: {
-    fontSize: 12,
-    color: colors.textSecondary,
-    marginTop: -6,
-    marginBottom: 14,
-  },
-  blockBtn: {
-    marginTop: 12,
-    borderRadius: 8,
-  },
-});

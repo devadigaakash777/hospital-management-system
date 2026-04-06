@@ -1,7 +1,8 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Modal, Portal, Text, IconButton } from 'react-native-paper';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 interface Props {
   visible: boolean;
@@ -16,19 +17,49 @@ const BaseModal: React.FC<Props> = ({ visible, title, onClose, children }) => {
       <Modal
         visible={visible}
         onDismiss={onClose}
-        contentContainerStyle={styles.modal}
+        contentContainerStyle={{
+          width: '90%',
+          maxHeight: '85%',
+          backgroundColor: colors.surface,
+          borderRadius: wp(4),
+          padding: wp(5),
+          paddingBottom: hp(5),
+          alignSelf: 'center',
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: hp(1) },
+          shadowOpacity: 0.25,
+          shadowRadius: wp(3),
+          elevation: 10,
+        }}
       >
-        {/* ✅ SafeAreaView removed — was causing extra top/bottom space */}
         <ScrollView
           showsVerticalScrollIndicator={false}
           bounces={false}
         >
           {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.title}>{title}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingBottom: hp(1),
+              marginBottom: hp(1),
+              borderBottomWidth: 2,
+              borderBottomColor: colors.primary,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: wp(4.5),
+                fontWeight: '700',
+                color: colors.primary,
+              }}
+            >
+              {title}
+            </Text>
             <IconButton
               icon="close"
-              size={22}
+              size={wp(5.5)}
               iconColor={colors.primary}
               onPress={onClose}
             />
@@ -36,7 +67,6 @@ const BaseModal: React.FC<Props> = ({ visible, title, onClose, children }) => {
 
           {/* Content */}
           <View>{children}</View>
-
         </ScrollView>
       </Modal>
     </Portal>
@@ -44,34 +74,3 @@ const BaseModal: React.FC<Props> = ({ visible, title, onClose, children }) => {
 };
 
 export default BaseModal;
-
-const styles = StyleSheet.create({
-  modal: {
-    width: '90%',
-    maxHeight: '85%',
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: 20,
-    paddingBottom: 40,
-    alignSelf: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
-    elevation: 10,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingBottom: 8,
-    marginBottom: 8,
-    borderBottomWidth: 2,
-    borderBottomColor: colors.primary,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: colors.primary,
-  },
-});

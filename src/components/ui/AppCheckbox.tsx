@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { ViewStyle, TextStyle } from 'react-native';
 import { Checkbox, TouchableRipple, Text } from 'react-native-paper';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 interface AppCheckboxProps {
   value: boolean;
@@ -27,15 +28,20 @@ const AppCheckbox: React.FC<AppCheckboxProps> = ({
   };
 
   return (
-    // ✅ TouchableRipple replaces TouchableOpacity
     <TouchableRipple
       onPress={handlePress}
       disabled={disabled}
       rippleColor={colors.primary + '22'}
-      style={[styles.container, containerStyle]}
+      style={[
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginVertical: hp(0.8),
+        },
+        containerStyle,
+      ]}
     >
       <>
-        {/* ✅ Paper Checkbox replaces custom View + Ionicons checkmark */}
         <Checkbox
           status={value ? 'checked' : 'unchecked'}
           disabled={disabled}
@@ -44,12 +50,13 @@ const AppCheckbox: React.FC<AppCheckboxProps> = ({
           onPress={handlePress}
         />
 
-        {/* ✅ Paper Text replaces RN Text */}
         {label && (
           <Text
             style={[
-              styles.label,
-              disabled && styles.disabledLabel,
+              {
+                fontSize: wp(3.8),
+                color: disabled ? colors.textSecondary : colors.textPrimary,
+              },
               labelStyle,
             ]}
           >
@@ -60,20 +67,5 @@ const AppCheckbox: React.FC<AppCheckboxProps> = ({
     </TouchableRipple>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 6,
-  },
-  label: {
-    fontSize: 14,
-    color: colors.textPrimary,
-  },
-  disabledLabel: {
-    color: colors.textSecondary,
-  },
-});
 
 export default AppCheckbox;

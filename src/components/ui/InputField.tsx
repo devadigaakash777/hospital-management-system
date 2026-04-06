@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle, TextInputProps } from 'react-native';
+import { View, StyleProp, ViewStyle, TextInputProps } from 'react-native';
 import { TextInput, HelperText } from 'react-native-paper';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 interface InputFieldProps extends Omit<TextInputProps, 'placeholderTextColor' | 'selectionColor'> {
   label?: string;
@@ -25,9 +26,7 @@ const InputField: React.FC<InputFieldProps> = ({
   const [hidePassword, setHidePassword] = React.useState(isPassword);
 
   return (
-    <View style={[styles.container, containerStyle]}>
-
-      {/* ✅ Paper TextInput — placeholder color via theme prop */}
+    <View style={[{ marginBottom: hp(2) }, containerStyle]}>
       <TextInput
         label={label}
         placeholder={placeholder}
@@ -38,20 +37,21 @@ const InputField: React.FC<InputFieldProps> = ({
         mode="outlined"
         outlineColor={error ? colors.error : colors.border}
         activeOutlineColor={error ? colors.error : colors.primary}
-        style={styles.input}
+        style={{
+          backgroundColor: colors.card,
+          fontSize: wp(4),
+        }}
         textColor={colors.textPrimary}
-        // ✅ Controls placeholder + label floating color
         theme={{
           colors: {
             onSurfaceVariant: colors.textSecondary,
           },
         }}
-        // ✅ Eye toggle for password fields
         right={
           isPassword ? (
             <TextInput.Icon
               icon={hidePassword ? 'eye-off-outline' : 'eye-outline'}
-              size={22}
+              size={wp(5.5)}
               color={colors.textSecondary}
               onPress={() => setHidePassword(prev => !prev)}
             />
@@ -59,29 +59,20 @@ const InputField: React.FC<InputFieldProps> = ({
         }
       />
 
-      {/* ✅ Paper HelperText for error messages */}
       {error ? (
-        <HelperText type="error" visible={!!error} style={styles.errorText}>
+        <HelperText
+          type="error"
+          visible={!!error}
+          style={{
+            fontSize: wp(3),
+            color: colors.error,
+          }}
+        >
           {error}
         </HelperText>
       ) : null}
-
     </View>
   );
 };
 
 export default InputField;
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 16,
-  },
-  input: {
-    backgroundColor: colors.card,
-    fontSize: 16,
-  },
-  errorText: {
-    fontSize: 12,
-    color: colors.error,
-  },
-});

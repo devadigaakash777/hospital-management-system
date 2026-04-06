@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import {
   Portal,
   Modal,
@@ -14,6 +14,7 @@ import DateTimePicker, {
 import { Picker } from '@react-native-picker/picker';
 import { colors } from '../../theme';
 import SearchablePicker from '../layout/SearchablePicker';
+import { wp, hp } from '../../utils/responsive';
 
 interface Props {
   visible: boolean;
@@ -52,32 +53,75 @@ const AppointmentFilterModal: React.FC<Props> = ({ visible, onClose }) => {
   };
 
   return (
-    // ✅ Portal + Modal replaces react-native-modal
     <Portal>
       <Modal
         visible={visible}
         onDismiss={onClose}
-        contentContainerStyle={styles.container}
+        contentContainerStyle={{
+          backgroundColor: colors.background,
+          padding: wp(4),
+          marginHorizontal: 0,
+          borderTopLeftRadius: wp(4),
+          borderTopRightRadius: wp(4),
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+        }}
       >
-        {/* ✅ Paper Text replaces RN Text */}
-        <Text style={styles.title}>Appointment Filters</Text>
+        {/* Title */}
+        <Text
+          style={{
+            fontSize: wp(5),
+            fontWeight: '700',
+            marginBottom: hp(1.5),
+            color: colors.textPrimary,
+          }}
+        >
+          Appointment Filters
+        </Text>
 
-        {/* ✅ Paper TextInput replaces RN TextInput */}
-        <Text style={styles.label}>Search</Text>
+        {/* Search */}
+        <Text
+          style={{
+            marginBottom: hp(0.8),
+            fontWeight: '600',
+            color: colors.textPrimary,
+          }}
+        >
+          Search
+        </Text>
         <TextInput
           placeholder="Search By Status, Department..."
           value={search}
           onChangeText={setSearch}
           mode="outlined"
-          style={styles.input}
+          style={{
+            backgroundColor: colors.card,
+            marginBottom: hp(1.8),
+          }}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
         />
 
-        {/* ✅ Picker unchanged — no Paper equivalent */}
-        <Text style={styles.label}>Status</Text>
-        <View style={styles.pickerContainer}>
+        {/* Status */}
+        <Text
+          style={{
+            marginBottom: hp(0.8),
+            fontWeight: '600',
+            color: colors.textPrimary,
+          }}
+        >
+          Status
+        </Text>
+        <View
+          style={{
+            backgroundColor: colors.card,
+            borderRadius: wp(2),
+            marginBottom: hp(1.8),
+          }}
+        >
           <Picker selectedValue={status} onValueChange={setStatus}>
             {statusOptions.map(item => (
               <Picker.Item key={item} label={item} value={item} />
@@ -85,7 +129,7 @@ const AppointmentFilterModal: React.FC<Props> = ({ visible, onClose }) => {
           </Picker>
         </View>
 
-        {/* ✅ SearchablePicker unchanged — already converted */}
+        {/* Department */}
         <SearchablePicker
           label="Department"
           value={department}
@@ -94,26 +138,45 @@ const AppointmentFilterModal: React.FC<Props> = ({ visible, onClose }) => {
           onSelect={value => setDepartment(value as DepartmentKey)}
         />
 
-        {/* ✅ TouchableRipple replaces TouchableOpacity date box */}
-        <Text style={styles.label}>Filter by Date</Text>
+        {/* Filter by Date */}
+        <Text
+          style={{
+            marginBottom: hp(0.8),
+            fontWeight: '600',
+            color: colors.textPrimary,
+          }}
+        >
+          Filter by Date
+        </Text>
         <TouchableRipple
-          style={styles.dateBox}
+          style={{
+            backgroundColor: colors.card,
+            borderRadius: wp(2),
+            padding: wp(3),
+            marginBottom: hp(1.8),
+          }}
           onPress={() => setActivePicker('filter')}
           rippleColor={colors.primary + '22'}
         >
-          <Text style={styles.text}>
+          <Text style={{ color: colors.textPrimary }}>
             {filterDate ? filterDate.toDateString() : 'Select Date'}
           </Text>
         </TouchableRipple>
 
-        {/* ✅ Paper Button replaces TouchableOpacity actions */}
-        <View style={styles.actions}>
+        {/* Actions */}
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: wp(2.5),
+            marginTop: hp(1.5),
+          }}
+        >
           <Button
             mode="contained"
             onPress={clearFilters}
             buttonColor={colors.border}
             textColor={colors.textPrimary}
-            style={styles.actionBtn}
+            style={{ flex: 1, borderRadius: wp(2) }}
           >
             Clear Filters
           </Button>
@@ -122,13 +185,13 @@ const AppointmentFilterModal: React.FC<Props> = ({ visible, onClose }) => {
             onPress={onClose}
             buttonColor={colors.primary}
             textColor={colors.textPrimary}
-            style={styles.actionBtn}
+            style={{ flex: 1, borderRadius: wp(2) }}
           >
             Apply
           </Button>
         </View>
 
-        {/* ✅ DateTimePicker unchanged */}
+        {/* DateTimePicker */}
         {activePicker && (
           <DateTimePicker
             value={filterDate ?? new Date()}
@@ -142,55 +205,3 @@ const AppointmentFilterModal: React.FC<Props> = ({ visible, onClose }) => {
 };
 
 export default AppointmentFilterModal;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.background,
-    padding: 16,
-    marginHorizontal: 0,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 12,
-    color: colors.textPrimary,
-  },
-  label: {
-    marginBottom: 6,
-    fontWeight: '600',
-    color: colors.textPrimary,
-  },
-  input: {
-    backgroundColor: colors.card,
-    marginBottom: 14,
-  },
-  dateBox: {
-    backgroundColor: colors.card,
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 14,
-  },
-  text: {
-    color: colors.textPrimary,
-  },
-  pickerContainer: {
-    backgroundColor: colors.card,
-    borderRadius: 8,
-    marginBottom: 14,
-  },
-  actions: {
-    flexDirection: 'row',
-    gap: 10,
-    marginTop: 12,
-  },
-  actionBtn: {
-    flex: 1,
-    borderRadius: 8,
-  },
-});

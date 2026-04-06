@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, ViewStyle, StyleProp } from 'react-native';
+import { ViewStyle, StyleProp } from 'react-native';
 import { Button } from 'react-native-paper';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -34,14 +35,13 @@ const AppButton: React.FC<AppButtonProps> = ({
   onPress,
   iconName,
   iconFamily = 'MaterialCommunityIcons',
-  iconSize = 20,
+  iconSize = wp(5),
   disabled = false,
   color = colors.textPrimary,
   backgroundColor,
   borderColor,
   containerStyle,
 }) => {
-  // ✅ Only called when iconName exists — never returns null
   const getIcon = () => {
     const props = { name: iconName!, size: iconSize, color };
 
@@ -64,16 +64,27 @@ const AppButton: React.FC<AppButtonProps> = ({
       mode="contained"
       onPress={onPress}
       disabled={disabled}
-      icon={iconName ? getIcon() : undefined} // ✅ undefined not null
+      icon={iconName ? getIcon() : undefined}
       buttonColor={backgroundColor ?? colors.primary}
       textColor={color}
       style={[
-        styles.button,
-        borderColor && { borderWidth: 1, borderColor },
+        {
+          borderRadius: wp(2.5),
+          borderWidth: borderColor ? 1 : 0,
+          borderColor: borderColor ?? 'transparent',
+        },
         containerStyle,
       ]}
-      labelStyle={styles.label}
-      contentStyle={styles.content}
+      labelStyle={{
+        fontSize: wp(4),
+        fontWeight: '600',
+      }}
+      contentStyle={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: hp(0.3),
+        paddingHorizontal: wp(1),
+      }}
     >
       {text ?? ''}
     </Button>
@@ -81,19 +92,3 @@ const AppButton: React.FC<AppButtonProps> = ({
 };
 
 export default AppButton;
-
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: 10,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 2,
-    paddingHorizontal: 4,
-  },
-});

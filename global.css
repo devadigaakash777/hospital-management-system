@@ -1,0 +1,6 @@
+/* This is the entry point for Tailwind — it loads base, component and utility styles
+Without this file, no Tailwind styles will be generated */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ViewStyle } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import { List, TouchableRipple } from 'react-native-paper';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -8,6 +8,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 type IconFamily =
   | 'Ionicons'
@@ -45,34 +46,58 @@ const SettingItem: React.FC<SettingItemProps> = ({
   arrowColor = colors.textPrimary,
   containerStyle,
 }) => {
-  // ✅ Returns a function — required by List.Item left/right props
+  const iconProps = { name: iconName!, size: wp(5.5), color: iconColor };
+
   const renderIcon = () => {
     if (!iconName) return undefined;
 
-    const props = { name: iconName, size: 22, color: iconColor };
-
     switch (iconFamily) {
       case 'Ionicons':
-        return () => <Ionicons {...props} />;
+        return () => (
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Ionicons {...iconProps} />
+          </View>
+        );
       case 'Feather':
-        return () => <Feather {...props} />;
+        return () => (
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Feather {...iconProps} />
+          </View>
+        );
       case 'AntDesign':
-        return () => <AntDesign {...props} />;
+        return () => (
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <AntDesign {...iconProps} />
+          </View>
+        );
       case 'FontAwesome6':
-        return () => <FontAwesome {...props} />;
+        return () => (
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <FontAwesome {...iconProps} />
+          </View>
+        );
       default:
-        return () => <MaterialCommunityIcons {...props} />;
+        return () => (
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <MaterialCommunityIcons {...iconProps} />
+          </View>
+        );
     }
   };
 
   return (
-    // ✅ TouchableRipple replaces TouchableOpacity
     <TouchableRipple
       onPress={onPress}
       rippleColor={colors.primary + '22'}
-      style={[styles.container, { backgroundColor }, containerStyle]}
+      style={[
+        {
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+          backgroundColor,
+        },
+        containerStyle,
+      ]}
     >
-      {/* ✅ List.Item replaces custom View + Text layout */}
       <List.Item
         title={title}
         description={subtitle}
@@ -80,45 +105,33 @@ const SettingItem: React.FC<SettingItemProps> = ({
         right={
           showArrow
             ? () => (
-                <Ionicons
-                  name="chevron-forward"
-                  size={20}
-                  color={arrowColor}
-                  style={styles.arrow}
-                />
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={wp(5)}
+                    color={arrowColor}
+                  />
+                </View>
               )
             : undefined
         }
-        titleStyle={[styles.title, { color: titleColor }]}
-        descriptionStyle={[styles.subtitle, { color: subtitleColor }]}
-        style={styles.listItem}
+        titleStyle={{
+          fontSize: wp(4),
+          fontWeight: '600',
+          color: titleColor,
+        }}
+        descriptionStyle={{
+          fontSize: wp(3.5),
+          marginTop: hp(0.3),
+          color: subtitleColor,
+        }}
+        style={{
+          paddingVertical: hp(0.8),
+          paddingHorizontal: wp(4),
+        }}
       />
     </TouchableRipple>
   );
 };
 
 export default SettingItem;
-
-const styles = StyleSheet.create({
-  container: {
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  listItem: {
-    paddingVertical: 6,
-    paddingHorizontal: 16,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.textPrimary,
-  },
-  subtitle: {
-    fontSize: 13,
-    marginTop: 2,
-    color: colors.textSecondary,
-  },
-  arrow: {
-    alignSelf: 'center',
-  },
-});

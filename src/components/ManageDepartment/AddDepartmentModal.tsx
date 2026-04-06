@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { colors } from '../../theme';
 import { BaseModal, ConfirmModal } from '..';
+import { wp, hp } from '../../utils/responsive';
 
 interface Props {
   visible: boolean;
@@ -45,14 +46,16 @@ const AddDepartmentModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
       title="Add Department"
       onClose={handleCancelPress}
     >
-      {/* ✅ Paper TextInput replaces custom InputField */}
       <TextInput
         label="Department Name"
         placeholder="e.g. Cardiology"
         value={name}
         onChangeText={setName}
         mode="outlined"
-        style={styles.input}
+        style={{
+          marginBottom: hp(1.5),
+          backgroundColor: colors.surface,
+        }}
         outlineColor={colors.border}
         activeOutlineColor={colors.primary}
         theme={{
@@ -60,14 +63,19 @@ const AddDepartmentModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
         }}
       />
 
-      {/* ✅ Paper Button replaces AppButton */}
-      <View style={styles.buttonRow}>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: hp(2.5),
+          gap: wp(2.5),
+        }}
+      >
         <Button
           mode="contained"
           onPress={handleCancelPress}
           buttonColor={colors.border}
           textColor={colors.textPrimary}
-          style={styles.halfBtn}
+          style={{ flex: 1 }}
         >
           Cancel
         </Button>
@@ -76,13 +84,12 @@ const AddDepartmentModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
           onPress={handleAddPress}
           buttonColor={colors.primary}
           textColor={colors.textPrimary}
-          style={styles.halfBtn}
+          style={{ flex: 1 }}
         >
           Add
         </Button>
       </View>
 
-      {/* ✅ Add Confirmation */}
       <ConfirmModal
         visible={showAddConfirm}
         type="add"
@@ -94,7 +101,6 @@ const AddDepartmentModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
         onCancel={() => setShowAddConfirm(false)}
       />
 
-      {/* ✅ Cancel Confirmation */}
       <ConfirmModal
         visible={showCancelConfirm}
         type="cancel"
@@ -110,18 +116,3 @@ const AddDepartmentModal: React.FC<Props> = ({ visible, onClose, onAdd }) => {
 };
 
 export default AddDepartmentModal;
-
-const styles = StyleSheet.create({
-  input: {
-    marginBottom: 12,
-    backgroundColor: colors.surface,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    marginTop: 20,
-    gap: 10,
-  },
-  halfBtn: {
-    flex: 1,
-  },
-});

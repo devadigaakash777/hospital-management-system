@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { Dialog, Portal, Text, Button } from 'react-native-paper';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 type ConfirmType = 'add' | 'edit' | 'delete' | 'cancel';
 
@@ -51,7 +51,6 @@ const config: Record<
   },
 };
 
-// ✅ Confirm button color based on type
 const getConfirmColor = (type: ConfirmType) => {
   switch (type) {
     case 'delete': return colors.error;
@@ -78,32 +77,54 @@ const ConfirmModal: React.FC<Props> = ({
   } = config[type];
 
   return (
-    // ✅ Portal + Dialog replaces Modal + SafeAreaView + Pressable
     <Portal>
       <Dialog
         visible={visible}
         onDismiss={onCancel}
-        style={styles.dialog}
+        style={{
+          backgroundColor: colors.surface,
+          borderRadius: wp(3),
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: hp(1) },
+          shadowOpacity: 0.25,
+          shadowRadius: wp(3),
+          elevation: 10,
+        }}
       >
-        {/* ✅ Dialog.Title replaces custom Text title */}
-        <Dialog.Title style={styles.title}>
+        <Dialog.Title
+          style={{
+            fontSize: wp(4.3),
+            fontWeight: '700',
+            color: colors.textPrimary,
+          }}
+        >
           {title ?? defaultTitle}
         </Dialog.Title>
 
-        {/* ✅ Dialog.Content replaces custom message View */}
         <Dialog.Content>
-          <Text style={styles.message}>
+          <Text
+            style={{
+              fontSize: wp(3.5),
+              color: colors.textSecondary,
+              lineHeight: hp(3),
+            }}
+          >
             {message ?? defaultMessage}
           </Text>
         </Dialog.Content>
 
-        {/* ✅ Dialog.Actions replaces buttonRow View */}
-        <Dialog.Actions style={styles.actions}>
+        <Dialog.Actions
+          style={{
+            gap: wp(2),
+            paddingHorizontal: wp(3),
+            paddingBottom: hp(1.5),
+          }}
+        >
           <Button
             mode="outlined"
             onPress={onCancel}
             textColor={colors.textSecondary}
-            style={styles.cancelBtn}
+            style={{ borderColor: colors.border }}
           >
             {cancelText ?? defaultCancelText}
           </Button>
@@ -111,7 +132,7 @@ const ConfirmModal: React.FC<Props> = ({
             mode="contained"
             onPress={onConfirm}
             buttonColor={getConfirmColor(type)}
-            style={styles.confirmBtn}
+            style={{ minWidth: wp(20) }}
           >
             {confirmText ?? defaultConfirmText}
           </Button>
@@ -122,36 +143,3 @@ const ConfirmModal: React.FC<Props> = ({
 };
 
 export default ConfirmModal;
-
-const styles = StyleSheet.create({
-  dialog: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
-    elevation: 10,
-  },
-  title: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: colors.textPrimary,
-  },
-  message: {
-    fontSize: 14,
-    color: colors.textSecondary,
-    lineHeight: 22,
-  },
-  actions: {
-    gap: 8,
-    paddingHorizontal: 12,
-    paddingBottom: 12,
-  },
-  cancelBtn: {
-    borderColor: colors.border,
-  },
-  confirmBtn: {
-    minWidth: 80,
-  },
-});

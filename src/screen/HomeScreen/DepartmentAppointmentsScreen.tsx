@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Linking, Alert } from 'react-native';
+import { View, Linking, Alert, ListRenderItem } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlatList } from 'react-native-gesture-handler';
 import { Button } from 'react-native-paper';
 
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 import StatusFilterBar from '../../components/HomeScreen/StatusFilterBar';
 import AppointmentCard from '../../components/HomeScreen/AppointmentCard';
 import CreateAppointmentModal from '../../components/HomeScreen/CreateAppointmentModal';
 import FilterHeader from '../../components/HomeScreen/FilterHeader';
 import AppointmentFilterSheet from '../../components/HomeScreen/AppointmentFilterModal';
-
-import { ListRenderItem } from 'react-native';
-
-/* ---------------- Types ---------------- */
 
 type Appointment = {
   id: string;
@@ -30,8 +27,6 @@ type Appointment = {
   patientMessage: string;
   status: 'confirmed' | 'cancelled' | 'admitted';
 };
-
-/* ---------------- Dummy Data ---------------- */
 
 const APPOINTMENTS_DATA: Appointment[] = [
   {
@@ -120,29 +115,36 @@ const DepartmentAppointmentsScreen = () => {
   const [createModalVisible, setCreateModalVisible] = useState(false);
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeArea}>
-      <View style={styles.container}>
+    <SafeAreaView
+      edges={['bottom']}
+      style={{ flex: 1, backgroundColor: colors.background }}
+    >
+      <View
+        style={{
+          flex: 1,
+          paddingHorizontal: wp(4),
+          paddingVertical: hp(1),
+        }}
+      >
         <FlatList
           data={APPOINTMENTS_DATA}
           keyExtractor={item => item.id}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={{ paddingBottom: hp(2.5) }}
           ListHeaderComponent={
             <View>
-              {/* ✅ Paper Button replaces AppButton */}
               <Button
                 mode="contained"
                 icon="plus"
                 onPress={() => setCreateModalVisible(true)}
                 buttonColor={colors.primary}
                 textColor={colors.textPrimary}
-                style={styles.addBtn}
+                style={{ marginBottom: hp(1), borderRadius: wp(2) }}
               >
-              Add Appointment
+                Add Appointment
               </Button>
 
-              {/* ✅ All below unchanged — already converted */}
               <StatusFilterBar onFilterChange={handleFilterChange} />
               <FilterHeader
                 onDayChange={day =>
@@ -168,21 +170,3 @@ const DepartmentAppointmentsScreen = () => {
 };
 
 export default DepartmentAppointmentsScreen;
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: 5,
-  },
-  listContent: {
-    paddingBottom: 20,
-  },
-  addBtn: {
-    marginBottom: 8,
-    borderRadius: 8,
-  },
-});

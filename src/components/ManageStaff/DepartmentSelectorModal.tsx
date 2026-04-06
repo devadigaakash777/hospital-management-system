@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 import {
   Portal,
   Dialog,
@@ -8,6 +8,7 @@ import {
 } from 'react-native-paper';
 import { colors } from '../../theme';
 import { AppCheckbox } from '..';
+import { wp, hp } from '../../utils/responsive';
 
 interface DepartmentSelectorModalProps {
   visible: boolean;
@@ -42,30 +43,46 @@ const DepartmentSelectorModal: React.FC<DepartmentSelectorModalProps> = ({
   };
 
   const renderItem = ({ item }: { item: string }) => (
-    // ✅ AppCheckbox already converted — no changes needed
     <AppCheckbox
       value={localSelected.includes(item)}
       onChange={() => toggleDepartment(item)}
       label={item}
-      containerStyle={styles.departmentItem}
+      containerStyle={{ marginVertical: hp(1.8) }}
     />
   );
 
   return (
-    // ✅ Portal + Dialog replaces Modal + View overlay
     <Portal>
       <Dialog
         visible={visible}
         onDismiss={onClose}
-        style={styles.dialog}
+        style={{
+          backgroundColor: colors.background,
+          borderRadius: wp(3.5),
+          borderWidth: 1,
+          borderColor: colors.border,
+        }}
       >
-        <Dialog.Title style={styles.title}>
+        <Dialog.Title
+          style={{
+            fontSize: wp(4.5),
+            fontWeight: '600',
+            color: colors.textPrimary,
+          }}
+        >
           Select Departments
         </Dialog.Title>
 
         <Dialog.Content>
-          {/* ✅ Select All — AppCheckbox unchanged */}
-          <View style={styles.selectAllContainer}>
+          {/* Select All */}
+          <View
+            style={{
+              borderBottomWidth: 1,
+              borderBottomColor: colors.border,
+              paddingBottom: hp(1.2),
+              marginBottom: hp(1.2),
+            }}
+          >
             <AppCheckbox
               value={isAllSelected}
               onChange={toggleSelectAll}
@@ -79,18 +96,25 @@ const DepartmentSelectorModal: React.FC<DepartmentSelectorModalProps> = ({
             renderItem={renderItem}
             showsVerticalScrollIndicator
             keyboardShouldPersistTaps="handled"
-            style={styles.listContainer}
+            style={{ maxHeight: hp(43) }}
           />
         </Dialog.Content>
 
-        {/* ✅ Dialog.Actions + Paper Button replaces AppButton */}
-        <Dialog.Actions style={styles.buttonRow}>
+        {/* Actions */}
+        <Dialog.Actions
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: wp(3),
+            paddingBottom: hp(1.5),
+          }}
+        >
           <Button
             mode="contained"
             onPress={onClose}
             buttonColor={colors.card}
             textColor={colors.textPrimary}
-            style={styles.button}
+            style={{ width: '48%' }}
           >
             Cancel
           </Button>
@@ -101,7 +125,7 @@ const DepartmentSelectorModal: React.FC<DepartmentSelectorModalProps> = ({
               onClose();
             }}
             buttonColor={colors.primary}
-            style={styles.button}
+            style={{ width: '48%' }}
           >
             Done
           </Button>
@@ -112,38 +136,3 @@ const DepartmentSelectorModal: React.FC<DepartmentSelectorModalProps> = ({
 };
 
 export default DepartmentSelectorModal;
-
-const styles = StyleSheet.create({
-  dialog: {
-    backgroundColor: colors.background,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.textPrimary,
-  },
-  selectAllContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    paddingBottom: 10,
-    marginBottom: 10,
-  },
-  listContainer: {
-    maxHeight: 350,
-  },
-  departmentItem: {
-    marginVertical: 15,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingBottom: 12,
-  },
-  button: {
-    width: '48%',
-  },
-});

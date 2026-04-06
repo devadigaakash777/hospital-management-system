@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 interface Props {
   value: string;
@@ -15,14 +15,26 @@ const SearchInput: React.FC<Props> = ({
   placeholder = 'Search...',
 }) => {
   return (
-    // ✅ Paper Searchbar replaces entire custom View + TextInput + icons
     <Searchbar
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
       onClearIconPress={() => onChangeText('')}
-      style={styles.container}
-      inputStyle={styles.input}
+      style={{
+        borderWidth: 1,
+        borderColor: colors.border,
+        backgroundColor: colors.surface,
+        borderRadius: wp(2.5),
+        height: hp(5.5),
+        marginBottom: hp(1.5),
+        elevation: 0,
+      }}
+      inputStyle={{
+        color: colors.textPrimary,
+        fontSize: wp(3.5),
+        minHeight: 0,
+        alignSelf: 'center',
+      }}
       iconColor={colors.textSecondary}
       placeholderTextColor={colors.textSecondary}
       theme={{
@@ -35,21 +47,3 @@ const SearchInput: React.FC<Props> = ({
 };
 
 export default SearchInput;
-
-const styles = StyleSheet.create({
-  container: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    borderRadius: 10,
-    height: 45,
-    marginBottom: 12,
-    elevation: 0, // ✅ Remove Paper's default shadow
-  },
-  input: {
-    color: colors.textPrimary,
-    fontSize: 14,
-    minHeight: 0,  // ✅ Fixes height on Android
-    alignSelf: 'center',
-  },
-});

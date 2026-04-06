@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { Text } from 'react-native-paper';
 import { colors } from '../../theme';
 import { AppCheckbox } from '..';
+import { wp } from '../../utils/responsive';
 
 const weeks = ['1st Week', '2nd Week', '3rd Week', '4th Week', 'Last Week'];
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -21,22 +22,44 @@ const SpecificWeekSection: React.FC<Props> = ({ selected, onToggle }) => {
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View>
 
-        {/* ✅ Header */}
-        <View style={styles.row}>
-          <View style={styles.weekHeader} />
+        {/* Header */}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ width: wp(22) }} />
           {days.map(day => (
-            // ✅ Paper Text replaces RN Text
-            <Text key={day} style={styles.dayHeader}>{day}</Text>
+            <Text
+              key={day}
+              style={{
+                width: wp(13),
+                textAlign: 'center',
+                color: colors.textSecondary,
+                fontWeight: '600',
+              }}
+            >
+              {day}
+            </Text>
           ))}
         </View>
 
-        {/* ✅ Rows */}
+        {/* Rows */}
         {weeks.map(week => (
-          <View key={week} style={styles.row}>
-            <Text style={styles.weekLabel}>{week}</Text>
+          <View key={week} style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              style={{
+                width: wp(22),
+                color: colors.textPrimary,
+                fontWeight: '600',
+              }}
+            >
+              {week}
+            </Text>
             {days.map(day => (
-              <View key={day} style={styles.cell}>
-                {/* ✅ AppCheckbox already converted — no changes needed */}
+              <View
+                key={day}
+                style={{
+                  width: wp(13),
+                  alignItems: 'center',
+                }}
+              >
                 <AppCheckbox
                   value={selected[week]?.includes(day) || false}
                   onChange={() => onToggle(week, day)}
@@ -52,28 +75,3 @@ const SpecificWeekSection: React.FC<Props> = ({ selected, onToggle }) => {
 };
 
 export default SpecificWeekSection;
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  weekHeader: {
-    width: 90,
-  },
-  dayHeader: {
-    width: 55,
-    textAlign: 'center',
-    color: colors.textSecondary,
-    fontWeight: '600',
-  },
-  weekLabel: {
-    width: 90,
-    color: colors.textPrimary,
-    fontWeight: '600',
-  },
-  cell: {
-    width: 55,
-    alignItems: 'center',
-  },
-});

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import { Card, Text, Button, TextInput, TouchableRipple } from 'react-native-paper';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 interface Props {
   onBlock?: (data: {
@@ -46,44 +47,87 @@ const BlockDatesCard: React.FC<Props> = ({ onBlock }) => {
   };
 
   return (
-    // ✅ Paper Card replaces custom View with shadow/border
-    <Card style={styles.card} mode="outlined">
+    <Card
+      style={{
+        borderRadius: wp(3.5),
+        borderColor: colors.border,
+        backgroundColor: colors.surface,
+        marginVertical: hp(1.5),
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: hp(0.5) },
+        shadowOpacity: 0.08,
+        shadowRadius: wp(1.5),
+        elevation: 4,
+      }}
+      mode="outlined"
+    >
       <Card.Content>
 
-        {/* ✅ Paper Text replaces RN Text */}
-        <Text style={styles.title}>Block Dates</Text>
+        <Text
+          style={{
+            fontSize: wp(4),
+            fontWeight: '700',
+            marginBottom: hp(1.8),
+            color: colors.textPrimary,
+          }}
+        >
+          Block Dates
+        </Text>
 
-        {/* ✅ TouchableRipple replaces TouchableOpacity date boxes */}
-        <View style={styles.dateRow}>
+        {/* Date Row */}
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: wp(2.5),
+            marginBottom: hp(2),
+          }}
+        >
           <TouchableRipple
-            style={styles.dateBox}
+            style={{
+              flex: 1,
+              borderWidth: 1,
+              borderColor: colors.border,
+              borderRadius: wp(2),
+              padding: wp(3),
+              backgroundColor: colors.card,
+            }}
             onPress={() => setPickerType('from')}
             rippleColor={colors.primary + '22'}
           >
-            <Text style={styles.dateText}>
+            <Text style={{ color: colors.textPrimary }}>
               {fromDate ? fromDate.toDateString() : 'From Date'}
             </Text>
           </TouchableRipple>
 
           <TouchableRipple
-            style={styles.dateBox}
+            style={{
+              flex: 1,
+              borderWidth: 1,
+              borderColor: colors.border,
+              borderRadius: wp(2),
+              padding: wp(3),
+              backgroundColor: colors.card,
+            }}
             onPress={() => setPickerType('to')}
             rippleColor={colors.primary + '22'}
           >
-            <Text style={styles.dateText}>
+            <Text style={{ color: colors.textPrimary }}>
               {toDate ? toDate.toDateString() : 'To Date'}
             </Text>
           </TouchableRipple>
         </View>
 
-        {/* ✅ Paper TextInput replaces InputField */}
+        {/* Reason Input */}
         <TextInput
           label="Reason (Optional)"
           placeholder="Eg: Medical Camp"
           value={reason}
           onChangeText={setReason}
           mode="outlined"
-          style={styles.input}
+          style={{
+            backgroundColor: colors.card,
+            marginBottom: hp(1.2),
+          }}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{
@@ -91,19 +135,21 @@ const BlockDatesCard: React.FC<Props> = ({ onBlock }) => {
           }}
         />
 
-        {/* ✅ Paper Button replaces AppButton */}
+        {/* Block Button */}
         <Button
           mode="contained"
           onPress={handleBlock}
           icon="calendar-remove"
           buttonColor={colors.primary}
           textColor="#fff"
-          style={styles.blockBtn}
+          style={{
+            marginTop: hp(1.2),
+            borderRadius: wp(2),
+          }}
         >
           Block Date(s)
         </Button>
 
-        {/* DateTimePicker unchanged */}
         {pickerType && (
           <DateTimePicker
             mode="date"
@@ -118,47 +164,3 @@ const BlockDatesCard: React.FC<Props> = ({ onBlock }) => {
 };
 
 export default BlockDatesCard;
-
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 14,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    marginVertical: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '700',
-    marginBottom: 14,
-    color: colors.textPrimary,
-  },
-  dateRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 16,
-  },
-  dateBox: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 8,
-    padding: 12,
-    backgroundColor: colors.card,
-  },
-  dateText: {
-    color: colors.textPrimary,
-  },
-  input: {
-    backgroundColor: colors.card,
-    marginBottom: 10,
-  },
-  blockBtn: {
-    marginTop: 10,
-    borderRadius: 8,
-  },
-});

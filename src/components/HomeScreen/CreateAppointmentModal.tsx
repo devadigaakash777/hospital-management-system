@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import {
   Text,
   Button,
@@ -12,11 +12,8 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import { colors } from '../../theme';
-import {
-  SearchablePicker,
-  BaseModal,
-  ConfirmModal,
-} from '..';
+import { SearchablePicker, BaseModal, ConfirmModal } from '..';
+import { wp, hp } from '../../utils/responsive';
 
 interface Props {
   visible: boolean;
@@ -130,6 +127,18 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
     }
   };
 
+  const inputStyle = {
+    marginBottom: hp(1.5),
+    backgroundColor: colors.card,
+  };
+
+  const labelStyle = {
+    fontWeight: '600' as const,
+    marginTop: hp(1.5),
+    marginBottom: hp(0.8),
+    color: colors.textPrimary,
+  };
+
   return (
     <>
       <BaseModal
@@ -137,14 +146,14 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
         visible={visible}
         onClose={handleCancelPress}
       >
-        {/* ✅ Paper TextInput replaces InputField */}
+        {/* Name Fields */}
         <TextInput
           label="First Name"
           placeholder="e.g. John"
           value={firstName}
           onChangeText={setFirstName}
           mode="outlined"
-          style={styles.input}
+          style={inputStyle}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
@@ -155,7 +164,7 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
           value={lastName}
           onChangeText={setLastName}
           mode="outlined"
-          style={styles.input}
+          style={inputStyle}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
@@ -167,7 +176,7 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
           onChangeText={setPhone}
           keyboardType="phone-pad"
           mode="outlined"
-          style={styles.input}
+          style={inputStyle}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
@@ -179,13 +188,13 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
           onChangeText={setEmail}
           keyboardType="email-address"
           mode="outlined"
-          style={styles.input}
+          style={inputStyle}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
         />
 
-        {/* ✅ Paper Checkbox replaces custom Checkbox component */}
+        {/* Health Package Checkbox */}
         <TouchableRipple
           onPress={() => {
             const newVal = !healthPkg;
@@ -199,7 +208,12 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
             }
           }}
           rippleColor={colors.primary + '22'}
-          style={styles.checkboxRow}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginVertical: hp(0.8),
+            paddingVertical: hp(0.5),
+          }}
         >
           <>
             <Checkbox
@@ -207,7 +221,7 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
               color={colors.primary}
               uncheckedColor={colors.border}
             />
-            <Text style={styles.checkboxLabel}>
+            <Text style={{ color: colors.textPrimary, marginLeft: wp(1) }}>
               Health Package Appointment
             </Text>
           </>
@@ -223,10 +237,16 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
           />
         )}
 
+        {/* VIP Checkbox */}
         <TouchableRipple
           onPress={() => setVip(!vip)}
           rippleColor={colors.primary + '22'}
-          style={styles.checkboxRow}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginVertical: hp(0.8),
+            paddingVertical: hp(0.5),
+          }}
         >
           <>
             <Checkbox
@@ -234,12 +254,14 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
               color={colors.primary}
               uncheckedColor={colors.border}
             />
-            <Text style={styles.checkboxLabel}>VIP / Priority Patient</Text>
+            <Text style={{ color: colors.textPrimary, marginLeft: wp(1) }}>
+              VIP / Priority Patient
+            </Text>
           </>
         </TouchableRipple>
 
-        {/* ✅ Department — disabled when health package selected */}
-        <View style={healthPkg ? styles.disabled : undefined}>
+        {/* Department */}
+        <View style={healthPkg ? { opacity: 0.4, pointerEvents: 'none' } : undefined}>
           <SearchablePicker
             label="Department"
             value={department}
@@ -253,7 +275,7 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
           />
         </View>
 
-        {/* ✅ Doctor */}
+        {/* Doctor */}
         {department && !healthPkg && (
           <SearchablePicker
             label="Doctor"
@@ -264,16 +286,23 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
           />
         )}
 
-        {/* ✅ Date — TouchableRipple replaces TouchableOpacity */}
+        {/* Date */}
         {doctor && !healthPkg && (
           <>
-            <Text style={styles.label}>Preferred Date</Text>
+            <Text style={labelStyle}>Preferred Date</Text>
             <TouchableRipple
-              style={styles.dropdown}
+              style={{
+                borderWidth: 1,
+                borderColor: colors.border,
+                borderRadius: wp(2.5),
+                padding: wp(3),
+                backgroundColor: colors.card,
+                marginBottom: hp(1.2),
+              }}
               onPress={() => setShowDatePicker(true)}
               rippleColor={colors.primary + '22'}
             >
-              <Text style={styles.dropdownText}>
+              <Text style={{ color: colors.textPrimary }}>
                 {selectedDate ? selectedDate.toDateString() : 'Select Date'}
               </Text>
             </TouchableRipple>
@@ -289,23 +318,32 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
           />
         )}
 
-        {/* ✅ Time Slots — Paper Chip replaces custom slot TouchableOpacity */}
+        {/* Time Slots */}
         {selectedDate && !healthPkg && (
           <>
-            <Text style={styles.label}>Time Slot</Text>
-            <View style={styles.slotGrid}>
+            <Text style={labelStyle}>Time Slot</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                marginBottom: hp(1.2),
+                gap: wp(2),
+              }}
+            >
               {timeSlots.map(slot => (
                 <Chip
                   key={slot}
                   selected={selectedSlot === slot}
                   onPress={() => setSelectedSlot(slot)}
-                  style={[
-                    styles.slot,
-                    selectedSlot === slot && { backgroundColor: colors.primary },
-                  ]}
+                  style={{
+                    borderRadius: wp(5),
+                    borderWidth: 1,
+                    borderColor: colors.border,
+                    backgroundColor: selectedSlot === slot ? colors.primary : undefined,
+                  }}
                   selectedColor="#fff"
                   textStyle={{
-                    fontSize: 12,
+                    fontSize: wp(3),
                     color: selectedSlot === slot ? '#fff' : colors.textSecondary,
                   }}
                 >
@@ -316,26 +354,34 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
           </>
         )}
 
+        {/* Message */}
         <TextInput
           label="Message (Optional)"
           placeholder="e.g. Please note any special requirements"
           value={message}
           onChangeText={setMessage}
           mode="outlined"
-          style={styles.input}
+          style={inputStyle}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
         />
 
-        {/* ✅ Paper Button replaces AppButton */}
-        <View style={styles.buttonRow}>
+        {/* Buttons */}
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: hp(2.5),
+            marginBottom: hp(1.2),
+            gap: wp(2.5),
+          }}
+        >
           <Button
             mode="contained"
             onPress={handleCancelPress}
             buttonColor={colors.border}
             textColor={colors.textPrimary}
-            style={styles.halfBtn}
+            style={{ flex: 1 }}
           >
             Cancel
           </Button>
@@ -343,7 +389,7 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
             mode="contained"
             onPress={handleCreatePress}
             buttonColor={colors.primary}
-            style={styles.halfBtn}
+            style={{ flex: 1 }}
           >
             Create Appointment
           </Button>
@@ -377,61 +423,3 @@ const CreateAppointmentModal = ({ visible, onClose }: Props) => {
 };
 
 export default CreateAppointmentModal;
-
-const styles = StyleSheet.create({
-  input: {
-    marginBottom: 12,
-    backgroundColor: colors.card,
-  },
-  label: {
-    fontWeight: '600',
-    marginTop: 12,
-    marginBottom: 6,
-    color: colors.textPrimary,
-  },
-  checkboxRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 6,
-    paddingVertical: 4,
-  },
-  checkboxLabel: {
-    color: colors.textPrimary,
-    marginLeft: 4,
-  },
-  dropdown: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 10,
-    padding: 12,
-    backgroundColor: colors.card,
-    marginBottom: 10,
-  },
-  dropdownText: {
-    color: colors.textPrimary,
-  },
-  slotGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 10,
-    gap: 8,
-  },
-  slot: {
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    marginTop: 20,
-    marginBottom: 10,
-    gap: 10,
-  },
-  halfBtn: {
-    flex: 1,
-  },
-  disabled: {
-    opacity: 0.4,
-    pointerEvents: 'none',
-  },
-});

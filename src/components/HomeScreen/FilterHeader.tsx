@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import { Chip, Button } from 'react-native-paper';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 type DayType = 'yesterday' | 'today' | 'tomorrow';
 
@@ -24,19 +25,26 @@ const FilterHeader: React.FC<Props> = ({
   const days: DayType[] = ['yesterday', 'today', 'tomorrow'];
 
   return (
-    <View style={styles.container}>
-
-      {/* ✅ Paper Chip replaces custom dayButton TouchableOpacity */}
-      <View style={styles.leftContainer}>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: hp(1.5),
+        paddingHorizontal: wp(3),
+      }}
+    >
+      {/* Day Chips */}
+      <View style={{ flexDirection: 'row', gap: wp(2) }}>
         {days.map(day => (
           <Chip
             key={day}
             selected={activeDay === day}
             onPress={() => handleDayPress(day)}
-            style={[
-              styles.dayChip,
-              activeDay === day && { backgroundColor: colors.primary },
-            ]}
+            style={{
+              borderRadius: wp(5),
+              backgroundColor: activeDay === day ? colors.primary : colors.surface,
+            }}
             selectedColor="#fff"
             textStyle={{
               color: activeDay === day ? colors.textPrimary : colors.textSecondary,
@@ -48,7 +56,7 @@ const FilterHeader: React.FC<Props> = ({
         ))}
       </View>
 
-      {/* ✅ Paper Button replaces AppButton */}
+      {/* Filter Button */}
       <Button
         mode="outlined"
         icon="filter-outline"
@@ -57,40 +65,17 @@ const FilterHeader: React.FC<Props> = ({
           (() => Alert.alert('Advanced Filter', 'Advanced filter functionality coming soon!'))
         }
         textColor={colors.textPrimary}
-        style={styles.filterBtn}
-        labelStyle={styles.filterLabel}
+        style={{
+          borderColor: colors.border,
+          backgroundColor: colors.surface,
+          borderRadius: wp(2),
+        }}
+        labelStyle={{ fontWeight: '500' }}
       >
         Filter
       </Button>
-
     </View>
   );
 };
 
 export default FilterHeader;
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-  },
-  leftContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  dayChip: {
-    borderRadius: 20,
-    backgroundColor: colors.surface,
-  },
-  filterBtn: {
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    borderRadius: 8,
-  },
-  filterLabel: {
-    fontWeight: '500',
-  },
-});

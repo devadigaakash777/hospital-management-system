@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Text, TouchableRipple, HelperText } from 'react-native-paper';
 import { SectionHeader, AppCheckbox } from '..';
 import { colors } from '../../theme';
 import DepartmentSelectorModal from './DepartmentSelectorModal';
+import { wp, hp } from '../../utils/responsive';
 
 interface PermissionItem<T extends string> {
   key: T;
@@ -39,24 +40,29 @@ function ManualRightsSection<T extends string>({
   permissionError,
 }: ManualRightsSectionProps<T>) {
   return (
-    <View style={styles.container}>
+    <View style={{ marginTop: hp(2.5) }}>
 
-      {/* ✅ SectionHeader unchanged — your own component */}
       <SectionHeader
         title="Select Departments"
         subtitle="Choose departments this staff member can access"
       />
 
-      {/* ✅ Paper HelperText replaces custom error Text */}
       {departmentError && (
         <HelperText type="error" visible={!!departmentError}>
           {departmentError}
         </HelperText>
       )}
 
-      {/* ✅ TouchableRipple replaces TouchableOpacity */}
       <TouchableRipple
-        style={styles.input}
+        style={{
+          backgroundColor: colors.card,
+          borderRadius: wp(2.5),
+          paddingVertical: hp(1.8),
+          paddingHorizontal: wp(3),
+          borderWidth: 1,
+          borderColor: colors.border,
+          marginBottom: hp(2.5),
+        }}
         onPress={onOpenDepartmentModal}
         rippleColor={colors.primary + '22'}
       >
@@ -73,7 +79,6 @@ function ManualRightsSection<T extends string>({
         </Text>
       </TouchableRipple>
 
-      {/* ✅ DepartmentSelectorModal unchanged */}
       {deptModalVisible && (
         <DepartmentSelectorModal
           visible={deptModalVisible}
@@ -89,23 +94,44 @@ function ManualRightsSection<T extends string>({
         subtitle="Define system-level access rights"
       />
 
-      {/* ✅ Paper HelperText replaces custom error Text */}
       {permissionError && (
         <HelperText type="error" visible={!!permissionError}>
           {permissionError}
         </HelperText>
       )}
 
-      {/* ✅ AppCheckbox unchanged — already converted to Paper */}
       {permissionConfig.map(item => (
-        <View key={item.key} style={styles.permissionRow}>
+        <View
+          key={item.key}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            marginBottom: hp(1.8),
+          }}
+        >
           <AppCheckbox
             value={permissions[item.key]}
             onChange={() => onTogglePermission(item.key)}
           />
-          <View style={styles.permissionTextContainer}>
-            <Text style={styles.permissionTitle}>{item.title}</Text>
-            <Text style={styles.permissionSubtitle}>{item.subtitle}</Text>
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                fontSize: wp(3.8),
+                fontWeight: '600',
+                color: colors.textPrimary,
+              }}
+            >
+              {item.title}
+            </Text>
+            <Text
+              style={{
+                fontSize: wp(3.3),
+                color: colors.textSecondary,
+                marginTop: hp(0.3),
+              }}
+            >
+              {item.subtitle}
+            </Text>
           </View>
         </View>
       ))}
@@ -115,36 +141,3 @@ function ManualRightsSection<T extends string>({
 }
 
 export default ManualRightsSection;
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 20,
-  },
-  input: {
-    backgroundColor: colors.card,
-    borderRadius: 10,
-    paddingVertical: 14,
-    paddingHorizontal: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 20,
-  },
-  permissionRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 14,
-  },
-  permissionTextContainer: {
-    flex: 1,
-  },
-  permissionTitle: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: colors.textPrimary,
-  },
-  permissionSubtitle: {
-    fontSize: 13,
-    color: colors.textSecondary,
-    marginTop: 2,
-  },
-});

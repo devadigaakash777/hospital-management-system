@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { TextInput, Button } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
 import { AppHeader, SectionHeader } from '../components';
 import { colors } from '../theme';
+import { wp, hp } from '../utils/responsive';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
@@ -41,28 +42,47 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: colors.background,
+      }}
+    >
       <KeyboardAwareScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={{
+          flexGrow: 1,
+          padding: wp(5),
+          justifyContent: 'center',
+        }}
         keyboardShouldPersistTaps="handled"
         enableOnAndroid
-        extraScrollHeight={20}
+        extraScrollHeight={hp(2.5)}
       >
-        {/* ✅ AppHeader + SectionHeader unchanged — your own components */}
         <AppHeader
           logo={require('../assets/admin-logo.jpg')}
           title="Admin Portal"
           subtitle="Adarsha Hospital Management"
         />
 
-        <View style={[styles.card, shadowStyle]}>
+        <View
+          style={{
+            marginTop: hp(1.2),
+            backgroundColor: colors.surface,
+            padding: wp(4),
+            borderRadius: wp(2.5),
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: hp(0.25) },
+            shadowOpacity: 0.12,
+            shadowRadius: wp(1.5),
+            elevation: 4,
+          }}
+        >
           <SectionHeader
             title="Admin Login"
             subtitle="Access the appointment management dashboard"
             align="center"
           />
 
-          {/* ✅ Paper TextInput replaces InputField */}
           <TextInput
             label="Email"
             placeholder="Enter your email"
@@ -70,13 +90,15 @@ export default function LoginScreen() {
             value={username}
             onChangeText={setUsername}
             mode="outlined"
-            style={styles.input}
+            style={{
+              backgroundColor: colors.card,
+              marginBottom: hp(1.5),
+            }}
             outlineColor={colors.border}
             activeOutlineColor={colors.primary}
             theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
           />
 
-          {/* ✅ Paper TextInput with eye toggle replaces InputField isPassword */}
           <TextInput
             label="Password"
             placeholder="Enter your password"
@@ -84,7 +106,10 @@ export default function LoginScreen() {
             value={password}
             onChangeText={setPassword}
             mode="outlined"
-            style={styles.input}
+            style={{
+              backgroundColor: colors.card,
+              marginBottom: hp(1.5),
+            }}
             outlineColor={colors.border}
             activeOutlineColor={colors.primary}
             theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
@@ -97,14 +122,19 @@ export default function LoginScreen() {
             }
           />
 
-          {/* ✅ Paper Button replaces AppButton */}
           <Button
             mode="contained"
             icon="login"
             onPress={handleLogin}
             buttonColor={colors.primary}
-            style={styles.loginBtn}
-            labelStyle={styles.loginBtnLabel}
+            style={{
+              marginTop: hp(1),
+              borderRadius: wp(2),
+            }}
+            labelStyle={{
+              fontSize: wp(4),
+              fontWeight: '600',
+            }}
           >
             Login
           </Button>
@@ -113,41 +143,3 @@ export default function LoginScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    padding: 20,
-    justifyContent: 'center',
-  },
-  card: {
-    marginTop: 10,
-    backgroundColor: colors.surface,
-    padding: 16,
-    borderRadius: 10,
-  },
-  input: {
-    backgroundColor: colors.card,
-    marginBottom: 12,
-  },
-  loginBtn: {
-    marginTop: 8,
-    borderRadius: 8,
-  },
-  loginBtnLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
-
-const shadowStyle = {
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.12,
-  shadowRadius: 6,
-  elevation: 4,
-};

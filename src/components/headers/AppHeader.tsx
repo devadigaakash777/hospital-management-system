@@ -1,11 +1,7 @@
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  ImageSourcePropType,
-} from 'react-native';
+import React from 'react';
+import { View, Text, Image, ImageSourcePropType } from 'react-native';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 interface AppHeaderProps {
   logo: ImageSourcePropType;
@@ -15,44 +11,37 @@ interface AppHeaderProps {
 
 const AppHeader: React.FC<AppHeaderProps> = ({ logo, title, subtitle }) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image source={logo} style={styles.logo} resizeMode="contain" />
+    <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+      <View style={{ padding: wp(1) }}>
+        <Image
+          source={logo}
+          style={{ width: wp(8), height: wp(8) }}
+          resizeMode="contain"
+        />
       </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>{title}</Text>
-        {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+      <View style={{ marginLeft: wp(0.5), flexDirection: 'column' }}>
+        <Text
+          style={{
+            fontSize: wp(4.5),
+            fontWeight: '600',
+            color: colors.textPrimary,
+          }}
+        >
+          {title}
+        </Text>
+        {subtitle && (
+          <Text
+            style={{
+              fontSize: wp(2.5),
+              color: colors.textSecondary,
+            }}
+          >
+            {subtitle}
+          </Text>
+        )}
       </View>
     </View>
   );
 };
 
 export default AppHeader;
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  imageContainer: {
-    padding: 4,
-  },
-  textContainer: {
-    marginLeft: 2,
-    flexDirection: 'column',
-  },
-  logo: {
-    width: 32,
-    height: 32,
-  },
-
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.textPrimary,
-  },
-  subtitle: {
-    fontSize: 10,
-    color: colors.textSecondary,
-  },
-});

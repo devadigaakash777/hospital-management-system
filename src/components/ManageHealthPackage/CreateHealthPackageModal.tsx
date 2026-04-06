@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import {
   Text,
   Button,
@@ -13,6 +13,7 @@ import DateTimePicker, {
 import { BaseModal, ConfirmModal } from '..';
 import { colors } from '../../theme';
 import { HealthPackage } from '../../types/healthpackage.types';
+import { wp, hp } from '../../utils/responsive';
 
 export interface CreateHealthPackageData {
   name: string;
@@ -163,6 +164,28 @@ const CreateHealthPackageModal: React.FC<Props> = ({
     onClose();
   };
 
+  const inputStyle = {
+    marginBottom: hp(1.5),
+    backgroundColor: colors.card,
+  };
+
+  const timeBoxStyle = {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: wp(2),
+    padding: wp(2.5),
+    backgroundColor: colors.card,
+  };
+
+  const btnStyle = {
+    width: wp(9),
+    height: wp(9),
+    borderRadius: wp(4.5),
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  };
+
   return (
     <>
       <BaseModal
@@ -170,14 +193,13 @@ const CreateHealthPackageModal: React.FC<Props> = ({
         title={isEdit ? 'Edit Health Package' : 'Create Health Package'}
         onClose={handleCancelPress}
       >
-        {/* ✅ Paper TextInput replaces InputField */}
         <TextInput
           label="Package Name *"
           placeholder="e.g. Executive Health Checkup"
           value={name}
           onChangeText={setName}
           mode="outlined"
-          style={styles.input}
+          style={inputStyle}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
@@ -188,7 +210,7 @@ const CreateHealthPackageModal: React.FC<Props> = ({
           value={description}
           onChangeText={setDescription}
           mode="outlined"
-          style={styles.input}
+          style={inputStyle}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
@@ -200,24 +222,43 @@ const CreateHealthPackageModal: React.FC<Props> = ({
           onChangeText={setPrice}
           keyboardType="numeric"
           mode="outlined"
-          style={styles.input}
+          style={inputStyle}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
         />
 
-        {/* ✅ Visiting Days — Paper Chip replaces dayChip TouchableOpacity */}
-        <Text style={styles.label}>Visiting Days</Text>
-        <View style={styles.daysContainer}>
+        {/* Visiting Days */}
+        <Text
+          style={{
+            marginTop: hp(1.2),
+            marginBottom: hp(0.8),
+            color: colors.textSecondary,
+            fontSize: wp(3.5),
+            fontWeight: '600',
+          }}
+        >
+          Visiting Days
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            marginBottom: hp(1),
+            gap: wp(2),
+          }}
+        >
           {DAYS.map(day => (
             <Chip
               key={day}
               selected={visitingDays.includes(day)}
               onPress={() => toggleDay(day)}
-              style={[
-                styles.dayChip,
-                visitingDays.includes(day) && { backgroundColor: colors.primary },
-              ]}
+              style={{
+                borderRadius: wp(5),
+                borderWidth: 1,
+                borderColor: colors.border,
+                backgroundColor: visitingDays.includes(day) ? colors.primary : undefined,
+              }}
               selectedColor="#fff"
               textStyle={{
                 color: visitingDays.includes(day) ? '#fff' : colors.textSecondary,
@@ -228,11 +269,29 @@ const CreateHealthPackageModal: React.FC<Props> = ({
           ))}
         </View>
 
-        {/* ✅ OPD Time Range — TouchableRipple replaces TouchableOpacity */}
-        <Text style={styles.label}>OPD Time Range</Text>
-        <View style={styles.rangeRow}>
+        {/* OPD Time Range */}
+        <Text
+          style={{
+            marginTop: hp(1.2),
+            marginBottom: hp(0.8),
+            color: colors.textSecondary,
+            fontSize: wp(3.5),
+            fontWeight: '600',
+          }}
+        >
+          OPD Time Range
+        </Text>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: wp(1.5),
+            marginBottom: hp(1),
+          }}
+        >
           <TouchableRipple
-            style={styles.timeBox}
+            style={timeBoxStyle}
             onPress={() => openRangePicker('from')}
             rippleColor={colors.primary + '22'}
           >
@@ -242,7 +301,7 @@ const CreateHealthPackageModal: React.FC<Props> = ({
           </TouchableRipple>
 
           <TouchableRipple
-            style={styles.timeBox}
+            style={timeBoxStyle}
             onPress={() => openRangePicker('to')}
             rippleColor={colors.primary + '22'}
           >
@@ -256,29 +315,44 @@ const CreateHealthPackageModal: React.FC<Props> = ({
             onPress={addTimeRange}
             disabled={!currentFrom || !currentTo}
             buttonColor={!currentFrom || !currentTo ? colors.border : colors.primary}
-            style={styles.addIconBtn}
-            labelStyle={styles.addIconText}
+            style={btnStyle}
+            labelStyle={{
+              fontSize: wp(5),
+              fontWeight: '600',
+              color: '#fff',
+            }}
             compact
           >
             +
           </Button>
         </View>
 
-        {/* ✅ Existing time ranges */}
+        {/* Existing Time Ranges */}
         {opdTimeRanges.map((range, index) => (
-          <View key={index} style={styles.rangeRow}>
-            <View style={styles.timeBox}>
+          <View
+            key={index}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: wp(1.5),
+              marginBottom: hp(1),
+            }}
+          >
+            <View style={timeBoxStyle}>
               <Text style={{ color: colors.textPrimary }}>{range.from}</Text>
             </View>
-            <View style={styles.timeBox}>
+            <View style={timeBoxStyle}>
               <Text style={{ color: colors.textPrimary }}>{range.to}</Text>
             </View>
             <Button
               mode="contained"
               onPress={() => removeTimeRange(index)}
               buttonColor={colors.border}
-              style={styles.removeBtn}
-              labelStyle={{ color: colors.textSecondary, fontSize: 14 }}
+              style={btnStyle}
+              labelStyle={{
+                color: colors.textSecondary,
+                fontSize: wp(3.5),
+              }}
               compact
             >
               ✕
@@ -302,7 +376,7 @@ const CreateHealthPackageModal: React.FC<Props> = ({
           onChangeText={setPatientsPerHour}
           keyboardType="numeric"
           mode="outlined"
-          style={styles.input}
+          style={inputStyle}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
@@ -314,20 +388,27 @@ const CreateHealthPackageModal: React.FC<Props> = ({
           onChangeText={setAdvanceBooking}
           keyboardType="numeric"
           mode="outlined"
-          style={styles.input}
+          style={inputStyle}
           outlineColor={colors.border}
           activeOutlineColor={colors.primary}
           theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
         />
 
-        {/* ✅ Paper Button replaces AppButton */}
-        <View style={styles.buttonRow}>
+        {/* Buttons */}
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: hp(2.5),
+            marginBottom: hp(3.5),
+            gap: wp(2.5),
+          }}
+        >
           <Button
             mode="contained"
             onPress={handleCancelPress}
             buttonColor={colors.border}
             textColor={colors.textPrimary}
-            style={styles.halfBtn}
+            style={{ flex: 1 }}
           >
             Cancel
           </Button>
@@ -335,7 +416,7 @@ const CreateHealthPackageModal: React.FC<Props> = ({
             mode="contained"
             onPress={handleCreatePress}
             buttonColor={colors.primary}
-            style={styles.halfBtn}
+            style={{ flex: 1 }}
           >
             {isEdit ? 'Save Changes' : 'Create Package'}
           </Button>
@@ -365,70 +446,3 @@ const CreateHealthPackageModal: React.FC<Props> = ({
 };
 
 export default CreateHealthPackageModal;
-
-const styles = StyleSheet.create({
-  input: {
-    marginBottom: 12,
-    backgroundColor: colors.card,
-  },
-  label: {
-    marginTop: 10,
-    marginBottom: 6,
-    color: colors.textSecondary,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  daysContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 8,
-    gap: 8,
-  },
-  dayChip: {
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  rangeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 8,
-  },
-  timeBox: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 8,
-    padding: 10,
-    backgroundColor: colors.card,
-  },
-  addIconBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  addIconText: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#fff',
-  },
-  removeBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    marginTop: 20,
-    marginBottom: 30,
-    gap: 10,
-  },
-  halfBtn: {
-    flex: 1,
-  },
-});

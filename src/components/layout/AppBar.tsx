@@ -1,6 +1,7 @@
 import React from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { Alert } from 'react-native';
 import { Appbar } from 'react-native-paper';
+import { wp } from '../../utils/responsive';
 
 const AppBar: React.FC = () => {
   const handleLogout = () => {
@@ -8,36 +9,19 @@ const AppBar: React.FC = () => {
   };
 
   return (
-    <Appbar.Header style={styles.appBar} elevated>
-
-      {/* Title Section */}
+    <Appbar.Header elevated style={{ elevation: 4 }}>
       <Appbar.Content
         title="Admin Dashboard"
         subtitle="Adarsha Hospital Management"
-        titleStyle={styles.title}
-        subtitleStyle={styles.subtitle}
+        titleStyle={{ fontWeight: 'bold' }}
+        subtitleStyle={{ fontSize: wp(3) }}
       />
-
-      {/* Logout Button */}
       <Appbar.Action
         icon="logout"
         onPress={handleLogout}
       />
-
     </Appbar.Header>
   );
 };
-
-const styles = StyleSheet.create({
-  appBar: {
-    elevation: 4,
-  },
-  title: {
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    fontSize: 12,
-  },
-});
 
 export default AppBar;

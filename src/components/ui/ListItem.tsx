@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
-import { Text, List } from 'react-native-paper';
+import { View, ViewStyle } from 'react-native';
+import { List } from 'react-native-paper';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -8,6 +8,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 type IconFamily =
   | 'Ionicons'
@@ -41,62 +42,87 @@ const ListItem: React.FC<ListItemProps> = ({
   containerStyle,
   children,
 }) => {
-  // ✅ Icon renderer — returns a function for Paper's List.Item icon prop
+  const iconProps = { name: iconName!, size: wp(5.5), color: iconColor };
+
   const renderIcon = () => {
     if (!iconName) return undefined;
-
-    const props = { name: iconName, size: 22, color: iconColor };
-
     switch (iconFamily) {
       case 'Ionicons':
-        return () => <Ionicons {...props} />;
+        return () => (
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Ionicons {...iconProps} />
+          </View>
+        );
       case 'Feather':
-        return () => <Feather {...props} />;
+        return () => (
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Feather {...iconProps} />
+          </View>
+        );
       case 'AntDesign':
-        return () => <AntDesign {...props} />;
+        return () => (
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <AntDesign {...iconProps} />
+          </View>
+        );
       case 'FontAwesome6':
-        return () => <FontAwesome {...props} />;
+        return () => (
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <FontAwesome {...iconProps} />
+          </View>
+        );
       default:
-        return () => <MaterialCommunityIcons {...props} />;
+        return () => (
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <MaterialCommunityIcons {...iconProps} />
+          </View>
+        );
     }
   };
 
   return (
-    // ✅ Paper List.Item replaces custom View + Text layout
     <List.Item
       title={title}
       description={subtitle}
       left={iconName ? renderIcon() : undefined}
-      right={children ? () => <View style={styles.rightSection}>{children}</View> : undefined}
-      titleStyle={[styles.title, { color: titleColor }]}
-      descriptionStyle={[styles.subtitle, { color: subtitleColor }]}
-      style={[styles.container, { backgroundColor }, containerStyle]}
+      right={
+        children
+          ? () => (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginLeft: wp(3),
+                }}
+              >
+                {children}
+              </View>
+            )
+          : undefined
+      }
+      titleStyle={{
+        fontSize: wp(4),
+        fontWeight: '600',
+        color: titleColor,
+      }}
+      descriptionStyle={{
+        fontSize: wp(3.5),
+        marginTop: hp(0.3),
+        color: subtitleColor,
+      }}
+      style={[
+        {
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+          paddingVertical: 0,
+          minHeight: hp(7),
+          backgroundColor,
+        },
+        containerStyle,
+      ]}
     />
   );
 };
 
 export default ListItem;
-
-const styles = StyleSheet.create({
-  container: {
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    paddingVertical: 2,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.textPrimary,
-  },
-  subtitle: {
-    fontSize: 13,
-    marginTop: 2,
-    color: colors.textSecondary,
-  },
-  rightSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 12,
-  },
-});

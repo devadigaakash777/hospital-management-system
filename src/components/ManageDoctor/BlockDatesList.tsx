@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 import { Card, Text, IconButton } from 'react-native-paper';
 import { ListItem, ConfirmModal } from '..';
 import { colors } from '../../theme';
+import { wp, hp } from '../../utils/responsive';
 
 interface Props {
   doctorID: string;
@@ -27,24 +28,43 @@ const BlockDatesList: React.FC<Props> = ({ doctorID }) => {
     <ListItem
       title={item}
       backgroundColor={colors.card}
-      containerStyle={styles.listItem}
+      containerStyle={{ marginBottom: hp(1.2) }}
     >
-      {/* ✅ Paper IconButton replaces AppButton icon-only button */}
       <IconButton
         icon="delete"
         iconColor={colors.error}
-        size={22}
+        size={wp(5.5)}
         onPress={() => setDeleteConfirm(item)}
       />
     </ListItem>
   );
 
   return (
-    // ✅ Paper Card replaces custom View with shadow/border
-    <Card style={styles.card} mode="outlined">
+    <Card
+      style={{
+        borderRadius: wp(3.5),
+        borderColor: colors.border,
+        backgroundColor: colors.surface,
+        marginVertical: hp(1.5),
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: hp(0.5) },
+        shadowOpacity: 0.08,
+        shadowRadius: wp(1.5),
+        elevation: 4,
+      }}
+      mode="outlined"
+    >
       <Card.Content>
-
-        <Text style={styles.title}>Blocked Dates of {doctorID}</Text>
+        <Text
+          style={{
+            fontSize: wp(4),
+            fontWeight: '700',
+            marginBottom: hp(1.8),
+            color: colors.textPrimary,
+          }}
+        >
+          Blocked Dates of {doctorID}
+        </Text>
 
         <FlatList
           data={dates}
@@ -52,13 +72,19 @@ const BlockDatesList: React.FC<Props> = ({ doctorID }) => {
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <Text style={styles.empty}>No blocked dates.</Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: colors.textSecondary,
+                marginTop: hp(1.2),
+              }}
+            >
+              No blocked dates.
+            </Text>
           }
         />
-
       </Card.Content>
 
-      {/* ✅ ConfirmModal unchanged */}
       <ConfirmModal
         visible={!!deleteConfirm}
         type="delete"
@@ -78,31 +104,3 @@ const BlockDatesList: React.FC<Props> = ({ doctorID }) => {
 };
 
 export default BlockDatesList;
-
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 14,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    marginVertical: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '700',
-    marginBottom: 14,
-    color: colors.textPrimary,
-  },
-  listItem: {
-    marginBottom: 10,
-  },
-  empty: {
-    textAlign: 'center',
-    color: colors.textSecondary,
-    marginTop: 10,
-  },
-});
